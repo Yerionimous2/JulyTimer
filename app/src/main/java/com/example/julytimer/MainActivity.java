@@ -7,6 +7,8 @@ import androidx.core.app.NotificationCompat;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -28,6 +30,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
     private TextView secondsLeft;
     public TextView secondsDone;
     private TextView percent;
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public Button darkmodeSwitch;
     public int multiper;
     private boolean ran;
-    public int darkMode = 2;
+    public int darkMode;
     private String backgroundcolor, textcolor, buttoncolor;
     private double percentage;
     private int PROGRESS_CURRENT = 0;
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.activity_main);
         ConstraintLayout homeScreenLayout = findViewById(R.id.Layout1);
@@ -84,6 +90,38 @@ public class MainActivity extends AppCompatActivity {
         builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
         notificationManager.notify(1, builder.build());
 
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        darkMode = sharedPref.getInt("Darkmode", 0);
+        secondsSwitch.setText(sharedPref.getString("timeMode", "Sekunden"));
+        System.out.println(secondsSwitch.getText());
+        if(secondsSwitch.getText().equals("Minuten")) {
+            multiper = 60;
+        }
+        if(secondsSwitch.getText().equals("Stunden")) {
+            multiper = 3600;
+        }
+        if(secondsSwitch.getText().equals("Sekunden")){
+            multiper = 1;
+        }
+
+        if(darkMode == 1) {
+            backgroundcolor = "#2E2E2E";
+            textcolor = "#C5C5C5";
+            buttoncolor = "#464646";
+            darkmodeSwitch.setText("Darkmode: an");
+        }
+        if(darkMode == 2) {
+            darkmodeSwitch.setText("Darkmode: auto");
+            //TODO: Eingabefelder für Zeiten im Darkmode hinzufügen.
+        }
+        if(darkMode == 0) {
+            backgroundcolor = "#99B9F9"; //#B7C8EA
+            textcolor = "#3A5A9B"; //#3A5A9B
+            buttoncolor = "#B7C8EA"; //#648AD6
+            darkmodeSwitch.setText("Darkmode: aus");
+        }
+
         NotificationChannel channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
         channel2.setDescription("Die Meilensteinbenachrichtigung");
         NotificationManager notificationManager2 = getSystemService(NotificationManager.class);
@@ -92,14 +130,11 @@ public class MainActivity extends AppCompatActivity {
 
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         final Timer tm1 = new Timer();
-        multiper = 1;
 
         //Hier wird alles geupdated
         // Stuff that updates the UI
 
         runOnUiThread(() -> {
-            secondsSwitch.setText("Sekunden");
-            darkmodeSwitch.setText("Darkmode: Auto");
             secondsDone.setTypeface(Typeface.MONOSPACE);
             secondsLeft.setTypeface(Typeface.MONOSPACE);
             percent.setTypeface(Typeface.MONOSPACE);
@@ -131,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     if(darkMode == 1) {
                         darkMode = 2;
                         darkmodeSwitch.setText("Darkmode: auto");
-                        //TODO: Eingabefelder für Zeiten im Darkmode hinzufügen
+                        //TODO: Eingabefelder für Zeiten im Darkmode hinzufügen.
                     } else {
                         darkMode = 0;
                         backgroundcolor = "#99B9F9"; //#B7C8EA
@@ -140,16 +175,18 @@ public class MainActivity extends AppCompatActivity {
                         darkmodeSwitch.setText("Darkmode: aus");
                     }
                 }
+                editor.putInt("Darkmode", darkMode);
+                editor.apply();
             }
         });
         secondsSwitch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(secondsSwitch.getText() == "Sekunden") {
+                if(secondsSwitch.getText().equals("Sekunden")) {
                     secondsSwitch.setText("Minuten");
                     multiper = 60;
                 } else {
-                    if(secondsSwitch.getText() == "Minuten") {
+                    if(secondsSwitch.getText().equals("Minuten")) {
                         secondsSwitch.setText("Stunden");
                         multiper = 3600;
                     } else {
@@ -157,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
                         multiper = 1;
                     }
                 }
-
+                editor.putString("timeMode", secondsSwitch.getText().toString());
+                editor.apply();
             }
         });
 
