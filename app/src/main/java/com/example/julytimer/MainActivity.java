@@ -7,12 +7,8 @@ import androidx.core.app.NotificationCompat;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -39,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public Button darkmodeSwitch;
     public int multiper;
     private boolean ran;
-    public int darkMode = 0;
+    public int darkMode = 2;
     private String backgroundcolor, textcolor, buttoncolor;
     private double percentage;
     private int PROGRESS_CURRENT = 0;
@@ -89,9 +85,9 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(1, builder.build());
 
         NotificationChannel channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription("Die Meilensteinbenachrichtigung");
+        channel2.setDescription("Die Meilensteinbenachrichtigung");
         NotificationManager notificationManager2 = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
+        notificationManager.createNotificationChannel(channel2);
         NotificationCompat.Builder builder2 = new NotificationCompat.Builder(this, "36");
 
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         runOnUiThread(() -> {
             secondsSwitch.setText("Sekunden");
-            darkmodeSwitch.setText("Darkmode: Aus");
+            darkmodeSwitch.setText("Darkmode: Auto");
             secondsDone.setTypeface(Typeface.MONOSPACE);
             secondsLeft.setTypeface(Typeface.MONOSPACE);
             percent.setTypeface(Typeface.MONOSPACE);
@@ -138,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
                         //TODO: Eingabefelder für Zeiten im Darkmode hinzufügen
                     } else {
                         darkMode = 0;
-                        backgroundcolor = "#B7C8EA";
-                        textcolor = "#3A5A9B";
-                        buttoncolor = "#648AD6";
+                        backgroundcolor = "#99B9F9"; //#B7C8EA
+                        textcolor = "#3A5A9B"; //#3A5A9B
+                        buttoncolor = "#B7C8EA"; //#648AD6
                         darkmodeSwitch.setText("Darkmode: aus");
                     }
                 }
@@ -318,13 +314,8 @@ public class MainActivity extends AppCompatActivity {
                 });
                 PROGRESS_CURRENT = (int) (x*multiper);
                 builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-                if(secondsSwitch.getText() == "Sekunden")
-                    builder.setContentText("Sekunden in Ghana noch! " + z + " Prozent schon geschafft!");
-                if(secondsSwitch.getText() == "Minuten")
-                    builder.setContentText("Minuten in Ghana noch! " + z + " Prozent schon geschafft!");
-                if(secondsSwitch.getText() == "Stunden")
-                    builder.setContentText("Stunden in Ghana noch! " + z + " Prozent schon geschafft!");
-                builder.setContentTitle(y + "");
+                builder.setContentText("noch in Ghana! " + z + " Prozent schon geschafft!");
+                builder.setContentTitle(y + " " +secondsSwitch.getText().toString());
                 notificationManager.notify(1, builder.build());
             }
         };
