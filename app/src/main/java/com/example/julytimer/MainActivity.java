@@ -16,6 +16,8 @@ import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,11 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView darkmodeEndText;
     public Button secondsSwitch;
     public Button darkmodeSwitch;
+    public Button darkmodeSettings;
     public EditText darkmodeBegin;
     public EditText darkmodeEnd;
     public int begin;
     public int end;
     public int multiper;
+    public int u = 0;
+    View view2;
     private boolean ran;
     public int darkMode;
     private String backgroundcolor, textcolor, buttoncolor;
@@ -64,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
     private final DisplayMetrics displayMetrics = new DisplayMetrics();
 
 
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     public long timestamp(String arg) throws ParseException {
         return df.parse(arg).getTime();
@@ -82,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEndText = new TextView(this);
         secondsSwitch = new Button(this);
         darkmodeSwitch = new Button(this);
+        darkmodeSettings = new Button(this);
         darkmodeBegin = new EditText(this);
         darkmodeEnd = new EditText(this);
         backgroundcolor = "#B7C8EA";
@@ -93,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEnd.setVisibility(View.INVISIBLE);
         darkmodeBeginText.setVisibility(View.INVISIBLE);
         darkmodeEndText.setVisibility(View.INVISIBLE);
+        darkmodeSettings.setVisibility(View.INVISIBLE);
+        darkmodeSettings.setText("Einstellen");
 
         NotificationChannel channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
         channel.setDescription("Die coole progress-Bar");
@@ -132,13 +144,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if(darkMode == 2) {
             darkmodeSwitch.setText("Darkmode: auto");
-            //TODO: Eingabefelder für Zeiten im Darkmode hinzufügen.
             darkmodeBegin.setText(Integer.toString(begin));
             darkmodeEnd.setText(Integer.toString(end));
-            darkmodeBegin.setVisibility(View.VISIBLE);
-            darkmodeEnd.setVisibility(View.VISIBLE);
-            darkmodeBeginText.setVisibility(View.VISIBLE);
-            darkmodeEndText.setVisibility(View.VISIBLE);
+            darkmodeSettings.setVisibility(View.VISIBLE);
         }
         if(darkMode == 0) {
             backgroundcolor = "#99B9F9"; //#B7C8EA
@@ -167,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEndText.setTypeface(Typeface.MONOSPACE);
             secondsSwitch.setTypeface(Typeface.MONOSPACE);
             darkmodeSwitch.setTypeface(Typeface.MONOSPACE);
+            darkmodeSettings.setTypeface(Typeface.MONOSPACE);
             darkmodeBegin.setTypeface(Typeface.MONOSPACE);
             darkmodeEnd.setTypeface(Typeface.MONOSPACE);
             secondsDone.setTextSize(12);
@@ -176,20 +185,16 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEndText.setTextSize(12);
             secondsSwitch.setTextSize(12);
             darkmodeSwitch.setTextSize(12);
+            darkmodeSettings.setTextSize(12);
             darkmodeBegin.setTextSize(12);
             darkmodeEnd.setTextSize(12);
-            homeScreenLayout.addView(darkmodeBeginText);
-            homeScreenLayout.addView(darkmodeEndText);
-            homeScreenLayout.addView(darkmodeBegin);
-            homeScreenLayout.addView(darkmodeEnd);
-            homeScreenLayout.addView(secondsSwitch);
             secondsSwitch.setWidth(400);
             secondsSwitch.setHeight(175);
-            homeScreenLayout.addView(darkmodeSwitch);
             darkmodeSwitch.setWidth(400);
             darkmodeSwitch.setHeight(175);
+            darkmodeSettings.setWidth(400);
+            darkmodeSettings.setHeight(175);
             darkmodeBegin.setWidth(130);
-            //darkmodeBegin.setHeight(110);
             darkmodeEnd.setWidth(130);
             darkmodeEnd.setHeight(110);
             darkmodeBegin.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -198,21 +203,30 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeBeginText.setText("Beginn des dunklen Modus:          Uhr");
             darkmodeEndText.setText("Beginn des hellen Modus:          Uhr");
+            homeScreenLayout.addView(darkmodeBeginText);
+            homeScreenLayout.addView(darkmodeEndText);
+            homeScreenLayout.addView(darkmodeBegin);
+            homeScreenLayout.addView(darkmodeEnd);
+            homeScreenLayout.addView(secondsSwitch);
+            homeScreenLayout.addView(darkmodeSwitch);
+            homeScreenLayout.addView(darkmodeSettings);
 
             darkmodeBegin.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
 
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(!hasFocus) {
                         a = darkmodeBegin.getText().toString();
-                        int aNum = Integer.parseInt(a);
-                        if((aNum > 24)||((aNum < 0))||(aNum < end)) {
-                            darkmodeBegin.setText(Integer.toString(begin));
-                        } else {
-                            begin = aNum;
-                            darkmodeBegin.setText(Integer.toString(begin));
-                            editor.putInt("darkmodeBegin", begin);
-                            editor.apply();
-                        }
+                        if(!a.equals("")) {
+                            int aNum = Integer.parseInt(a);
+                            if((aNum > 24)||((aNum < 0))||(aNum < end)) {
+                                darkmodeBegin.setText(Integer.toString(begin));
+                            } else {
+                                begin = aNum;
+                                darkmodeBegin.setText(Integer.toString(begin));
+                                editor.putInt("darkmodeBegin", begin);
+                                editor.apply();
+                            }
+                        } else darkmodeBegin.setText(Integer.toString(begin));
                     }
                 }
             });
@@ -254,15 +268,13 @@ public class MainActivity extends AppCompatActivity {
                         darkmodeSwitch.setText("Darkmode: auto");
                         darkmodeBegin.setText(Integer.toString(begin));
                         darkmodeEnd.setText(Integer.toString(end));
-                        darkmodeBegin.setVisibility(view.VISIBLE);
-                        darkmodeEnd.setVisibility(view.VISIBLE);
-                        darkmodeBeginText.setVisibility(View.VISIBLE);
-                        darkmodeEndText.setVisibility(View.VISIBLE);
+                        darkmodeSettings.setVisibility(View.VISIBLE);
                     } else {
                         darkMode = 0;
                         backgroundcolor = "#99B9F9"; //#B7C8EA
                         textcolor = "#3A5A9B"; //#3A5A9B
                         buttoncolor = "#B7C8EA"; //#648AD6
+                        darkmodeSettings.setVisibility(view.INVISIBLE);
                         darkmodeBegin.setVisibility(view.INVISIBLE);
                         darkmodeEnd.setVisibility(view.INVISIBLE);
                         darkmodeBeginText.setVisibility(view.INVISIBLE);
@@ -274,6 +286,29 @@ public class MainActivity extends AppCompatActivity {
                 editor.apply();
             }
         });
+
+        darkmodeSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!darkmodeSettings.getText().equals("Fertig")) {
+                    u = 500;
+                    darkmodeBegin.setVisibility(view.VISIBLE);
+                    darkmodeEnd.setVisibility(view.VISIBLE);
+                    darkmodeBeginText.setVisibility(View.VISIBLE);
+                    darkmodeEndText.setVisibility(View.VISIBLE);
+                    darkmodeSettings.setText("Fertig");
+                } else {
+                    u = 0;
+                    darkmodeBegin.setVisibility(view.INVISIBLE);
+                    darkmodeEnd.setVisibility(view.INVISIBLE);
+                    darkmodeBeginText.setVisibility(View.INVISIBLE);
+                    darkmodeEndText.setVisibility(View.INVISIBLE);
+                    darkmodeSettings.setText("Einstellen");
+                }
+                hideSoftKeyboard((View) findViewById(R.id.Layout1));
+            }
+        });
+
         secondsSwitch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -402,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
                         notificationManager2.notify(2, builder2.build());
                     }
 
-                    if((now.format(DateTimeFormatter.ofPattern("MM")) == "24")&&((now.format(DateTimeFormatter.ofPattern("HH:mm:ss")) == "07:30:00"))) {
+                    if((now.format(DateTimeFormatter.ofPattern("dd")) == "24")&&((now.format(DateTimeFormatter.ofPattern("HH:mm:ss")) == "07:30:00"))) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Noch einen Monat geschafft! Ich bin stolz auf dich <3", Toast.LENGTH_LONG);
                         toast.show();
                         builder2.setContentText("JulyTimer-Meilenstein")
@@ -433,17 +468,19 @@ public class MainActivity extends AppCompatActivity {
                     secondsLeft.measure(0, 0);
                     percent.measure(0, 0);
                     secondsSwitch.setX(width / 2 - 450);
-                    secondsSwitch.setY(height / 4 * 3 - 550);
+                    secondsSwitch.setY(height / 4 * 3 - 550 + u);
                     darkmodeSwitch.setX(width / 2 + 50);
-                    darkmodeSwitch.setY(height / 4 * 3 - 550);
+                    darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
+                    darkmodeSettings.setX(width / 2 - 200);
                     secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
                     secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
                     percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
-                    secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4);
-                    secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130);
-                    percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260);
+                    secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4 + u);
+                    secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130 + u);
+                    percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
                     darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
                     darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
+                    darkmodeSettings.setY(secondsDone.getY() - 300);
                     darkmodeBeginText.setY(150);
                     darkmodeEndText.setY(280);
                     darkmodeBegin.setX(darkmodeBeginText.getX() + 625);
@@ -458,6 +495,7 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeEndText.setTextColor(Color.parseColor(textcolor));
                     secondsSwitch.setTextColor(Color.parseColor(textcolor));
                     darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
+                    darkmodeSettings.setTextColor(Color.parseColor(textcolor));
                     darkmodeBegin.setTextColor(Color.parseColor(textcolor));
                     darkmodeEnd.setTextColor(Color.parseColor(textcolor));
                     secondsDone.setBackgroundColor(Color.parseColor(buttoncolor));
@@ -467,6 +505,7 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeEndText.setBackgroundColor(Color.parseColor(buttoncolor));
                     secondsSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
                     darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
+                    darkmodeSettings.setBackgroundColor(Color.parseColor(buttoncolor));
                     darkmodeBegin.setBackgroundColor(Color.parseColor(buttoncolor));
                     darkmodeEnd.setBackgroundColor(Color.parseColor(buttoncolor));
                 });
