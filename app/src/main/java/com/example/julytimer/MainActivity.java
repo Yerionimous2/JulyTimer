@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         final Timer tm1 = new Timer();
 
-        //Hier wird alles geupdated
-        // Stuff that updates the UI
+        //Hier wird alles inizialisiert
+        // Stuff that inizializes the UI
 
         runOnUiThread(() -> {
             secondsDone.setTypeface(Typeface.MONOSPACE);
@@ -292,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!darkmodeSettings.getText().equals("Fertig")) {
                     u = 500;
+                    darkmodeSettings.setY(secondsDone.getY());
                     darkmodeBegin.setVisibility(view.VISIBLE);
                     darkmodeEnd.setVisibility(view.VISIBLE);
                     darkmodeBeginText.setVisibility(View.VISIBLE);
@@ -338,11 +339,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Hier wird alles geupdated
-                LocalDateTime now2 = LocalDateTime.now();
-                ZonedDateTime now = now2.atZone(ZoneId.of("Asia/Kolkata"));
+                LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+                LocalDateTime nowWithoutZone = LocalDateTime.now();
                 try {
-                    x = timestamp(now.format(dr)) - timestamp("2022-08-24 07:30:00.000");
-                    y = timestamp("2023-07-23 19:40:00.000") - timestamp(now.format(dr));
+                    x = timestamp(now.format(dr)) - timestamp("2022-08-24 09:30:00.000");
+                    y = timestamp("2023-07-23 21:40:00.000") - timestamp(now.format(dr));
                     completeTime = timestamp("2023-07-23 19:40:00.000") - timestamp("2022-08-24 07:30:00.000");
                 } catch (ParseException oi) {
                 }
@@ -368,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String zString = dform.format(z) + " Prozent schon geschafft!";
                 if(darkMode == 2)
-                if ((Integer.parseInt(now.format(dz)) > begin) || (Integer.parseInt(now.format(dz)) < end)) {
+                if ((Integer.parseInt(nowWithoutZone.format(dz)) > begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
                     backgroundcolor = "#2E2E2E";
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
@@ -471,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
                     secondsSwitch.setY(height / 4 * 3 - 550 + u);
                     darkmodeSwitch.setX(width / 2 + 50);
                     darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
-                    darkmodeSettings.setX(width / 2 - 200);
+                    darkmodeSettings.setX(darkmodeSwitch.getX());
                     secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
                     secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
                     percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
@@ -480,7 +481,9 @@ public class MainActivity extends AppCompatActivity {
                     percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
                     darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
                     darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
-                    darkmodeSettings.setY(secondsDone.getY() - 300);
+                    if(darkmodeSettings.getText().equals("Einstellen")) {
+                        darkmodeSettings.setY(secondsDone.getY() + 850);
+                    }
                     darkmodeBeginText.setY(150);
                     darkmodeEndText.setY(280);
                     darkmodeBegin.setX(darkmodeBeginText.getX() + 625);
