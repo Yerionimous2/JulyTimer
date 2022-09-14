@@ -35,8 +35,51 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    /*
+    * Usage of the Variables:
+    * sharedPref and editor are used to save the Variables:
+    *   begin
+    *   end
+    *   multiper
+    *   darkMode
+    * df is used to save the time Pattern, in which the Dates and the time right now are saved
+    * ar is used to save the time Pattern, in which the Dates and the time right now are saved
+    * dz is used to save the time Pattern, in which the hour right now is saved
+    * displayMetrics is used to Measure the Display
+    *
+    * secondsLeft is used to Display the "Sekunden, bis du mich wiedersiehst" text
+    * secondsDone is used to Display the "Sekunden, seit du mich gesehen hast" text
+    * percent is used to Display the "Prozent schon geschafft!" text
+    * darkmodeBeginText is used to Display the "Beginn des dunklen Modus" text
+    * darkmodeEndText is used to Display the "Beginn des hellen Modus" text
+    * secondsSwitch is used to change the time displayed from seconds to minutes or hours
+    * darkmodeSwitch is used to switch the mode the display is colored
+    * darkmodeSettings is used to activate the Settings of the Times the automatic dark mode starts end ends and to validate the changes made
+    * darkmodeBegin is used to let the user edit the time where the darkmode starts
+    * darkmodeEnd is used to let the user edit the time where the darkmode ends
+    *
+    * begin is used to store time where the darkmode starts
+    * end is used to store the time where the darkmode ends
+    * multiper is the multiplier used to change from seconds to minutes an hours. It is either 1 for Seconds, 60 for Minutes or 3600 for Hours
+    * u is used to push the buttons and texts down to make space for the darkmode settings. It is either 0 for normal use or 500 for pushing downwards
+    * darkMode is used to check which mode is used to change the colors of the Display elements. It is either 0 for off, 1 for on or 2 for automatic
+    * PROGRESS_CURRENT is used to make the Progress Bar in the Notification happen. It is a Value between 0 and completeTime, being the number of Seconds passed
+    * ran is used to check whether the App has updated at least once this session in the percent Progress message. It is either false for not run or true for run
+    * backgroundcolor, textcolor and buttoncolor are used for easier access to the specific Color Values. They are defined in colors.txt
+    * a is used to make the Conversion from String to int happen when the User types in a new time for the darkmode automatic
+    * percentage is used to check wheather an increase in percent has happened. It is a Value from 0 to 100, just being the floored percentage
+    * x is used to save the seconds already passed
+    * y is used to save the seconds needing to pass
+    * completeTime is used to save the seconds between the start and end dates
+    * z is used to save the percent of time already passed
+    */
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    @SuppressLint("SimpleDateFormat")
+    public final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
+    private final DisplayMetrics displayMetrics = new DisplayMetrics();
     private TextView secondsLeft;
     public TextView secondsDone;
     private TextView percent;
@@ -51,39 +94,49 @@ public class MainActivity extends AppCompatActivity {
     public int end;
     public int multiper;
     public int u = 0;
-    View view2;
-    private boolean ran;
     public int darkMode;
-    private String backgroundcolor, textcolor, buttoncolor;
-    private double percentage;
     private int PROGRESS_CURRENT = 0;
-    private long x;
+    private boolean ran;
+    private String backgroundcolor, textcolor, buttoncolor;
     public String a;
+    private double percentage;
+    private long x;
     private long y;
     private long completeTime;
     private double z;
-    @SuppressLint("SimpleDateFormat")
-    public final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-    private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
-    private final DisplayMetrics displayMetrics = new DisplayMetrics();
 
 
+    /*
+     * hideSoftKeyboard is used to close the Android soft Keyboard.
+     * The Input "view" is usually just (View) findViewById(R.id.Layout1)
+     */
     public void hideSoftKeyboard(View view){
         InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    /*
+     * timestamp is used to convert a Date and Time combo to the UNIX Milliseconds.
+     * This is used in the calculations for the seconds passed and the seconds to pass
+     */
     public long timestamp(String arg) throws ParseException {
         return df.parse(arg).getTime();
     }
 
+    /*
+     * onCreate is the Method called on the start of the App. Here is most of the Code found located.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         ConstraintLayout homeScreenLayout = findViewById(R.id.Layout1);
+        /*
+         * Here the most Variables get inizialized and the built-in Android assets are built.
+         * This is optimal for the kind of Tasks that only have to run once.
+         * This could be run from a different function somewhere else for Modularity.
+         */
         secondsDone = new TextView(this);
         secondsLeft = new TextView(this);
         percent = new TextView(this);
@@ -94,11 +147,9 @@ public class MainActivity extends AppCompatActivity {
         darkmodeSettings = new Button(this);
         darkmodeBegin = new EditText(this);
         darkmodeEnd = new EditText(this);
-        backgroundcolor = "#B7C8EA";
-        textcolor = "#3A5A9B";
-        buttoncolor = "#648AD6";
+        final Timer tm1 = new Timer();
         ran = false;
-
+        int PROGRESS_MAX = 28814999;                                // This has to be updated for changeable Dates
         darkmodeBegin.setVisibility(View.INVISIBLE);
         darkmodeEnd.setVisibility(View.INVISIBLE);
         darkmodeBeginText.setVisibility(View.INVISIBLE);
@@ -106,6 +157,10 @@ public class MainActivity extends AppCompatActivity {
         darkmodeSettings.setVisibility(View.INVISIBLE);
         darkmodeSettings.setText("Einstellen");
 
+        /*
+         * The Notification Channels are getting Initialized.
+         * These are needed to build and send Messages to the Notification Center.
+         */
         NotificationChannel channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
         channel.setDescription("Die coole progress-Bar");
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -115,17 +170,25 @@ public class MainActivity extends AppCompatActivity {
                 .setContentTitle("Ghana in progress")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle());
-        int PROGRESS_MAX = 28814999;
-        builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-        notificationManager.notify(1, builder.build());
 
+        NotificationChannel channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
+        channel2.setDescription("Die Meilensteinbenachrichtigung");
+        NotificationManager notificationManager2 = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel2);
+        NotificationCompat.Builder builder2 = new NotificationCompat.Builder(this, "36");
+
+        /*
+         * All the stored Data is being Initialized.
+         * The default Values are:
+         *   multiper: 1
+         *   darkmode: 0
+         *   begin: 19
+         *   end: 7
+         */
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        darkMode = sharedPref.getInt("Darkmode", 0);
-        begin = sharedPref.getInt("darkmodeBegin", 19);
-        end = sharedPref.getInt("darkmodeEnd", 7);
+
         secondsSwitch.setText(sharedPref.getString("timeMode", "Sekunden"));
-        System.out.println(secondsSwitch.getText());
         if(secondsSwitch.getText().equals("Minuten")) {
             multiper = 60;
         }
@@ -136,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             multiper = 1;
         }
 
+        darkMode = sharedPref.getInt("Darkmode", 0);
         if(darkMode == 1) {
             backgroundcolor = "#2E2E2E";
             textcolor = "#C5C5C5";
@@ -155,18 +219,15 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSwitch.setText("Darkmode: aus");
         }
 
-        NotificationChannel channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
-        channel2.setDescription("Die Meilensteinbenachrichtigung");
-        NotificationManager notificationManager2 = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel2);
-        NotificationCompat.Builder builder2 = new NotificationCompat.Builder(this, "36");
+        begin = sharedPref.getInt("darkmodeBegin", 19);
+        end = sharedPref.getInt("darkmodeEnd", 7);
 
+        /*
+         * The Display gets measured and all the Display Elements are getting put on their Spot.
+         * This needs to happen on the UI Thread, because no other Thread has the rights needed to
+         *  alter with most of this Stuff
+         */
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        final Timer tm1 = new Timer();
-
-        //Hier wird alles inizialisiert
-        // Stuff that inizializes the UI
-
         runOnUiThread(() -> {
             secondsDone.setTypeface(Typeface.MONOSPACE);
             secondsLeft.setTypeface(Typeface.MONOSPACE);
@@ -195,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSettings.setWidth(400);
             darkmodeSettings.setHeight(175);
             darkmodeBegin.setWidth(130);
+            darkmodeBegin.setHeight(110);
             darkmodeEnd.setWidth(130);
             darkmodeEnd.setHeight(110);
             darkmodeBegin.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -204,6 +266,11 @@ public class MainActivity extends AppCompatActivity {
             darkmodeBeginText.setText("Beginn des dunklen Modus:          Uhr");
             darkmodeEndText.setText("Beginn des hellen Modus:          Uhr");
 
+            /*
+             * When the Focus on the EditText is lost, the Number gets Validated and moved to the
+             * begin variable. The Focus is lost when a Button is pushed or the other EditText gets
+             * focussed.
+             */
             darkmodeBegin.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
 
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -224,6 +291,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            /*
+             * When the Focus on the EditText is lost, the Number gets Validated and moved to the
+             * end variable. The Focus is lost when a Button is pushed or the other EditText gets
+             * focussed.
+             */
             darkmodeEnd.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
 
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -241,8 +313,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
         });
+
         darkmodeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -569,6 +641,11 @@ public class MainActivity extends AppCompatActivity {
                 notificationManager.notify(1, builder.build());
             }
         };
+
+        /*
+         * The display modules are put on the Screen, even though some of them are invisible.
+         * The Timer gets started and the Timertask gets executed roughly every 100 Milliseconds.
+         */
         homeScreenLayout.addView(secondsDone);
         homeScreenLayout.addView(secondsLeft);
         homeScreenLayout.addView(percent);
