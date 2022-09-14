@@ -203,13 +203,6 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeBeginText.setText("Beginn des dunklen Modus:          Uhr");
             darkmodeEndText.setText("Beginn des hellen Modus:          Uhr");
-            homeScreenLayout.addView(darkmodeBeginText);
-            homeScreenLayout.addView(darkmodeEndText);
-            homeScreenLayout.addView(darkmodeBegin);
-            homeScreenLayout.addView(darkmodeEnd);
-            homeScreenLayout.addView(secondsSwitch);
-            homeScreenLayout.addView(darkmodeSwitch);
-            homeScreenLayout.addView(darkmodeSettings);
 
             darkmodeBegin.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
 
@@ -292,7 +285,33 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!darkmodeSettings.getText().equals("Fertig")) {
                     u = 500;
+                    int width = displayMetrics.widthPixels;
                     darkmodeSettings.setY(secondsDone.getY());
+                    darkmodeSettings.setX(width / 2 - 200);
+                    int height = displayMetrics.heightPixels;
+                    secondsDone.measure(0, 0);
+                    darkmodeBeginText.measure(0, 0);
+                    darkmodeEndText.measure(0, 0);
+                    secondsLeft.measure(0, 0);
+                    percent.measure(0, 0);
+                    secondsSwitch.setX(width / 2 - 450);
+                    secondsSwitch.setY(height / 4 * 3 - 550 + u);
+                    darkmodeSwitch.setX(width / 2 + 50);
+                    darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
+                    secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
+                    secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
+                    percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
+                    secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4 + u);
+                    secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130 + u);
+                    percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
+                    darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
+                    darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
+                    darkmodeBeginText.setY(150);
+                    darkmodeEndText.setY(280);
+                    darkmodeBegin.setX(darkmodeBeginText.getX() + 625);
+                    darkmodeEnd.setX(darkmodeEndText.getX() + 600);
+                    darkmodeBegin.setY(darkmodeBeginText.getY());
+                    darkmodeEnd.setY(darkmodeEndText.getY());
                     darkmodeBegin.setVisibility(view.VISIBLE);
                     darkmodeEnd.setVisibility(view.VISIBLE);
                     darkmodeBeginText.setVisibility(View.VISIBLE);
@@ -300,6 +319,33 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeSettings.setText("Fertig");
                 } else {
                     u = 0;
+                    int width = displayMetrics.widthPixels;
+                    int height = displayMetrics.heightPixels;
+                    secondsDone.measure(0, 0);
+                    darkmodeBeginText.measure(0, 0);
+                    darkmodeEndText.measure(0, 0);
+                    secondsLeft.measure(0, 0);
+                    percent.measure(0, 0);
+                    secondsSwitch.setX(width / 2 - 450);
+                    secondsSwitch.setY(height / 4 * 3 - 550 + u);
+                    darkmodeSwitch.setX(width / 2 + 50);
+                    darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
+                    darkmodeSettings.setX(darkmodeSwitch.getX());
+                    secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
+                    secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
+                    percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
+                    secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4 + u);
+                    secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130 + u);
+                    percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
+                    darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
+                    darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
+                    darkmodeSettings.setY(secondsDone.getY() + 850);
+                    darkmodeBeginText.setY(150);
+                    darkmodeEndText.setY(280);
+                    darkmodeBegin.setX(darkmodeBeginText.getX() + 625);
+                    darkmodeEnd.setX(darkmodeEndText.getX() + 600);
+                    darkmodeBegin.setY(darkmodeBeginText.getY());
+                    darkmodeEnd.setY(darkmodeEndText.getY());
                     darkmodeBegin.setVisibility(view.INVISIBLE);
                     darkmodeEnd.setVisibility(view.INVISIBLE);
                     darkmodeBeginText.setVisibility(View.INVISIBLE);
@@ -472,7 +518,11 @@ public class MainActivity extends AppCompatActivity {
                     secondsSwitch.setY(height / 4 * 3 - 550 + u);
                     darkmodeSwitch.setX(width / 2 + 50);
                     darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
-                    darkmodeSettings.setX(darkmodeSwitch.getX());
+                    if(darkmodeSettings.getText().equals("Einstellen")) {
+                        darkmodeSettings.setX(darkmodeSwitch.getX());
+                    } else {
+                        darkmodeSettings.setX(width / 2 - 200);
+                    }
                     secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
                     secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
                     percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
@@ -522,6 +572,13 @@ public class MainActivity extends AppCompatActivity {
         homeScreenLayout.addView(secondsDone);
         homeScreenLayout.addView(secondsLeft);
         homeScreenLayout.addView(percent);
+        homeScreenLayout.addView(darkmodeBeginText);
+        homeScreenLayout.addView(darkmodeEndText);
+        homeScreenLayout.addView(darkmodeBegin);
+        homeScreenLayout.addView(darkmodeEnd);
+        homeScreenLayout.addView(secondsSwitch);
+        homeScreenLayout.addView(darkmodeSwitch);
+        homeScreenLayout.addView(darkmodeSettings);
         tm1.schedule(tmTk1, 0, 100);
     }
 }
