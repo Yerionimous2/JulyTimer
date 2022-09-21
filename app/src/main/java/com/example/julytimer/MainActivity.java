@@ -88,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView secondsLeft;
     public TextView secondsDone;
     private TextView percent;
-    private TextView darkmodeBeginText;
-    private TextView darkmodeEndText;
+    private TextView darkmodeBeginText1;
+    private TextView darkmodeBeginText2;
+    private TextView darkmodeEndText1;
+    private TextView darkmodeEndText2;
     public Button secondsSwitch;
     public Button darkmodeSwitch;
     public Button darkmodeSettings;
@@ -103,12 +105,15 @@ public class MainActivity extends AppCompatActivity {
     NotificationCompat.Builder builder2;
     public final Timer tm1 = new Timer();
     public int begin;
+    public int height;
+    public int width;
     public int end;
     public int multiper;
     public int u = 0;
     public int darkMode;
     private int PROGRESS_CURRENT = 0;
     private int PROGRESS_MAX;
+    public int textSize;
     private boolean ran;
     private String backgroundcolor = "#000000";
     private String textcolor = "#000000";
@@ -124,10 +129,11 @@ public class MainActivity extends AppCompatActivity {
     private double z;
 
     /*
-     * save(int) saves the given  int for later use
+     * save(int) saves the given  int for later use under the given name
      */
-    public void save(int a) {
-
+    public void save(int a, String name) {
+        editor.putInt(name, a);
+        editor.apply();
     }
 
     /*
@@ -138,8 +144,10 @@ public class MainActivity extends AppCompatActivity {
         secondsDone = new TextView(this);
         secondsLeft = new TextView(this);
         percent = new TextView(this);
-        darkmodeBeginText = new TextView(this);
-        darkmodeEndText = new TextView(this);
+        darkmodeBeginText1 = new TextView(this);
+        darkmodeBeginText2 = new TextView(this);
+        darkmodeEndText1 = new TextView(this);
+        darkmodeEndText2 = new TextView(this);
         secondsSwitch = new Button(this);
         darkmodeSwitch = new Button(this);
         darkmodeSettings = new Button(this);
@@ -149,8 +157,10 @@ public class MainActivity extends AppCompatActivity {
         PROGRESS_MAX = 28814999;                                // This has to be updated for changeable Dates
         darkmodeBegin.setVisibility(View.INVISIBLE);
         darkmodeEnd.setVisibility(View.INVISIBLE);
-        darkmodeBeginText.setVisibility(View.INVISIBLE);
-        darkmodeEndText.setVisibility(View.INVISIBLE);
+        darkmodeBeginText1.setVisibility(View.INVISIBLE);
+        darkmodeBeginText2.setVisibility(View.INVISIBLE);
+        darkmodeEndText1.setVisibility(View.INVISIBLE);
+        darkmodeEndText2.setVisibility(View.INVISIBLE);
         darkmodeSettings.setVisibility(View.INVISIBLE);
         darkmodeSettings.setText("Einstellen");
         dform = new DecimalFormat("#.#######");
@@ -158,8 +168,9 @@ public class MainActivity extends AppCompatActivity {
         initialiseNotifications();
 
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        initialiseUI();
 
+        initialiseUI();
+        measure();
         initialiseListeners();
     }
 
@@ -195,37 +206,9 @@ public class MainActivity extends AppCompatActivity {
 
         begin = sharedPref.getInt("darkmodeBegin", 19);
         end = sharedPref.getInt("darkmodeEnd", 7);
-
-        secondsSwitch.setText(sharedPref.getString("timeMode", "Sekunden"));
-        if(secondsSwitch.getText().equals("Minuten")) {
-            multiper = 60;
-        }
-        if(secondsSwitch.getText().equals("Stunden")) {
-            multiper = 3600;
-        }
-        if(secondsSwitch.getText().equals("Sekunden")){
-            multiper = 1;
-        }
+        multiper = sharedPref.getInt("timeMode", 1);
 
         darkMode = sharedPref.getInt("Darkmode", 0);
-        if(darkMode == 1) {
-            backgroundcolor = "#2E2E2E";
-            textcolor = "#C5C5C5";
-            buttoncolor = "#464646";
-            darkmodeSwitch.setText("Darkmode: an");
-        }
-        if(darkMode == 2) {
-            darkmodeSwitch.setText("Darkmode: auto");
-            darkmodeBegin.setText(Integer.toString(begin));
-            darkmodeEnd.setText(Integer.toString(end));
-            darkmodeSettings.setVisibility(View.VISIBLE);
-        }
-        if(darkMode == 0) {
-            backgroundcolor = "#99B9F9"; //#B7C8EA
-            textcolor = "#3A5A9B"; //#3A5A9B
-            buttoncolor = "#B7C8EA"; //#648AD6
-            darkmodeSwitch.setText("Darkmode: aus");
-        }
     }
 
     /*
@@ -251,88 +234,192 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * updateUI updates the UI
+     * Measures everything on Screen.
      */
-    public void updateUI() {
+    public void measure() {
+        height = displayMetrics.heightPixels;
+        width = displayMetrics.widthPixels;
+        secondsSwitch.measure(0, 0);
+        darkmodeSwitch.measure(0, 0);
+        darkmodeSettings.measure(0, 0);
+        secondsLeft.measure(0, 0);
+        secondsDone.measure(0, 0);
+        percent.measure(0, 0);
+        darkmodeBeginText1.measure(0, 0);
+        darkmodeBeginText2.measure(0, 0);
+        darkmodeEndText1.measure(0, 0);
+        darkmodeEndText2.measure(0, 0);
+        darkmodeBegin.measure(0, 0);
+        darkmodeEnd.measure(0, 0);
+    }
+
+    public void setTextSizes(int textSize) {
+        secondsSwitch.setTextSize(textSize);
+        darkmodeSwitch.setTextSize(textSize);
+        darkmodeSettings.setTextSize(textSize);
+        secondsLeft.setTextSize(textSize);
+        secondsDone.setTextSize(textSize);
+        percent.setTextSize(textSize);
+        darkmodeBeginText1.setTextSize(textSize);
+        darkmodeBeginText2.setTextSize(textSize);
+        darkmodeEndText1.setTextSize(textSize);
+        darkmodeEndText2.setTextSize(textSize);
+        darkmodeBegin.setTextSize(textSize);
+        darkmodeEnd.setTextSize(textSize);
+    }
+
+    public void setText() {
+        secondsDone.setText(xString);
+        secondsLeft.setText(yString);
+        percent.setText(zString);
+
+        if(multiper == 60) {
+            secondsSwitch.setText("Minuten");
+        }
+        if(multiper == 3600) {
+            secondsSwitch.setText("Stunden");
+        }
+        if(multiper == 86400) {
+            secondsSwitch.setText("Tage");
+        }
+        if(multiper == 1) {
+            secondsSwitch.setText("Sekunden");
+        }
+        darkmodeBeginText1.setText("Beginn des dunklen Modus:");
+        darkmodeBeginText2.setText("Uhr");
+        darkmodeEndText1.setText("Beginn des hellen Modus:");
+        darkmodeEndText2.setText("Uhr");
+        if(darkMode == 0) {
+            darkmodeSwitch.setText("Darkmode: Aus");
+        }
+        if(darkMode == 1) {
+            darkmodeSwitch.setText("Darkmode: An");
+        }
+        if(darkMode == 2) {
+            darkmodeSwitch.setText("Darkmode: Auto");
+        }
+    }
+
+    public void setPaddingSizes(int height, int width, int textSize) {
+        measure();
+        int horizontal = width / 27;
+        int vertical = horizontal / 2;
+        int buttonWidth = textSize * 27 + horizontal * 2;
+        int buttonHeight = textSize * 12 + vertical * 2;
+        secondsSwitch.setWidth(buttonWidth);
+        darkmodeSwitch.setWidth(buttonWidth);
+        darkmodeSettings.setWidth(buttonWidth);
+        secondsSwitch.setHeight(buttonHeight);
+        darkmodeSwitch.setHeight(buttonHeight);
+        darkmodeSettings.setHeight(buttonHeight);
+        secondsLeft.setPaddingRelative(horizontal, vertical, horizontal, vertical);
+        secondsDone.setPaddingRelative(horizontal, vertical, horizontal, vertical);
+        percent.setPaddingRelative(horizontal, vertical, horizontal, vertical);
+        darkmodeBeginText1.setPaddingRelative(horizontal, vertical, 0, vertical);
+        darkmodeBeginText2.setPaddingRelative(0, vertical, horizontal, vertical);
+        darkmodeEndText1.setPaddingRelative(horizontal, vertical, 0, vertical);
+        darkmodeEndText2.setPaddingRelative(0, vertical, horizontal, vertical);
+        darkmodeBegin.setPaddingRelative(0, vertical, 0, vertical);
+        darkmodeEnd.setPaddingRelative(0, vertical, 0, vertical);
+    }
+
+    public void setPositions(int height, int width, int mode) {
+        measure();
+        secondsSwitch.setX(width / 2 - secondsSwitch.getMeasuredWidth() / 2 - width / 4);
+        darkmodeSwitch.setX(width / 2 - darkmodeSwitch.getMeasuredWidth() / 2 + width / 4);
+        secondsDone.setX((width / 2) - secondsDone.getMeasuredWidth() / 2);
+        secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
+        percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
+        darkmodeBeginText1.setX(width / 2 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth() + darkmodeBeginText2.getMeasuredWidth()) / 2);
+        darkmodeBegin.setX(darkmodeBeginText1.getX() + darkmodeBeginText1.getMeasuredWidth());
+        darkmodeBeginText2.setX(darkmodeBegin.getX() + darkmodeBegin.getMeasuredWidth());
+        darkmodeEndText1.setX(width / 2 - (darkmodeEndText1.getMeasuredWidth() + darkmodeEnd.getMeasuredWidth() + darkmodeEndText2.getMeasuredWidth()) / 2);
+        darkmodeEnd.setX(darkmodeEndText1.getX() + darkmodeEndText1.getMeasuredWidth());
+        darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
+        if(mode == 0) darkmodeSettings.setX(darkmodeSwitch.getX());
+        if(mode == 1) darkmodeSettings.setX(width / 2 - darkmodeSettings.getMeasuredWidth() / 2);
+
+        darkmodeBeginText1.setY(height/10);
+        if(mode == 0) {
+            secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4);
+            secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + textSize * 10);
+            percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + textSize * 20);
+            darkmodeSettings.setY(percent.getY() + textSize * 60);
+        }
+        if(mode == 1) {
+            secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - textSize * 5);
+            secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 + textSize * 5);
+            percent.setY(height / 2 - percent.getMeasuredHeight() / 2 + textSize * 15);
+            darkmodeSettings.setY(darkmodeEndText1.getY() + textSize * 15);
+        }
+        darkmodeEndText1.setY(darkmodeBeginText1.getY() + textSize * 10);
+        secondsSwitch.setY(percent.getY() + textSize * 40);
+        darkmodeSwitch.setY(secondsSwitch.getY());
+        darkmodeBegin.setY(darkmodeBeginText1.getY());
+        darkmodeEnd.setY(darkmodeEndText1.getY());
+        darkmodeBeginText2.setY(darkmodeBeginText1.getY());
+        darkmodeEndText2.setY(darkmodeEndText1.getY());
+    }
+
+    public void setColors() {
+        if(darkMode == 0) {
+            backgroundcolor = "#99B9F9"; //#B7C8EA
+            textcolor = "#3A5A9B"; //#3A5A9B
+            buttoncolor = "#B7C8EA"; //#648AD6
+        }
+        if (darkMode == 1) {
+            backgroundcolor = "#2E2E2E";
+            textcolor = "#C5C5C5";
+            buttoncolor = "#464646";
+        }
+        if(darkMode == 2)
+            if ((Integer.parseInt(nowWithoutZone.format(dz)) > begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
+                backgroundcolor = "#2E2E2E";
+                textcolor = "#C5C5C5";
+                buttoncolor = "#464646";
+            } else {
+                backgroundcolor = "#99B9F9"; //#B7C8EA
+                textcolor = "#3A5A9B"; //#3A5A9B
+                buttoncolor = "#B7C8EA"; //#648AD6
+            }
+        layout.setBackgroundColor(Color.parseColor(backgroundcolor));
+        secondsDone.setTextColor(Color.parseColor(textcolor));
+        secondsLeft.setTextColor(Color.parseColor(textcolor));
+        percent.setTextColor(Color.parseColor(textcolor));
+        darkmodeBeginText1.setTextColor(Color.parseColor(textcolor));
+        darkmodeBeginText2.setTextColor(Color.parseColor(textcolor));
+        darkmodeEndText1.setTextColor(Color.parseColor(textcolor));
+        darkmodeEndText2.setTextColor(Color.parseColor(textcolor));
+        secondsSwitch.setTextColor(Color.parseColor(textcolor));
+        darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
+        darkmodeSettings.setTextColor(Color.parseColor(textcolor));
+        darkmodeBegin.setTextColor(Color.parseColor(textcolor));
+        darkmodeEnd.setTextColor(Color.parseColor(textcolor));
+        secondsDone.setBackgroundColor(Color.parseColor(buttoncolor));
+        secondsLeft.setBackgroundColor(Color.parseColor(buttoncolor));
+        percent.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeBeginText1.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeBeginText2.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeEndText1.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeEndText2.setBackgroundColor(Color.parseColor(buttoncolor));
+        secondsSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeSettings.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeBegin.setBackgroundColor(Color.parseColor(buttoncolor));
+        darkmodeEnd.setBackgroundColor(Color.parseColor(buttoncolor));
+    }
+
+    public void updateUI2(int mode) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                int width = displayMetrics.widthPixels;
-                int height = displayMetrics.heightPixels;
-                secondsDone.measure(0, 0);
-                darkmodeBeginText.measure(0, 0);
-                darkmodeEndText.measure(0, 0);
-                secondsLeft.measure(0, 0);
-                percent.measure(0, 0);
-                secondsSwitch.setX(width / 2 - 450);
-                secondsSwitch.setY(height / 4 * 3 - 550 + u);
-                darkmodeSwitch.setX(width / 2 + 50);
-                darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
-                if(darkmodeSettings.getText().equals("Einstellen")) {
-                    darkmodeSettings.setX(darkmodeSwitch.getX());
-                } else {
-                    darkmodeSettings.setX(width / 2 - 200);
-                }
-                secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
-                secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
-                percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
-                secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4 + u);
-                secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130 + u);
-                percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
-                darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
-                darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
-                if(darkmodeSettings.getText().equals("Einstellen")) {
-                    darkmodeSettings.setY(secondsDone.getY() + 850);
-                }
-                darkmodeBeginText.setY(150);
-                darkmodeEndText.setY(280);
-                darkmodeBegin.setX(darkmodeBeginText.getX() + 635);
-                darkmodeEnd.setX(darkmodeEndText.getX() + 610);
-                darkmodeBegin.setY(darkmodeBeginText.getY());
-                darkmodeEnd.setY(darkmodeEndText.getY());
-                layout.setBackgroundColor(Color.parseColor(backgroundcolor));
-                secondsDone.setTextColor(Color.parseColor(textcolor));
-                secondsLeft.setTextColor(Color.parseColor(textcolor));
-                percent.setTextColor(Color.parseColor(textcolor));
-                darkmodeBeginText.setTextColor(Color.parseColor(textcolor));
-                darkmodeEndText.setTextColor(Color.parseColor(textcolor));
-                secondsSwitch.setTextColor(Color.parseColor(textcolor));
-                darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
-                darkmodeSettings.setTextColor(Color.parseColor(textcolor));
-                darkmodeBegin.setTextColor(Color.parseColor(textcolor));
-                darkmodeEnd.setTextColor(Color.parseColor(textcolor));
-                secondsDone.setBackgroundColor(Color.parseColor(buttoncolor));
-                secondsLeft.setBackgroundColor(Color.parseColor(buttoncolor));
-                percent.setBackgroundColor(Color.parseColor(buttoncolor));
-                darkmodeBeginText.setBackgroundColor(Color.parseColor(buttoncolor));
-                darkmodeEndText.setBackgroundColor(Color.parseColor(buttoncolor));
-                secondsSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
-                darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
-                darkmodeSettings.setBackgroundColor(Color.parseColor(buttoncolor));
-                darkmodeBegin.setBackgroundColor(Color.parseColor(buttoncolor));
-                darkmodeEnd.setBackgroundColor(Color.parseColor(buttoncolor));
-
-                secondsDone.setText(xString);
-                secondsLeft.setText(yString);
-                percent.setText(zString);
-                secondsDone.setPaddingRelative(40, 15, 40, 20);
-                darkmodeBeginText.setPaddingRelative(40, 15, 40, 20);
-                darkmodeBegin.setPaddingRelative(0, 15, 0, 20);
-                darkmodeEndText.setPaddingRelative(40, 15, 40, 20);
-                darkmodeEnd.setPaddingRelative(0, 15, 0, 20);
-                secondsLeft.setPaddingRelative(40, 15, 40, 20);
-                percent.setPaddingRelative(40, 15, 40, 20);
-
-                if(darkMode == 2)
-                    if ((Integer.parseInt(nowWithoutZone.format(dz)) > begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
-                        backgroundcolor = "#2E2E2E";
-                        textcolor = "#C5C5C5";
-                        buttoncolor = "#464646";
-                    } else {
-                        backgroundcolor = "#99B9F9"; //#B7C8EA
-                        textcolor = "#3A5A9B"; //#3A5A9B
-                        buttoncolor = "#B7C8EA"; //#648AD6
-                    }
+                measure();
+                textSize = (int)(width / 90);
+                setTextSizes(textSize);
+                setText();
+                setPaddingSizes(height, width, textSize);
+                setPositions(height, width, mode);
+                setColors();
             }
         });
     }
@@ -347,39 +434,20 @@ public class MainActivity extends AppCompatActivity {
                 secondsDone.setTypeface(Typeface.MONOSPACE);
                 secondsLeft.setTypeface(Typeface.MONOSPACE);
                 percent.setTypeface(Typeface.MONOSPACE);
-                darkmodeBeginText.setTypeface(Typeface.MONOSPACE);
-                darkmodeEndText.setTypeface(Typeface.MONOSPACE);
+                darkmodeBeginText1.setTypeface(Typeface.MONOSPACE);
+                darkmodeBeginText2.setTypeface(Typeface.MONOSPACE);
+                darkmodeEndText1.setTypeface(Typeface.MONOSPACE);
+                darkmodeEndText2.setTypeface(Typeface.MONOSPACE);
                 secondsSwitch.setTypeface(Typeface.MONOSPACE);
                 darkmodeSwitch.setTypeface(Typeface.MONOSPACE);
                 darkmodeSettings.setTypeface(Typeface.MONOSPACE);
                 darkmodeBegin.setTypeface(Typeface.MONOSPACE);
                 darkmodeEnd.setTypeface(Typeface.MONOSPACE);
-                secondsDone.setTextSize(12);
-                secondsLeft.setTextSize(12);
-                percent.setTextSize(12);
-                darkmodeBeginText.setTextSize(12);
-                darkmodeEndText.setTextSize(12);
-                secondsSwitch.setTextSize(12);
-                darkmodeSwitch.setTextSize(12);
-                darkmodeSettings.setTextSize(12);
-                darkmodeBegin.setTextSize(12);
-                darkmodeEnd.setTextSize(12);
-                secondsSwitch.setWidth(400);
-                secondsSwitch.setHeight(175);
-                darkmodeSwitch.setWidth(400);
-                darkmodeSwitch.setHeight(175);
-                darkmodeSettings.setWidth(400);
-                darkmodeSettings.setHeight(175);
-                darkmodeBegin.setWidth(100);
-                darkmodeBegin.setHeight(110);
-                darkmodeEnd.setWidth(100);
-                darkmodeEnd.setHeight(110);
+                measure();
                 darkmodeBegin.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 darkmodeEnd.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
                 darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
-                darkmodeBeginText.setText("Beginn des dunklen Modus:          Uhr");
-                darkmodeEndText.setText("Beginn des hellen Modus:          Uhr");
             }
         });
     }
@@ -400,8 +468,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     begin = aNum;
                                     darkmodeBegin.setText(Integer.toString(begin));
-                                    editor.putInt("darkmodeBegin", begin);
-                                    editor.apply();
+                                    save(begin, "darkmodeBegin");
                                 }
                             } else darkmodeBegin.setText(Integer.toString(begin));
                         }
@@ -424,8 +491,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 end = aNum;
                                 darkmodeEnd.setText(Integer.toString(end));
-                                editor.putInt("darkmodeEnd", end);
-                                editor.apply();
+                                save(end, "darkmodeEnd");
                             }
                         }
                     }
@@ -461,13 +527,14 @@ public class MainActivity extends AppCompatActivity {
                                 darkmodeSettings.setVisibility(view.INVISIBLE);
                                 darkmodeBegin.setVisibility(view.INVISIBLE);
                                 darkmodeEnd.setVisibility(view.INVISIBLE);
-                                darkmodeBeginText.setVisibility(view.INVISIBLE);
-                                darkmodeEndText.setVisibility(view.INVISIBLE);
+                                darkmodeBeginText1.setVisibility(view.INVISIBLE);
+                                darkmodeBeginText2.setVisibility(view.INVISIBLE);
+                                darkmodeEndText1.setVisibility(view.INVISIBLE);
+                                darkmodeEndText2.setVisibility(view.INVISIBLE);
                                 darkmodeSwitch.setText("Darkmode: aus");
                             }
                         }
-                        editor.putInt("Darkmode", darkMode);
-                        editor.apply();
+                        save(darkMode, "Darkmode");
                     }
                 });
 
@@ -479,72 +546,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if (!darkmodeSettings.getText().equals("Fertig")) {
-                            u = 500;
-                            int width = displayMetrics.widthPixels;
-                            int height = displayMetrics.heightPixels;
-                            secondsDone.measure(0, 0);
-                            darkmodeBeginText.measure(0, 0);
-                            darkmodeEndText.measure(0, 0);
-                            secondsLeft.measure(0, 0);
-                            percent.measure(0, 0);
-                            darkmodeSettings.setX(width / 2 - 200);
-                            darkmodeSettings.setY(secondsDone.getY());
-                            darkmodeSwitch.setX(width / 2 + 50);
-                            darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
-                            secondsSwitch.setX(width / 2 - 450);
-                            secondsSwitch.setY(height / 4 * 3 - 550 + u);
-                            secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
-                            secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4 + u);
-                            secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
-                            secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130 + u);
-                            percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
-                            percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
-                            darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
-                            darkmodeBeginText.setY(150);
-                            darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
-                            darkmodeEndText.setY(280);
-                            darkmodeBegin.setX(darkmodeBeginText.getX() + 635);
-                            darkmodeBegin.setY(darkmodeBeginText.getY());
-                            darkmodeEnd.setX(darkmodeEndText.getX() + 610);
-                            darkmodeEnd.setY(darkmodeEndText.getY());
+                            updateUI2(1);
                             darkmodeBegin.setVisibility(View.VISIBLE);
                             darkmodeEnd.setVisibility(View.VISIBLE);
-                            darkmodeBeginText.setVisibility(View.VISIBLE);
-                            darkmodeEndText.setVisibility(View.VISIBLE);
+                            darkmodeBeginText1.setVisibility(View.VISIBLE);
+                            darkmodeBeginText2.setVisibility(View.VISIBLE);
+                            darkmodeEndText1.setVisibility(View.VISIBLE);
+                            darkmodeEndText2.setVisibility(View.VISIBLE);
                             darkmodeSettings.setText("Fertig");
                         } else {
-                            u = 0;
-                            int width = displayMetrics.widthPixels;
-                            int height = displayMetrics.heightPixels;
-                            secondsDone.measure(0, 0);
-                            darkmodeBeginText.measure(0, 0);
-                            darkmodeEndText.measure(0, 0);
-                            secondsLeft.measure(0, 0);
-                            percent.measure(0, 0);
-                            secondsSwitch.setX(width / 2 - 450);
-                            secondsSwitch.setY(height / 4 * 3 - 550 + u);
-                            darkmodeSwitch.setX(width / 2 + 50);
-                            darkmodeSwitch.setY(height / 4 * 3 - 550 + u);
-                            darkmodeSettings.setX(darkmodeSwitch.getX());
-                            secondsDone.setX((width / 2) - (secondsDone.getMeasuredWidth() / 2));
-                            secondsLeft.setX(width / 2 - secondsLeft.getMeasuredWidth() / 2);
-                            percent.setX(width / 2 - percent.getMeasuredWidth() / 2);
-                            secondsDone.setY(height / 2 - secondsDone.getMeasuredHeight() / 2 - height / 4 + u);
-                            secondsLeft.setY(height / 2 - secondsLeft.getMeasuredHeight() / 2 - height / 4 + 130 + u);
-                            percent.setY(height / 2 - percent.getMeasuredHeight() / 2 - height / 4 + 260 + u);
-                            darkmodeBeginText.setX(width / 2 - darkmodeBeginText.getMeasuredWidth() / 2);
-                            darkmodeEndText.setX(width / 2 - darkmodeEndText.getMeasuredWidth() / 2);
-                            darkmodeSettings.setY(secondsDone.getY() + 850);
-                            darkmodeBeginText.setY(150);
-                            darkmodeEndText.setY(280);
-                            darkmodeBegin.setX(darkmodeBeginText.getX() + 635);
-                            darkmodeEnd.setX(darkmodeEndText.getX() + 610);
-                            darkmodeBegin.setY(darkmodeBeginText.getY());
-                            darkmodeEnd.setY(darkmodeEndText.getY());
+                            updateUI2(0);
                             darkmodeBegin.setVisibility(View.INVISIBLE);
                             darkmodeEnd.setVisibility(View.INVISIBLE);
-                            darkmodeBeginText.setVisibility(View.INVISIBLE);
-                            darkmodeEndText.setVisibility(View.INVISIBLE);
+                            darkmodeBeginText1.setVisibility(View.INVISIBLE);
+                            darkmodeBeginText2.setVisibility(View.INVISIBLE);
+                            darkmodeEndText1.setVisibility(View.INVISIBLE);
+                            darkmodeEndText2.setVisibility(View.INVISIBLE);
                             darkmodeSettings.setText("Einstellen");
                         }
                         hideSoftKeyboard((View) findViewById(R.id.Layout1));
@@ -563,13 +580,15 @@ public class MainActivity extends AppCompatActivity {
                             if (secondsSwitch.getText().equals("Minuten")) {
                                 secondsSwitch.setText("Stunden");
                                 multiper = 3600;
+                            } else if(secondsSwitch.getText().equals("Stunden")){
+                                secondsSwitch.setText("Tage");
+                                multiper = 86400;
                             } else {
                                 secondsSwitch.setText("Sekunden");
                                 multiper = 1;
                             }
                         }
-                        editor.putString("timeMode", secondsSwitch.getText().toString());
-                        editor.apply();
+                        save(multiper, "timeMode");
                     }
                 });
             }
@@ -633,7 +652,7 @@ public class MainActivity extends AppCompatActivity {
             a = timestamp(first);
             b = timestamp(second);
         } catch(ParseException oi) {
-            System.out.println("Error: ParseExceptionin timestamp");
+            System.out.println("Debug: ParseException in timestamp");
         }
         if(a > b) {
             return a - b;
@@ -649,7 +668,10 @@ public class MainActivity extends AppCompatActivity {
         if(multiper == 60) {
             return "Minuten" + message;
         }
-        return "Stunden" + message;
+        if(multiper == 3600) {
+            return "Stunden" + message;
+        }
+        return "Tage" + message;
     }
 
     public void setXYZ() {
@@ -687,17 +709,31 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft.setText("Sekunden, bist du mich wiedersiehst: 0");
             percent.setText("100 Prozent schon geschafft!");
         }
-        updateUI();
-        PROGRESS_CURRENT = (int) (x*multiper);
+        if(darkmodeSettings.getText().equals("Einstellen"))
+            updateUI2(0);
+        if(darkmodeSettings.getText().equals("Fertig"))
+            updateUI2(1);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(darkmodeSwitch.getText().toString().equals("Darkmode: Auto"))
+                    darkmodeSettings.setVisibility(View.VISIBLE);
+            }
+        });
+        PROGRESS_CURRENT = (int) x;
+        PROGRESS_MAX = (int) (completeTime / 1000);
         sendNotification(1, y + " " +secondsSwitch.getText().toString(), "noch in Ghana! " + z + " Prozent schon geschafft!");
     }
+
     /*
      * onCreate is the Method called on the start of the App. Here is most of the Code found located.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
+        System.out.println("Hallo");
         setContentView(R.layout.activity_main);
         ConstraintLayout homeScreenLayout = findViewById(R.id.Layout1);
 
@@ -721,8 +757,10 @@ public class MainActivity extends AppCompatActivity {
         homeScreenLayout.addView(secondsDone);
         homeScreenLayout.addView(secondsLeft);
         homeScreenLayout.addView(percent);
-        homeScreenLayout.addView(darkmodeBeginText);
-        homeScreenLayout.addView(darkmodeEndText);
+        homeScreenLayout.addView(darkmodeBeginText1);
+        homeScreenLayout.addView(darkmodeBeginText2);
+        homeScreenLayout.addView(darkmodeEndText1);
+        homeScreenLayout.addView(darkmodeEndText2);
         homeScreenLayout.addView(darkmodeBegin);
         homeScreenLayout.addView(darkmodeEnd);
         homeScreenLayout.addView(secondsSwitch);
