@@ -16,9 +16,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -33,7 +31,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -115,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
     public int width;
     public int end = 0;
     public int multiper;
-    public int u = 0;
     public int darkMode;
     private int PROGRESS_CURRENT = 0;
     private int PROGRESS_MAX;
@@ -151,13 +147,6 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public void setDates(String startDate, String endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        save(startDate, "Start");
-        save(endDate, "Ende");
-    }
-
     /*
      * initialise initialises the UI and loads the saved Values in the Variables
      * uses initialiseNotifications and initialiseUI.
@@ -177,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         darkmodeBegin = new EditText(this);
         darkmodeEnd = new EditText(this);
         ran = false;
-        PROGRESS_MAX = 28814999;                                // This has to be updated for changeable Dates
+        PROGRESS_MAX = 28814999;                                // Failsafe for Notification
         darkmodeBegin.setVisibility(View.INVISIBLE);
         darkmodeEnd.setVisibility(View.INVISIBLE);
         darkmodeBeginText1.setVisibility(View.INVISIBLE);
@@ -484,11 +473,31 @@ public class MainActivity extends AppCompatActivity {
                 darkmodeSettings.setTypeface(Typeface.MONOSPACE);
                 darkmodeBegin.setTypeface(Typeface.MONOSPACE);
                 darkmodeEnd.setTypeface(Typeface.MONOSPACE);
+                secondsDone.setText("");
+                secondsLeft.setText("");
+                percent.setText("");
+                darkmodeBeginText1.setText("");
+                darkmodeBeginText2.setText("");
+                darkmodeEndText1.setText("");
+                darkmodeEndText2.setText("");
+                secondsSwitch.setText("");
+                changeDates.setText(getString(R.string.change_data_button));
+                darkmodeSwitch.setText("");
+                darkmodeSettings.setText("");
+                darkmodeBegin.setText("");
+                darkmodeEnd.setText("");
                 measure();
                 darkmodeBegin.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 darkmodeEnd.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
                 darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
+                measure();
+                textSize = (int)(width / 90);
+                setTextSizes(textSize);
+                setText();
+                setPaddingSizes(height, width, textSize);
+                setPositions(height, width, 0);
+                setColors();
             }
         });
     }
@@ -1065,12 +1074,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ConstraintLayout homeScreenLayout = findViewById(R.id.Layout1);
+        layout = findViewById(R.id.Layout1);
 
         initialise();
 
         loadVariables();
 
-        layout = findViewById(R.id.Layout1);
         tmTk1 = new TimerTask() {
             @SuppressLint("SetTextI18n")
             @Override
