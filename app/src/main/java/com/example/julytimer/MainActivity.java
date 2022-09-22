@@ -240,8 +240,6 @@ public class MainActivity extends AppCompatActivity {
 
         startDate = sharedPref.getString("Start", "2022-08-24 09:30:00.000");
         endDate = sharedPref.getString("Ende", "2023-07-23 21:40:00.000");
-        startDate = "2022-08-24 09:30:00.000";
-        endDate = "2023-07-23 21:40:00.000";
     }
 
     /*
@@ -521,12 +519,6 @@ public class MainActivity extends AppCompatActivity {
                 setPaddingSizes(height, width, textSize);
                 setPositions(height, width, 0);
                 setColors();
-                System.out.println(dateParseString(parseDate("2022-08-24 09:30:00.000")));
-                System.out.println(dateParseString(parseDate("0000-01-01 01:00:00.000")));
-                System.out.println(dateParseString(parseDate("2022-00-00 00:00:00.000")));
-                System.out.println(dateParseString(parseDate("2022-12-24 19:30:00.000")));
-                System.out.println(dateParseString(parseDate("2002-09-23 09:50:00.000")));
-                System.out.println(dateParseString(parseDate("2020-05-10 23:30:00.000")));
             }
         });
     }
@@ -983,7 +975,8 @@ public class MainActivity extends AppCompatActivity {
                     sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_almost_done_notification));
                 }
 
-                if((now.format(DateTimeFormatter.ofPattern("dd")) == "24")&&((now.format(DateTimeFormatter.ofPattern("HH:mm:ss")) == "07:30:00"))) {
+                if((now.format(DateTimeFormatter.ofPattern("dd")).equals(startDate.substring(8, 10)))
+                        &&((now.format(DateTimeFormatter.ofPattern("HH:mm:ss")).equals(startDate.substring(11, 19))))) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_month_toast), Toast.LENGTH_LONG);
                     toast.show();
                     sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_month_notification));
@@ -1060,9 +1053,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void update() {
         setXYZ();
-
-        System.out.println(startDate);
-        System.out.println(endDate);
 
         sendMileStoneNotifications();
 
