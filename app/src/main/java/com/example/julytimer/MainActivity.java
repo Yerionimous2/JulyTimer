@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
     public int textSize;
     private boolean ran;
     private boolean timerBool = true;
+    public boolean changedStart, changedEnd;
     private String backgroundcolor = "#000000";
     private String textcolor = "#000000";
     private String buttoncolor = "#000000";
@@ -145,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
     public void save(String a, String name) {
         editor.putString(name, a);
         editor.apply();
+    }
+
+    public String intArrayToString(int[] a) {
+        String result = "";
+        for(int i=0; i<a.length; i++) {
+            result += a[i];
+            result += ", ";
+        }
+        return result;
     }
 
     /*
@@ -509,6 +519,12 @@ public class MainActivity extends AppCompatActivity {
                 setPaddingSizes(height, width, textSize);
                 setPositions(height, width, 0);
                 setColors();
+                System.out.println(dateParseString(parseDate("2022-08-24 09:30:00.000")));
+                System.out.println(dateParseString(parseDate("0000-01-01 01:00:00.000")));
+                System.out.println(dateParseString(parseDate("2022-00-00 00:00:00.000")));
+                System.out.println(dateParseString(parseDate("2022-12-24 19:30:00.000")));
+                System.out.println(dateParseString(parseDate("2002-09-23 09:50:00.000")));
+                System.out.println(dateParseString(parseDate("2020-05-10 23:30:00.000")));
             }
         });
     }
@@ -679,17 +695,14 @@ public class MainActivity extends AppCompatActivity {
         if(date[0] < 1000) result += "0";
         if(date[0] < 100) result += "0";
         if(date[0] < 10) result += "0";
-        if(date[0] == 0) result += "0";
         result += Integer.toString(date[0]) + "-";
         if(date[1] < 10) result += "0";
         result += Integer.toString(date[1]) + "-";
         if(date[2] < 10) result += "0";
         result += Integer.toString(date[2]) + " ";
         if(date[3] < 10) result += "0";
-        if(date[3] == 0) result += "0";
         result += Integer.toString(date[3]) + ":";
         if(date[4] < 10) result += "0";
-        if(date[4] == 0) result += "0";
         result += Integer.toString(date[4]) + ":00.000";
         return result;
     }
@@ -828,6 +841,8 @@ public class MainActivity extends AppCompatActivity {
         int[] c = parseDate(endDate);
         int[] b = new int[5];
         int[] d = new int[5];
+        changedStart = false;
+        changedEnd = false;
         DatePickerDialog datePickerDialog1 = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
@@ -838,7 +853,7 @@ public class MainActivity extends AppCompatActivity {
                         b[1] = monthOfYear + 1;
                         b[2] = dayOfMonth;
                     }
-                }, a[0], a[1], a[2]);
+                }, a[0], a[1] - 1, a[2]);
         TimePickerDialog timePickerDialog1 = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
 
@@ -861,7 +876,7 @@ public class MainActivity extends AppCompatActivity {
                         d[1] = monthOfYear + 1;
                         d[2] = dayOfMonth;
                     }
-                },c[0], c[1], c[2]);
+                },c[0], c[1] - 1, c[2]);
         TimePickerDialog timePickerDialog2 = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
 
@@ -879,6 +894,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 timePickerDialog1.show();
                 datePickerDialog1.show();
+                changedStart = true;
             }
         });
         done.setOnClickListener(new View.OnClickListener() {
@@ -891,12 +907,23 @@ public class MainActivity extends AppCompatActivity {
                 showEndDatePicker.setVisibility(View.INVISIBLE);
                 done.setVisibility(View.INVISIBLE);
 
-                if(checkDates(dateParseString(b), dateParseString(d))) {
-                    startDate = dateParseString(b);
-                    save(startDate, "Start");
-                    endDate = dateParseString(d);
-                    save(endDate, "Ende");
-                }
+                if(changedStart && changedEnd)
+                    if(checkDates(dateParseString(b), dateParseString(d))) {
+                        startDate = dateParseString(b);
+                        save(startDate, "Start");
+                        endDate = dateParseString(d);
+                        save(endDate, "Ende");
+                    }
+                if(changedStart && !changedEnd)
+                    if(checkDates(dateParseString(b), endDate)) {
+                        startDate = dateParseString(b);
+                        save(startDate, "Start");
+                    }
+                if(!changedStart && changedEnd)
+                    if(checkDates(startDate, dateParseString(d))) {
+                        endDate = dateParseString(d);
+                        save(endDate, "Ende");
+                    }
 
                 secondsSwitch.setVisibility(View.VISIBLE);
                 secondsDone.setVisibility(View.VISIBLE);
@@ -916,6 +943,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 timePickerDialog2.show();
                 datePickerDialog2.show();
+                changedEnd = true;
             }
         });
     }
@@ -1030,6 +1058,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void update() {
         setXYZ();
+
+        System.out.println(startDate);
+        System.out.println(endDate);
 
         sendMileStoneNotifications();
 
