@@ -1,10 +1,12 @@
 package com.example.julytimer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,11 +14,15 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
     private DecimalFormat dform;
-    private final DisplayMetrics displayMetrics = new DisplayMetrics();
+    //private final DisplayMetrics displayMetrics = new DisplayMetrics();
     TimerTask tmTk1;
     private TextView secondsLeft;
     public TextView secondsDone;
@@ -141,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         initialiseNotifications();
 
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        //getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         initialiseUI();
         measure();
@@ -281,12 +287,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public static int getScreenWidth(@NonNull Activity activity) {
+            WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            return windowMetrics.getBounds().width() - insets.left - insets.right;
+    }
+
+    public static int getScreenHeight(@NonNull Activity activity) {
+            WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            return windowMetrics.getBounds().height() - insets.top - insets.bottom;
+    }
+
     /*
      * Measures everything on Screen.
      */
     public void measure() {
-        height = displayMetrics.heightPixels;
-        width = displayMetrics.widthPixels;
+        height = getScreenHeight(this);
+        width = getScreenWidth(this);
+
         secondsSwitch.measure(0, 0);
         changeDates.measure(0, 0);
         darkmodeSwitch.measure(0, 0);

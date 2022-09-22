@@ -1,5 +1,21 @@
 <resources>
 
+    <!--[ universal Strings ]-->
+    <string name="seconds">Sekunden</string>
+    <string name="minutes">Minuten</string>
+    <string name="hours">Stunden</string>
+    <string name="days">Tage</string>
+    <string name="begin_dark_mode">Beginn des dunklen Modus:</string>
+    <string name="begin_bright_mode">Beginn des hellen Modus:</string>
+    <string name="o_clock">Uhr</string>
+    <string name="darkmode_off">Darkmode: Aus</string>
+    <string name="darkmode_on">Darkmode: An</string>
+    <string name="darkmode_auto">Darkmode: Auto</string>
+    <string name="done">Fertig</string>
+    <string name="setup">Einstellen</string>
+    <string name="startdate">Startdatum:</string>
+    <string name="enddate">Enddatum:</string>
+
     <!--[ Notification Strings ]-->
     <string name="setup_darkmode_times">Einstellen</string>
     <string name="notification_name_1">Die coole progress-Bar</string>
@@ -17,7 +33,7 @@
     <string name="since_seen">, seit du mich gesehen hast: </string>
     <string name="until_seeing">, bis du mich wiedersiehst: </string>
     <string name="percent_done"> Prozent schon geschafft!</string>
-    <string name="app_name">JulyTimer</string>
+    <string name="app_name" translatable="false">JulyTimer</string>
 
     <!--[ Toast Strings ]-->
     <string name="milestone_third_toast">Ein Drittel ist schon geschafft! Wie cool!</string>
@@ -28,19 +44,4 @@
     <string name="milestone_month_toast">Noch einen Monat geschafft! Ich bin stolz auf dich!</string>
     <string name="milestone_done_toast">Jaaaaaaa!</string>
 
-    <!--[ Translation Strings ]-->
-    <string name="seconds">Sekunden</string>
-    <string name="minutes">Minuten</string>
-    <string name="hours">Stunden</string>
-    <string name="days">Tage</string>
-    <string name="begin_dark_mode">Beginn des dunklen Modus:</string>
-    <string name="begin_bright_mode">Beginn des hellen Modus:</string>
-    <string name="o_clock">Uhr</string>
-    <string name="darkmode_off">Darkmode: Aus</string>
-    <string name="darkmode_on">Darkmode: An</string>
-    <string name="darkmode_auto">Darkmode: Auto</string>
-    <string name="done">Fertig</string>
-    <string name="setup">Einstellen</string>
-    <string name="startdate">Startdatum:</string>
-    <string name="enddate">Enddatum:</string>
 </resources>
