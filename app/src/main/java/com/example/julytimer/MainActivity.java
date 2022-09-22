@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     private double percentage;
 
     /*
-     * save(int) saves the given int for later use under the given name
+     * save(int) saves the given int for later use under the given name.
      */
     public void save(int a, String name) {
         editor.putInt(name, a);
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * save(String) saves the given String for later use under the given name
+     * save(String) saves the given String for later use under the given name.
      */
     public void save(String a, String name) {
         editor.putString(name, a);
@@ -199,11 +199,18 @@ public class MainActivity extends AppCompatActivity {
         initialiseListeners();
     }
 
+    /*
+     * initialiseNotifications initalises the Notificationchannels and their builders needed to send
+     *  Notifications to the User.
+     */
     public void initialiseNotifications() {
         Context context = this;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                /*
+                 * Stuff needed for the Progressbar Notification
+                 */
                 channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
                 channel.setDescription(getString(R.string.notification_name_1));
                 notificationManager = getSystemService(NotificationManager.class);
@@ -214,6 +221,9 @@ public class MainActivity extends AppCompatActivity {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setStyle(new NotificationCompat.BigTextStyle());
 
+                /*
+                 * Stuff needed for the Milestone Notifications
+                 */
                 channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
                 channel2.setDescription(getString(R.string.notification_name_2));
                 notificationManager2 = getSystemService(NotificationManager.class);
@@ -224,12 +234,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * All the stored Data is being Initialized.
+     * All the stored Data is being loaded from the Disk.
      * The default Values are:
-     *   multiper: 1
-     *   darkmode: 0
-     *   begin: 19
-     *   end: 7
+     *  multiper:  1
+     *  darkmode:  0
+     *  begin:     19
+     *  end:       7
+     *  startDate: "2022-08-24 09:30:00.000"
+     *  endDate:   "2023-07-23 21:40:00.000"
      */
     public void loadVariables() {
         sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -246,8 +258,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Sends a Notification to the User, either in the "normal" Channel(1) used for the Time showing or
-     * the "meilenstein" Channel(2) used for the milestone achievements
+     * Sends a Notification to the User, either in the "normal" Channel(1) used for the Progressbar or
+     *  the "milestone" Channel(2) used for the milestone achievements.
+     * channel: the Channel used.
+     *  1 = progress-bar
+     *  2 = milestones
+     * title:   the title of the Notification
+     * message: the content of the Notification
      */
     public void sendNotification(int channel, String title, String message) {
         runOnUiThread(new Runnable() {
@@ -293,6 +310,9 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEnd.measure(0, 0);
     }
 
+    /*
+     * Sets the Textsizes of anything containing Text to the given textSize.
+     */
     public void setTextSizes(int textSize) {
         secondsSwitch.setTextSize(textSize);
         changeDates.setTextSize(textSize);
@@ -309,6 +329,9 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEnd.setTextSize(textSize);
     }
 
+    /*
+     * Sets the Texts of anything onScreen to their Values.
+     */
     public void setText() {
         secondsDone.setText(xString);
         secondsLeft.setText(yString);
@@ -341,6 +364,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Sets the Boundaries of the things on screen.
+     * Depends from the width of the screen and the textSize.
+     */
     public void setPaddingSizes(int height, int width, int textSize) {
         measure();
         int horizontal = width / 27;
@@ -366,6 +393,12 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEnd.setPaddingRelative(horizontal, vertical, horizontal, vertical);
     }
 
+    /*
+     * Sets everything to where it should be on screen.
+     * mode: weather the Elements should be in the normal place or lower.
+     *  0 = normal
+     *  1 = low
+     */
     public void setPositions(int height, int width, int mode) {
         measure();
         secondsSwitch.setX(width / 2 - secondsSwitch.getMeasuredWidth() / 2 - width / 4);
@@ -411,6 +444,9 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEndText2.setY(darkmodeEndText1.getY());
     }
 
+    /*
+     * Updates the colorscheme and makes everything look good.
+     */
     public void setColors() {
         if(darkMode == 0) {
             backgroundcolor = "#99B9F9"; //#B7C8EA
@@ -461,6 +497,9 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEnd.setBackgroundColor(Color.parseColor(buttoncolor));
     }
 
+    /*
+     * Updates the UI with new Texts, new Textsizes, new Positions and new Colorscheme.
+     */
     public void updateUI2(int mode) {
         runOnUiThread(new Runnable() {
             @Override
@@ -478,7 +517,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Initialises the UI
+     * Initialises the UI by
+     *  setting the Typeface to Monospace
+     *  clearing the Texts
+     *  setting the Textalignments
+     *  setting the Textsizes
+     *  setting the Positions
+     *  setting the Colors
      */
     public void initialiseUI() {
         runOnUiThread(new Runnable() {
@@ -526,6 +571,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * Defines the Listeners for all Buttons and EditTexts.
+     */
     public void initialiseListeners() {
         runOnUiThread(new Runnable() {
             @Override
@@ -692,6 +740,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * Converts a given Date in  the Format "yyyy-MM-dd HH:mm" in an Array, where the Element
+     *  0 = Jahr
+     *  1 = Monat
+     *  2 = Tag
+     *  3 = Stunde
+     *  4 = Minute
+     */
     private int[] parseDate(String date) {
         int[] result = new int[5];
         result[0] = Integer.parseInt(date.substring(0, 4));  // Jahr auslesen
@@ -702,6 +758,15 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    /*
+     * converts an array of int where
+     *  0 = Jahr
+     *  1 = Monat
+     *  2 = Tag
+     *  3 = Stunde
+     *  4 = Minute
+     * into a String of the Form "yyyy-MM-dd HH:mm:00.000"
+     */
     private String dateParseString(int[] date) {
         String result = "";
         if(date[0] < 1000) result += "0";
@@ -719,10 +784,23 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    /*
+     * Converts a String of the Form "yyyy-MM-dd HH:mm:ss.mmm" into a easily readable Date like:
+     *  "12 JAN 2022 12:30" for input "2022-01-12 12:30:00.000"
+     */
     private String createReadableDate(String date) {
         return createReadableDate(parseDate(date));
     }
 
+    /*
+     * Converts a int Array of the Form of the Output of ParseDate into a easily readable Date like:
+     *  "12 JAN 2022 12:30" for input
+     *   0 = 2022
+     *   1 = 1
+     *   2 = 12
+     *   3 = 12
+     *   4 = 30
+     */
     private String createReadableDate(int[] date) {
         String result = Integer.toString(date[2]);
         switch (date[1]) {
@@ -757,6 +835,9 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    /*
+     * Checks, weather the changed Dates make sense for the Apps.
+     */
     private boolean checkDates(String beginDate, String endDate) {
         long a, b, c;
         a = 0;
@@ -775,7 +856,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
+     * Creates a new UI, where the User can change the Dates.
+     */
     private void pickDate() {
+        /*
+         * Make the other UI invisible and create the new Items.
+         */
         secondsSwitch.setVisibility(View.INVISIBLE);
         secondsDone.setVisibility(View.INVISIBLE);
         percent.setVisibility(View.INVISIBLE);
@@ -788,13 +875,16 @@ public class MainActivity extends AppCompatActivity {
         Button showStartDatePicker = new Button(this);
         Button showEndDatePicker = new Button(this);
         Button done = new Button(this);
+        /*
+         * Sets the Text for all of the Items on Display and makes them look good.
+         */
         lbstartDate.setText("Startdatum:");
         lbendDate.setText("Enddatum:");
         showStartDatePicker.setText(createReadableDate(startDate));
         done.setText("Fertig");
         showEndDatePicker.setText(createReadableDate(endDate));
-        measure();
 
+        measure();
         lbstartDate.setTextSize(textSize);
         lbendDate.setTextSize(textSize);
         showStartDatePicker.setTextSize(textSize);
@@ -815,6 +905,10 @@ public class MainActivity extends AppCompatActivity {
         showStartDatePicker.setTypeface(Typeface.MONOSPACE);
         done.setTypeface(Typeface.MONOSPACE);
         showEndDatePicker.setTypeface(Typeface.MONOSPACE);
+
+        /*
+         * Places the Items on the right spot on the Display
+         */
         int horizontal = width / 27;
         int vertical = horizontal / 2;
         int buttonWidth = textSize * 27 + horizontal * 2;
@@ -849,6 +943,9 @@ public class MainActivity extends AppCompatActivity {
         lyout.addView(done);
         lyout.addView(showEndDatePicker);
 
+        /*
+         * Initialises the Datapickers and defines the Button onClickListeners
+         */
         int[] a = parseDate(startDate);
         int[] c = parseDate(endDate);
         int[] b = new int[5];
@@ -901,6 +998,11 @@ public class MainActivity extends AppCompatActivity {
                         showEndDatePicker.setText(createReadableDate(d));;
                     }
                 }, c[3], c[4], true);
+
+        /*
+         * If the upper Date change Button is pressed, the Date and Time pickers are shown and
+         *  changedStart is set to true to indicate the first Date may have been changed.
+         */
         showStartDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -909,6 +1011,24 @@ public class MainActivity extends AppCompatActivity {
                 changedStart = true;
             }
         });
+
+        /*
+         * If the lower Date change Button is pressed, the Date and Time pickers are shown and
+         *  changedEnd is set to true to indicate the second Date may have been changed.
+         */
+        showEndDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timePickerDialog2.show();
+                datePickerDialog2.show();
+                changedEnd = true;
+            }
+        });
+
+        /*
+         * If the done Button is pressed, the changed Dates get Validated and saved.
+         * The Timer gets resumed and the normal UI gets Visible again.
+         */
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -947,15 +1067,6 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeSettings.setVisibility(View.VISIBLE);
 
                 timerBool = true;
-            }
-        });
-
-        showEndDatePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timePickerDialog2.show();
-                datePickerDialog2.show();
-                changedEnd = true;
             }
         });
     }
@@ -1076,6 +1187,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Puts a prefix to a String depending on what time showing mode the App is.
+     */
     public String setString(int multiper, String message) {
         if(multiper == 1) {
             return "Sekunden" + message;
@@ -1089,6 +1203,9 @@ public class MainActivity extends AppCompatActivity {
         return "Tage" + message;
     }
 
+    /*
+     * Does the Math to set x, y and z and their corresponding Strings.
+     */
     public void setXYZ() {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
@@ -1107,6 +1224,10 @@ public class MainActivity extends AppCompatActivity {
         zString = dform.format(z) + " " + getString(R.string.percent_done);
     }
 
+    /*
+     * Updates the App, this includes updating the UI, sending out the milestone notifications and
+     *  updates the Progressbar notification.
+     */
     public void update() {
         setXYZ();
 
@@ -1156,7 +1277,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * onCreate is the Method called on the start of the App. Here is most of the Code found located.
+     * onCreate is the Method called on the start of the App.
+     * It initialises the UI, loads in all the Variables and initialises the timerTask.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
