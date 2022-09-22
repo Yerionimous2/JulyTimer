@@ -37,42 +37,53 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     /*
-    * Usage of the Variables:
-    * sharedPref and editor are used to save the Variables:
-    *   begin
-    *   end
-    *   multiper
-    *   darkMode
-    * df is used to save the time Pattern, in which the Dates and the time right now are saved
-    * ar is used to save the time Pattern, in which the Dates and the time right now are saved
-    * dz is used to save the time Pattern, in which the hour right now is saved
-    * displayMetrics is used to Measure the Display
-    *
-    * secondsLeft is used to Display the "Sekunden, bis du mich wiedersiehst" text
-    * secondsDone is used to Display the "Sekunden, seit du mich gesehen hast" text
-    * percent is used to Display the "Prozent schon geschafft!" text
-    * darkmodeBeginText is used to Display the "Beginn des dunklen Modus" text
-    * darkmodeEndText is used to Display the "Beginn des hellen Modus" text
-    * secondsSwitch is used to change the time displayed from seconds to minutes or hours
-    * darkmodeSwitch is used to switch the mode the display is colored
-    * darkmodeSettings is used to activate the Settings of the Times the automatic dark mode starts end ends and to validate the changes made
-    * darkmodeBegin is used to let the user edit the time where the darkmode starts
-    * darkmodeEnd is used to let the user edit the time where the darkmode ends
-    *
-    * begin is used to store time where the darkmode starts
-    * end is used to store the time where the darkmode ends
-    * multiper is the multiplier used to change from seconds to minutes an hours. It is either 1 for Seconds, 60 for Minutes or 3600 for Hours
-    * u is used to push the buttons and texts down to make space for the darkmode settings. It is either 0 for normal use or 500 for pushing downwards
-    * darkMode is used to check which mode is used to change the colors of the Display elements. It is either 0 for off, 1 for on or 2 for automatic
-    * PROGRESS_CURRENT is used to make the Progress Bar in the Notification happen. It is a Value between 0 and completeTime, being the number of Seconds passed
-    * ran is used to check whether the App has updated at least once this session in the percent Progress message. It is either false for not run or true for run
-    * backgroundcolor, textcolor and buttoncolor are used for easier access to the specific Color Values. They are defined in colors.txt
-    * a is used to make the Conversion from String to int happen when the User types in a new time for the darkmode automatic
-    * percentage is used to check wheather an increase in percent has happened. It is a Value from 0 to 100, just being the floored percentage
-    * x is used to save the seconds already passed
-    * y is used to save the seconds needing to pass
-    * completeTime is used to save the seconds between the start and end dates
-    * z is used to save the percent of time already passed
+     * sharedPref and editor are used to save the Variables:
+     *  begin
+     *  end
+     *  multiper
+     *  darkMode
+     *  startDate
+     *  endDate
+     * df, dr, dz, dform are used for formatting purposes
+     * displayMetrics is used to measure the Display
+     * secondsLeft displays the seconds left to the endDate
+     * secondsDone displays the seconds elapsed since the startDate
+     * percent displays the percentage of seconds done
+     * darkmodeBeginText1, darkmodeBeginText2, darkmodeEndText1, darkmodeEndText2 display the labels used for editing the darkmode auto mode
+     * secondsSwitch switches the Displays between seconds, minutes, hours and days
+     * changeDates accesses the Options to change the times
+     * darkmodeSwitch switches the Colorscheme between darkmode, brightmode and the auto mode
+     * darkmodeSettings accesses the Options for editing the darkmode auto mode
+     * darkmodeBegin is used to let the user change the Time when the auto changes to dark mode
+     * darkmodeEnd is used to let the user change the Time when the auto changes to bright mode
+     * channel, channel2, notificationManager, notificationManager2, builder, builder2 are used to send the notifications
+     * begin, end set the times when the dark mode begins or ends
+     * height, width are used to save the height and width of the screen
+     * multiper is used to save the modes in which the time is displayed:
+     *  1     = seconds
+     *  60    = minutes
+     *  3600  = hours
+     *  86400 = days
+     * darkmode is used to save the mode in which the colorscheme changes:
+     *  0 = bright mode
+     *  1 = dark mode
+     *  2 = auto mode
+     * PROGRESS_CURRENT, PROGRESS_MAX are used to display the progressbar
+     * textsize is used to scale the text and all display elements
+     * ran is used to check weather the update() method has run already
+     * timerbool is used to pause the timer
+     *  0 = timer paused
+     *  1 = timer running
+     * changedStart, changedEnd are used to check weather the start or end date have been changed
+     *  0 = not been changed
+     *  1 = been changed
+     * backgroundcolor, textcolor, buttoncolor are used to store the current colorscheme
+     * xString, yString, zString are used to convert x, y, z to their String and surround them with Text
+     * startDate, endDate are used to Store the start and end date
+     * completeTime is used to save the amount of seconds between start and end date
+     * x is used to save the amount of seconds passed since the startDate
+     * y is used to save the amound of seconds between now and the endDate
+     * z is used to save the percentage of time passed
     */
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -83,17 +94,17 @@ public class MainActivity extends AppCompatActivity {
     public final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
+    private DecimalFormat dform;
     private final DisplayMetrics displayMetrics = new DisplayMetrics();
     TimerTask tmTk1;
-    private DecimalFormat dform;
     private TextView secondsLeft;
     public TextView secondsDone;
     private TextView percent;
     private TextView darkmodeBeginText1;
     private TextView darkmodeBeginText2;
     private TextView darkmodeEndText1;
-    private TextView lbstartDate;
     private TextView darkmodeEndText2;
+    private TextView lbstartDate;
     public Button secondsSwitch;
     public Button changeDates;
     public Button darkmodeSwitch;
@@ -108,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
     NotificationCompat.Builder builder2;
     public final Timer tm1 = new Timer();
     public int begin = 0;
+    public int end = 0;
     public int height;
     public int width;
-    public int end = 0;
     public int multiper;
     public int darkMode;
     private int PROGRESS_CURRENT = 0;
@@ -126,11 +137,11 @@ public class MainActivity extends AppCompatActivity {
     public String xString, yString, zString;
     public String startDate = "2022-08-24 09:30:00.000";
     public String endDate = "2023-07-23 21:40:00.000";
-    private double percentage;
+    private long completeTime;
     private long x;
     private long y;
-    private long completeTime;
     private double z;
+    private double percentage;
 
     /*
      * save(int) saves the given int for later use under the given name
@@ -148,14 +159,6 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public String intArrayToString(int[] a) {
-        String result = "";
-        for(int i=0; i<a.length; i++) {
-            result += a[i];
-            result += ", ";
-        }
-        return result;
-    }
 
     /*
      * initialise initialises the UI and loads the saved Values in the Variables
@@ -942,39 +945,77 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * Sends notifications and/or Toasts to the user if one of the Milestones are reached:
+     *  the percentage increased by 1: toast
+     *  one third is done:             toast and notification
+     *  the half is done:              toast and notification
+     *  two thirds are done:           toast and notification
+     *  the percentage is at 90:       toast and notification
+     *  a month has passed:            toast and notification
+     */
     public void sendMileStoneNotifications() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                /*
+                 * If the Percentage rises by one percent while the App is running, a Toast is shown to the user
+                 *  with the message set in milestone_percent(default: Noch ein Prozent geschafft! Ich liebe dich!)
+                 */
                 if ((percentage < Math.floor(z)) && (ran)) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_percent), Toast.LENGTH_LONG);
                     toast.show();
                 }
 
+                /*
+                 * If the Percentage is roughly one third while the App is running, a Toast is shown and a notification is send to the user
+                 *  with the messages set in milestone_third_toast(default: Ein Drittel ist schon geschafft! Wie cool!)
+                 *  and in milestone_third_notification(default: Ein Drittel ist schon geschafft!).
+                 */
                 if((z>33.334)&&(z<33.34)) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_third_toast), Toast.LENGTH_LONG);
                     toast.show();
                     sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_third_notification));
                 }
 
+                /*
+                 * If the Percentage is roughly a half while the App is running, a Toast is shown and a notification is send to the user
+                 *  with the messages set in milestone_half_toast(default: Die Hälfte ist schon geschafft! Wie cool!)
+                 *  and milestone_half_notification(default: Die Hälfte ist schon geschafft!).
+                 */
                 if((z>50)&&(z<50.01)) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_half_toast), Toast.LENGTH_LONG);
                     toast.show();
                     sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_half_notification));
                 }
 
+                /*
+                 * If the Percentage is roughly two thirds while the App is running, a Toast is shown and a notification is send to the user
+                 *  with the messages set in milestone_two_third_toast(default: Zwei Drittel sind schon geschafft! Wie cool!)
+                 *  and milestone_two_third_notification(default: Zwei Drittel sind schon geschafft!).
+                 */
                 if((z>66.667)&&(z<66.67)) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_two_third_toast), Toast.LENGTH_LONG);
                     toast.show();
                     sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_two_third_notification));
                 }
 
-                if((z>99.99)&&(z<100)) {
+                /*
+                 * If the Percentage is roughly at 90 while the App is running, a Toast is shown and a notification is send to the user
+                 *  with the messages set in milestone_almost_done_toast(default: Fast alles geschafft! Bis bald :))
+                 *  and milestone_almost_done_notification(default: Fast alles geschafft! Bis bald :)).
+                 */
+                if((z>89.99)&&(z<90.01)) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_almost_done_toast), Toast.LENGTH_LONG);
                     toast.show();
                     sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_almost_done_notification));
                 }
 
+                /*
+                 * If the Day and Time are the same as in the start date while the App is running, a Toast is shown and a notification is send to the user
+                 *  with the messages set in milestone_month_toast(default: Noch einen Monat geschafft! Ich bin stolz auf dich!)
+                 *  and milestone_month_notification(default: Noch einen Monat geschafft! Ich bin stolz auf dich!).
+                 */
                 if((now.format(DateTimeFormatter.ofPattern("dd")).equals(startDate.substring(8, 10)))
                         &&((now.format(DateTimeFormatter.ofPattern("HH:mm:ss")).equals(startDate.substring(11, 19))))) {
                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_month_toast), Toast.LENGTH_LONG);
@@ -1135,6 +1176,7 @@ public class MainActivity extends AppCompatActivity {
         /*
          * The display modules are put on the Screen, even though some of them are invisible.
          * The Timer gets started and the Timertask gets executed roughly every 100 Milliseconds.
+         * Only here the TimerTask tm1 gets executed the first time.
          */
         homeScreenLayout.addView(secondsDone);
         homeScreenLayout.addView(secondsLeft);
