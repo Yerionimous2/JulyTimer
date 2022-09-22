@@ -530,6 +530,11 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                /*
+                 * When the Focus on the EditText is lost, the Number gets Validated and moved to the
+                 *  start variable. The Focus is lost when a Button is pushed or the other EditText gets
+                 *  focussed.
+                 */
                 darkmodeBegin.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
@@ -551,8 +556,8 @@ public class MainActivity extends AppCompatActivity {
 
                 /*
                  * When the Focus on the EditText is lost, the Number gets Validated and moved to the
-                 * end variable. The Focus is lost when a Button is pushed or the other EditText gets
-                 * focussed.
+                 *  end variable. The Focus is lost when a Button is pushed or the other EditText gets
+                 *  focussed.
                  */
                 darkmodeEnd.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
                     @Override
@@ -571,6 +576,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                /*
+                 * When the Button gets pressed the timer gets paused and the UI changes to the PickDate UI.
+                 */
                 changeDates.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -580,8 +588,9 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 /*
-                 * Changes the Dark mode by adding 1 to the counter until 2, otherwise set it to 0.
-                 * the 2 activates the automatic. Afterwards the darkmode is saved.
+                 * Changes the Dark mode by adding 1 to the counter up to 2, otherwise set it to 0.
+                 *  the 2 activates the automatic. Afterwards the Buttontext and the colors are
+                 *  updated and the darkmode is saved.
                  */
                 darkmodeSwitch.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -621,8 +630,9 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 /*
-                 * Activates the Settings if the Settings are off and the other way around.
-                 * Validates the Settings changed and saves them. Also closes the Keyboard.
+                 * If the Button is clicked the Settings are activated if they are off and
+                 *  deacitvated if they are on.
+                 * The Settings are validated and saved. The Keyboard gets closed.
                  */
                 darkmodeSettings.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -650,6 +660,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                /*
+                 * If the Button gets clicked, the mode of displaying the time is changed
+                 *  in this order: seconds, minutes, hours, days.
+                 * The Mode is saved.
+                 */
                 secondsSwitch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
