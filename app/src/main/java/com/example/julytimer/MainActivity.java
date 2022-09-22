@@ -187,21 +187,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initialiseNotifications() {
-        channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription(getString(R.string.notification_name_1));
-        notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
-        builder = new NotificationCompat.Builder(this, "35");
-        builder.setContentText("")
-                .setContentTitle("")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setStyle(new NotificationCompat.BigTextStyle());
+        Context context = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
+                channel.setDescription(getString(R.string.notification_name_1));
+                notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+                builder = new NotificationCompat.Builder(context, "35");
+                builder.setContentText("")
+                        .setContentTitle("")
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setStyle(new NotificationCompat.BigTextStyle());
 
-        channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
-        channel2.setDescription(getString(R.string.notification_name_2));
-        notificationManager2 = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel2);
-        builder2 = new NotificationCompat.Builder(this, "36");
+                channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
+                channel2.setDescription(getString(R.string.notification_name_2));
+                notificationManager2 = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel2);
+                builder2 = new NotificationCompat.Builder(context, "36");
+            }
+        });
     }
 
     /*
@@ -231,21 +237,26 @@ public class MainActivity extends AppCompatActivity {
      * the "meilenstein" Channel(2) used for the milestone achievements
      */
     public void sendNotification(int channel, String title, String message) {
-        if(channel == 1) {
-            builder.setContentText(message)
-                    .setContentTitle(title)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setStyle(new NotificationCompat.BigTextStyle())
-                    .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-            notificationManager.notify(1, builder.build());
-        }
-        if(channel == 2) {
-            builder2.setContentText(message)
-                    .setContentTitle(title)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setStyle(new NotificationCompat.BigTextStyle());
-            notificationManager2.notify(2, builder2.build());
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(channel == 1) {
+                    builder.setContentText(message)
+                            .setContentTitle(title)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setStyle(new NotificationCompat.BigTextStyle())
+                            .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+                    notificationManager.notify(1, builder.build());
+                }
+                if(channel == 2) {
+                    builder2.setContentText(message)
+                            .setContentTitle(title)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setStyle(new NotificationCompat.BigTextStyle());
+                    notificationManager2.notify(2, builder2.build());
+                }
+            }
+        });
     }
 
     /*
