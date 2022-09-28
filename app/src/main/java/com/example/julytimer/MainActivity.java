@@ -793,14 +793,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Converts a String of the Form "yyyy-MM-dd HH:mm:ss.mmm" into a easily readable Date like:
-     *  "12 JAN 2022 12:30" for input "2022-01-12 12:30:00.000"
-     */
-    private String createReadableDate(String date) {
-        return createReadableDate(parseDate(date));
-    }
-
-    /*
      * Converts a int Array of the Form of the Output of ParseDate into a easily readable Date like:
      *  "12 JAN 2022 12:30" for input
      *   0 = 2022
@@ -883,6 +875,10 @@ public class MainActivity extends AppCompatActivity {
             Button showStartDatePicker = new Button(context);
             Button showEndDatePicker = new Button(context);
             Button done = new Button(context);
+            PROGRESS_CURRENT = PROGRESS_MAX;
+            String srigjhs4r = "x " + getString(R.string.seconds);
+            String siegjose4 = getString(R.string.still_there) + " y " + getString(R.string.percent_done);
+            sendNotification(1, srigjhs4r, siegjose4);
             /*
              * Sets the Text for all of the Items on Display and makes them look good.
              */
@@ -959,7 +955,7 @@ public class MainActivity extends AppCompatActivity {
             int[] c = parseDate(endDate);
             c[3] += calcOffHours();
             showEndDatePicker.setText(createReadableDate(c));
-            //TODO: Check, weather the Date is weird.
+            //TODO: Check, weather the Dates are weird.
             int[] b = new int[5];
             int[] d = new int[5];
             changedStart = false;
@@ -1023,8 +1019,9 @@ public class MainActivity extends AppCompatActivity {
                 showEndDatePicker.setVisibility(View.INVISIBLE);
                 done.setVisibility(View.INVISIBLE);
 
-                b[3] -= calcOffHours();
-                d[3] -= calcOffHours();
+                if(changedStart) b[3] -= calcOffHours();
+                if(changedEnd)   d[3] -= calcOffHours();
+                //TODO: Check, weather the Dates are weird.
 
                 if(changedStart && changedEnd)
                     if(checkDates(dateParseString(b), dateParseString(d))) {
