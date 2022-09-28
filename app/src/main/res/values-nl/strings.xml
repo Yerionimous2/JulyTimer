@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="seconds">Seconden</string>
+    <string name="minutes">Minuten</string>
+    <string name="hours">Uur</string>
+    <string name="days">Dagen</string>
+    <string name="begin_dark_mode">Begin van de donkere modus:</string>
+    <string name="begin_bright_mode">Start van de lichtmodus:</string>
+    <string name="o_clock">Horloge</string>
+    <string name="darkmode_off">Darkmode: Aus</string>
+    <string name="darkmode_on">Darkmode: An</string>
+    <string name="darkmode_auto">Darkmode: Auto</string>
+    <string name="done">Afgerond</string>
+    <string name="setup">Ingesteld op</string>
+    <string name="startdate">Startdatum:</string>
+    <string name="enddate">Einddatum:</string>
+    <string name="setup_darkmode_times">Ingesteld op</string>
+    <string name="notification_name_1">voortgangsbalk</string>
+    <string name="notification_name_2">Mijlpaalmelding</string>
+    <string name="still_there">nog altijd daar!</string>
+    <string name="milestone_notification_title">JulyTimer-Mijlpaal</string>
+    <string name="milestone_third_notification">Een derde is al klaar!</string>
+    <string name="milestone_half_notification">De helft is al klaar!</string>
+    <string name="milestone_two_third_notification">Twee derde is al klaar!</string>
+    <string name="milestone_almost_done_notification">Bijna daar! Tot ziens :)</string>
+    <string name="milestone_month_notification">Weer een maand voorbij! Ik ben trots op je!</string>
+    <string name="change_data_button">gegevens wijzigen</string>
+    <string name="since_seen">, sinds je me zag:</string>
+    <string name="until_seeing">, totdat je me weer ziet:</string>
+    <string name="percent_done">" procent al gedaan!"</string>
+    <string name="milestone_third_toast">Een derde is al klaar! Hoe cool!</string>
+    <string name="milestone_half_toast">De helft is al klaar! Hoe cool!</string>
+    <string name="milestone_two_third_toast">Twee derde is al klaar! Hoe cool!</string>
+    <string name="milestone_percent">Weer een procent klaar! Ik houd van je!</string>
+    <string name="milestone_almost_done_toast">Bijna alles gedaan! Tot ziens :)</string>
+    <string name="milestone_month_toast">Weer een maand voorbij! Ik ben trots op je!</string>
+    <string name="milestone_done_toast">Jaaaaaaa!</string>
+</resources>
