@@ -861,7 +861,8 @@ public class MainActivity extends AppCompatActivity {
         Context context = this;
         runOnUiThread(() -> {
             /*
-             * Make the other UI invisible and create the new Items.
+             * Make the other UI invisible and create the new Items. Update the Progressbar
+             *  Notification to a Placeholder
              */
             secondsSwitch.setVisibility(View.INVISIBLE);
             secondsDone.setVisibility(View.INVISIBLE);
@@ -949,13 +950,17 @@ public class MainActivity extends AppCompatActivity {
              * Initialises the Datapickers and defines the Button onClickListeners
              */
             int[] a = parseDate(startDate);
-            a[3] += calcOffHours();
+            System.out.println(a[3] + ":" + a[4]);
+            a = correctDate(a, 1);
+            System.out.println(a[3] + ":" + a[4]);
             showStartDatePicker.setText(createReadableDate(a));
 
             int[] c = parseDate(endDate);
-            c[3] += calcOffHours();
+            System.out.println(c[4]);
+            c = correctDate(c, 1);
+            System.out.println(c[4]);
             showEndDatePicker.setText(createReadableDate(c));
-            //TODO: Check, weather the Dates are weird.
+
             int[] b = new int[5];
             int[] d = new int[5];
             changedStart = false;
@@ -1019,9 +1024,12 @@ public class MainActivity extends AppCompatActivity {
                 showEndDatePicker.setVisibility(View.INVISIBLE);
                 done.setVisibility(View.INVISIBLE);
 
-                if(changedStart) b[3] -= calcOffHours();
-                if(changedEnd)   d[3] -= calcOffHours();
-                //TODO: Check, weather the Dates are weird.
+                if(changedStart) {
+                    correctDate(b, 2);
+                }
+                if(changedEnd) {
+                    correctDate(d, 2);
+                }
 
                 if(changedStart && changedEnd)
                     if(checkDates(dateParseString(b), dateParseString(d))) {
@@ -1053,6 +1061,30 @@ public class MainActivity extends AppCompatActivity {
                 timerBool = true;
             });
         });
+    }
+
+    /*
+     * corrects for Errors happening because of correcting for Timezones.
+     *  (i.e. the Hour may be < 0 or > 24.)
+     */
+    private int[] correctDate(int[] b, int mode) {
+        float a = 0;
+        try {
+            a = timestamp(dateParseString(b));
+        } catch(ParseException oi) {
+            System.out.println("Debug: ParseException in timestamp");
+        }
+        if(mode == 1) {
+            a += calcOffHours();
+        }
+        if(mode == 2) {
+            a -= calcOffHours();
+        }
+        b = parseDate(df.format(a));
+        if(mode == 1) {
+            b[4] += 1;
+        }
+        return b;
     }
 
     /*
@@ -1260,14 +1292,14 @@ public class MainActivity extends AppCompatActivity {
     public int calcOffHours() {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
-        int a = 0,b = 0;
+        float a = 0,b = 0;
         try {
-            a = (int) timestamp(now.format(dr));
-            b = (int) timestamp(nowWithoutZone.format(dr));
+            a = timestamp(now.format(dr));
+            b = timestamp(nowWithoutZone.format(dr));
         } catch(ParseException oi) {
             System.out.println("Debug: ParseException in timestamp");
         }
-        return (b-a)/(1000 * 60 * 60);
+        return (int)(b-a)/(1000 * 60 * 60);
     }
 
     /*
