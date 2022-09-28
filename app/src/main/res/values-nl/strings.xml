@@ -35,4 +35,5 @@
     <string name="milestone_almost_done_toast">Bijna alles gedaan! Tot ziens :)</string>
     <string name="milestone_month_toast">Weer een maand voorbij! Ik ben trots op je!</string>
     <string name="milestone_done_toast">Jaaaaaaa!</string>
+    <string name="app_name" translatable="false">JulyTimer</string>
 </resources>
