@@ -33,7 +33,7 @@
     <string name="since_seen">, seit du mich gesehen hast: </string>
     <string name="until_seeing">, bis du mich wiedersiehst: </string>
     <string name="percent_done"> Prozent schon geschafft!</string>
-    <string name="app_name" translatable="false">JulyTimer</string>
+    <string name="app_name">JulyTimer</string>
 
     <!--[ Toast Strings ]-->
     <string name="milestone_third_toast">Ein Drittel ist schon geschafft! Wie cool!</string>

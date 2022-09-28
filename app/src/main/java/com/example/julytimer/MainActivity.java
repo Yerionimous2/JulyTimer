@@ -435,10 +435,12 @@ public class MainActivity extends AppCompatActivity {
             secondsDone.setX((float) ((float) (width / 2.0) - secondsDone.getMeasuredWidth() / 2.0));
             secondsLeft.setX((float) (width / 2.0 - secondsLeft.getMeasuredWidth() / 2.0));
             percent.setX((float) (width / 2.0 - percent.getMeasuredWidth() / 2.0));
-            darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth() + darkmodeBeginText2.getMeasuredWidth()) / 2.0));
+            darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth()
+                    + darkmodeBeginText2.getMeasuredWidth()) / 2.0));
             darkmodeBegin.setX(darkmodeBeginText1.getX() + darkmodeBeginText1.getMeasuredWidth());
             darkmodeBeginText2.setX(darkmodeBegin.getX() + darkmodeBegin.getMeasuredWidth());
-            darkmodeEndText1.setX((float) (width / 2.0 - (darkmodeEndText1.getMeasuredWidth() + darkmodeEnd.getMeasuredWidth() + darkmodeEndText2.getMeasuredWidth()) / 2.0));
+            darkmodeEndText1.setX((float) (width / 2.0 - (darkmodeEndText1.getMeasuredWidth() + darkmodeEnd.getMeasuredWidth()
+                    + darkmodeEndText2.getMeasuredWidth()) / 2.0));
             darkmodeEnd.setX(darkmodeEndText1.getX() + darkmodeEndText1.getMeasuredWidth());
             darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
             if(mode == 0) darkmodeSettings.setX(darkmodeSwitch.getX());
@@ -855,15 +857,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Creates a new UI, where the User can change the Dates.
+     * Make the other UI invisible. Update the Progressbar
+     *  Notification to a Placeholder
      */
-    private void pickDate() {
-        Context context = this;
+    private void makeUIinvisible() {
         runOnUiThread(() -> {
-            /*
-             * Make the other UI invisible and create the new Items. Update the Progressbar
-             *  Notification to a Placeholder
-             */
             secondsSwitch.setVisibility(View.INVISIBLE);
             secondsDone.setVisibility(View.INVISIBLE);
             percent.setVisibility(View.INVISIBLE);
@@ -871,15 +869,27 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSettings.setVisibility(View.INVISIBLE);
             darkmodeSwitch.setVisibility(View.INVISIBLE);
             changeDates.setVisibility(View.INVISIBLE);
+            PROGRESS_CURRENT = PROGRESS_MAX;
+            String srigjhs4r = "x " + getString(R.string.seconds);
+            String siegjose4 = getString(R.string.still_there) + " y " + getString(R.string.percent_done);
+            sendNotification(1, srigjhs4r, siegjose4);
+        });
+    }
+
+    /*
+     * Creates a new UI, where the User can change the Dates.
+     */
+    private void pickDate() {
+        Context context = this;
+        runOnUiThread(() -> {
+
+            makeUIinvisible();
+
             TextView lbendDate = new TextView(context);
             lbstartDate = new TextView(context);
             Button showStartDatePicker = new Button(context);
             Button showEndDatePicker = new Button(context);
             Button done = new Button(context);
-            PROGRESS_CURRENT = PROGRESS_MAX;
-            String srigjhs4r = "x " + getString(R.string.seconds);
-            String siegjose4 = getString(R.string.still_there) + " y " + getString(R.string.percent_done);
-            sendNotification(1, srigjhs4r, siegjose4);
             /*
              * Sets the Text for all of the Items on Display and makes them look good.
              */
