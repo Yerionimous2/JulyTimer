@@ -687,6 +687,7 @@ public class MainActivity extends AppCompatActivity {
                         darkmodeSwitch.setText(getString(R.string.darkmode_off));
                     }
                 }
+                update();
                 save(darkMode, "Darkmode");
             });
 
@@ -741,6 +742,7 @@ public class MainActivity extends AppCompatActivity {
                         multiper = 1;
                     }
                 }
+                update();
                 save(multiper, "timeMode");
             });
         });
@@ -1241,7 +1243,7 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeEnd.setText(Integer.toString(end));
                 }
             });
-            PROGRESS_CURRENT = (int) x;
+            PROGRESS_CURRENT = (int) x * multiper;
             PROGRESS_MAX = (int) (completeTime / 1000);
             sendNotification(1, y + " " +secondsSwitch.getText().toString(),
                     getString(R.string.still_there) + " " + z + " " + getString(R.string.percent_done));
