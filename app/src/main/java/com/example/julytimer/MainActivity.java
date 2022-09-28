@@ -888,9 +888,7 @@ public class MainActivity extends AppCompatActivity {
              */
             lbstartDate.setText(getString(R.string.startdate));
             lbendDate.setText(getString(R.string.enddate));
-            showStartDatePicker.setText(createReadableDate(startDate));
             done.setText(getString(R.string.done));
-            showEndDatePicker.setText(createReadableDate(endDate));
 
             measure();
             lbstartDate.setTextSize(textSize);
@@ -955,7 +953,13 @@ public class MainActivity extends AppCompatActivity {
              * Initialises the Datapickers and defines the Button onClickListeners
              */
             int[] a = parseDate(startDate);
+            a[3] += calcOffHours();
+            showStartDatePicker.setText(createReadableDate(a));
+
             int[] c = parseDate(endDate);
+            c[3] += calcOffHours();
+            showEndDatePicker.setText(createReadableDate(c));
+            //TODO: Check, weather the Date is weird.
             int[] b = new int[5];
             int[] d = new int[5];
             changedStart = false;
@@ -1018,6 +1022,9 @@ public class MainActivity extends AppCompatActivity {
                 showStartDatePicker.setVisibility(View.INVISIBLE);
                 showEndDatePicker.setVisibility(View.INVISIBLE);
                 done.setVisibility(View.INVISIBLE);
+
+                b[3] -= calcOffHours();
+                d[3] -= calcOffHours();
 
                 if(changedStart && changedEnd)
                     if(checkDates(dateParseString(b), dateParseString(d))) {
@@ -1248,6 +1255,22 @@ public class MainActivity extends AppCompatActivity {
             sendNotification(1, y + " " +secondsSwitch.getText().toString(),
                     getString(R.string.still_there) + " " + z + " " + getString(R.string.percent_done));
         });
+    }
+
+    /*
+     * Calculates the Hours the users Time is off to the Time in Berlin(GMT+2).
+     */
+    public int calcOffHours() {
+        now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+        nowWithoutZone = LocalDateTime.now();
+        int a = 0,b = 0;
+        try {
+            a = (int) timestamp(now.format(dr));
+            b = (int) timestamp(nowWithoutZone.format(dr));
+        } catch(ParseException oi) {
+            System.out.println("Debug: ParseException in timestamp");
+        }
+        return (b-a)/(1000 * 60 * 60);
     }
 
     /*
