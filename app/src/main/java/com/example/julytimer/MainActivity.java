@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEndText2.setVisibility(View.INVISIBLE);
             darkmodeSettings.setVisibility(View.INVISIBLE);
             darkmodeSettings.setText(getString(R.string.setup_darkmode_times));
-            dform = new DecimalFormat("#.#######");
+            dform = new DecimalFormat("#.######");
 
             initialiseNotifications();
 
@@ -1301,7 +1301,7 @@ public class MainActivity extends AppCompatActivity {
             homeScreenLayout.addView(changeDates);
             homeScreenLayout.addView(darkmodeSwitch);
             homeScreenLayout.addView(darkmodeSettings);
-            tm1.schedule(tmTk1, 0, 100);
+            tm1.schedule(tmTk1, 0, 400);
         });
     }
 }
