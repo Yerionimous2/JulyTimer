@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             if(channel == 1) {
                 builder.setContentText(message)
                         .setContentTitle(title)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.herz)
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             if(channel == 2) {
                 builder2.setContentText(message)
                         .setContentTitle(title)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.herz)
                         .setStyle(new NotificationCompat.BigTextStyle());
                 notificationManager2.notify(2, builder2.build());
             }
