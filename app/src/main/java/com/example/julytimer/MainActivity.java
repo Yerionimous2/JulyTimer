@@ -18,6 +18,7 @@ import android.graphics.Insets;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
     private DecimalFormat dform;
-    //private final DisplayMetrics displayMetrics = new DisplayMetrics();
     TimerTask tmTk1;
     private TextView secondsLeft;
     public TextView secondsDone;
@@ -290,18 +290,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static int getScreenWidth(@NonNull Activity activity) {
-            WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+    public int getScreenWidth(@NonNull Activity activity) {
+        WindowMetrics windowMetrics;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
             Insets insets = windowMetrics.getWindowInsets()
                     .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
             return windowMetrics.getBounds().width() - insets.left - insets.right;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
+        }
     }
 
-    public static int getScreenHeight(@NonNull Activity activity) {
-            WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+    public int getScreenHeight(@NonNull Activity activity) {
+        WindowMetrics windowMetrics;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
             Insets insets = windowMetrics.getWindowInsets()
                     .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
             return windowMetrics.getBounds().height() - insets.top - insets.bottom;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.heightPixels;
+        }
     }
 
     /*
