@@ -506,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
                 buttoncolor = "#464646";
             }
             if(darkMode == 2)
-                if ((Integer.parseInt(nowWithoutZone.format(dz)) > begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
+                if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
                     backgroundcolor = "#2E2E2E";
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
