@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private int PROGRESS_CURRENT = 0;
     private int PROGRESS_MAX;
     public int textSize;
-    private boolean ran;
+    private boolean ran, ran2;
     private boolean timerBool = true;
     public boolean changedStart, changedEnd;
     private String backgroundcolor = "#000000";
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             darkmodeBegin = new EditText(a);
             darkmodeEnd = new EditText(a);
             ran = false;
+            ran2 = false;
             PROGRESS_MAX = 28814999;                                // Failsafe for Notification
             darkmodeBegin.setVisibility(View.INVISIBLE);
             darkmodeEnd.setVisibility(View.INVISIBLE);
@@ -412,8 +413,8 @@ public class MainActivity extends AppCompatActivity {
             measure();
             int horizontal = width / 27;
             int vertical = horizontal / 2;
-            int buttonWidth = textSize * 27 + horizontal * 2;
-            int buttonHeight = textSize * 12 + vertical * 2;
+            int buttonWidth = (int) (width / 2.5);
+            int buttonHeight = (int) (buttonWidth / 2.2);
             secondsSwitch.setWidth(buttonWidth);
             changeDates.setWidth(buttonWidth);
             darkmodeSwitch.setWidth(buttonWidth);
@@ -466,22 +467,21 @@ public class MainActivity extends AppCompatActivity {
 
             darkmodeBeginText1.setY((float) (height/10.0));
             if(mode == 0) {
+                secondsSwitch.setY(height - secondsSwitch.getMeasuredHeight() * 4);
                 secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight() / 2.0 - height / 4.0));
-                secondsLeft.setY((float) (height / 2.0 - secondsLeft.getMeasuredHeight() / 2.0 - height / 4.0 + textSize * 10));
-                percent.setY((float) (height / 2.0 - percent.getMeasuredHeight() / 2.0 - height / 4.0 + textSize * 20));
-                darkmodeSettings.setY(percent.getY() + textSize * 60);
-                changeDates.setY(percent.getY() + textSize * 60);
+                darkmodeSettings.setY((float) (secondsSwitch.getY() + darkmodeSettings.getMeasuredHeight() + darkmodeSettings.getMeasuredHeight() / 4.0));
+                changeDates.setY(darkmodeSettings.getY());
                 changeDates.setVisibility(View.VISIBLE);
             }
             if(mode == 1) {
-                secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight() / 2.0 - textSize * 5));
-                secondsLeft.setY((float) (height / 2.0 - secondsLeft.getMeasuredHeight() / 2.0 + textSize * 5));
-                percent.setY((float) (height / 2.0 - percent.getMeasuredHeight() / 2.0 + textSize * 15));
-                darkmodeSettings.setY(darkmodeEndText1.getY() + textSize * 15);
+                secondsSwitch.setY((float) (height - secondsSwitch.getMeasuredHeight() * 2.5));
+                secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight()));
+                darkmodeSettings.setY(darkmodeEndText1.getY() + textSize * 15); //?
                 changeDates.setVisibility(View.INVISIBLE);
             }
-            darkmodeEndText1.setY(darkmodeBeginText1.getY() + textSize * 10);
-            secondsSwitch.setY(percent.getY() + textSize * 40);
+            secondsLeft.setY((float) (secondsDone.getY() + secondsLeft.getMeasuredHeight() + secondsLeft.getMeasuredHeight() / 3.0));
+            percent.setY((float) (secondsLeft.getY() + percent.getMeasuredHeight() + percent.getMeasuredHeight() / 3.0));
+            darkmodeEndText1.setY(darkmodeBeginText1.getY() + textSize * 10); //?
             darkmodeSwitch.setY(secondsSwitch.getY());
             darkmodeBegin.setY(darkmodeBeginText1.getY());
             darkmodeEnd.setY(darkmodeEndText1.getY());
@@ -551,9 +551,14 @@ public class MainActivity extends AppCompatActivity {
     public void updateUI2(int mode) {
         runOnUiThread(() -> {
             measure();
-            textSize = width / 90;
-            setTextSizes(textSize);
+            if(!ran2) {
+                xString = setString(1, getString(R.string.since_seen) + " " + completeTime/1000);
+                setText();
+                textSize = measureMaxTextsize();
+                xString = setString(multiper, getString(R.string.since_seen) + " " + x);
+            }
             setText();
+            setTextSizes(textSize);
             setPaddingSizes(width, textSize);
             setPositions(height, width, mode);
             setColors();
@@ -585,7 +590,7 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSettings.setTypeface(Typeface.MONOSPACE);
             darkmodeBegin.setTypeface(Typeface.MONOSPACE);
             darkmodeEnd.setTypeface(Typeface.MONOSPACE);
-            secondsDone.setText("");
+            //secondsDone.setText("Sekunden, seit du mich gesehen hast: " + calcMilSeconds(startDate, endDate) / 1000);
             secondsLeft.setText("");
             percent.setText("");
             darkmodeBeginText1.setText("");
@@ -604,13 +609,28 @@ public class MainActivity extends AppCompatActivity {
             darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
             measure();
-            textSize = width / 90;
+
+            textSize = 12/*measureMaxTextsize()*/;
             setTextSizes(textSize);
             setText();
             setPaddingSizes(width, textSize);
             setPositions(height, width, 0);
             setColors();
         });
+    }
+
+    /*
+     * Measures the maximum TextSize possible on this Device.
+     */
+    public int measureMaxTextsize() {
+        int ts;
+        setTextSizes(0);
+        secondsDone.measure(0, 0);
+        for(ts = 0; width >= secondsDone.getMeasuredWidth(); ts += 1) {
+            setTextSizes(ts);
+            secondsDone.measure(0, 0);
+        }
+        return ts - 2;
     }
 
     /*
@@ -974,15 +994,11 @@ public class MainActivity extends AppCompatActivity {
              * Initialises the Datapickers and defines the Button onClickListeners
              */
             int[] a = parseDate(startDate);
-            System.out.println(a[3] + ":" + a[4]);
             a = correctDate(a, 1);
-            System.out.println(a[3] + ":" + a[4]);
             showStartDatePicker.setText(createReadableDate(a));
 
             int[] c = parseDate(endDate);
-            System.out.println(c[4]);
             c = correctDate(c, 1);
-            System.out.println(c[4]);
             showEndDatePicker.setText(createReadableDate(c));
 
             int[] b = new int[5];
@@ -1275,7 +1291,6 @@ public class MainActivity extends AppCompatActivity {
             sendMileStoneNotifications();
 
             percentage = Math.floor(z);
-
             ran = true;
 
             if(percentage >= 100) {
@@ -1308,6 +1323,7 @@ public class MainActivity extends AppCompatActivity {
             sendNotification(1, y + " " +secondsSwitch.getText().toString(),
                     getString(R.string.still_there) + " " + z + " " + getString(R.string.percent_done));
         });
+        ran2 = true;
     }
 
     /*
