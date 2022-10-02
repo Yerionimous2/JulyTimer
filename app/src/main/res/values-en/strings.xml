@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="seconds">seconds</string>
-    <string name="minutes">minutes</string>
-    <string name="hours">hours</string>
-    <string name="days">days</string>
-    <string name="begin_dark_mode">begin of darkmode:</string>
-    <string name="begin_bright_mode">begin of brightmode:</string>
-    <string name="o_clock">o\' clock</string>
+    <string name="seconds">Seconds</string>
+    <string name="minutes">Minutes</string>
+    <string name="hours">Hours</string>
+    <string name="days">Days</string>
+    <string name="begin_dark_mode">Begin of darkmode:</string>
+    <string name="begin_bright_mode">Begin of brightmode:</string>
+    <string name="o_clock">O\' clock</string>
     <string name="darkmode_off">darkmode: off</string>
     <string name="darkmode_on">darkmode: on</string>
     <string name="darkmode_auto">darkmode: auto</string>
     <string name="done">done</string>
     <string name="setup">setup</string>
-    <string name="startdate">starting date:</string>
-    <string name="enddate">ending date:</string>
+    <string name="startdate">Starting date:</string>
+    <string name="enddate">Ending date:</string>
     <string name="setup_darkmode_times">setup</string>
     <string name="notification_name_1">cool progressbar</string>
     <string name="notification_name_2">milestone notification</string>
@@ -27,7 +27,7 @@
     <string name="change_data_button">change dates</string>
     <string name="since_seen">, since you\'ve seen me:</string>
     <string name="until_seeing">, until you see me:</string>
-    <string name="percent_done">percent done already!</string>
+    <string name="percent_done">Percent done already!</string>
     <string name="milestone_third_toast">One third done already! How cool!</string>
     <string name="milestone_half_toast">One half done already! How cool!</string>
     <string name="milestone_two_third_toast">Two third done already! How cool!</string>
@@ -35,4 +35,5 @@
     <string name="milestone_almost_done_toast">Almost done! See you soon :)</string>
     <string name="milestone_month_toast">Another month done! I am proud of you!</string>
     <string name="milestone_done_toast">Yeeeeeeees!</string>
+    <string name="app_name" translatable="false">JulyTimer</string>
 </resources>
