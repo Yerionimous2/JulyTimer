@@ -390,8 +390,13 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft.setText(yString);
             secondsLeft2.setText(yString2);
             percent.setText(zString);
+            StringBuilder sb = new StringBuilder();
             if(zString2 != null) {
-                while (zString2.length() < 9) zString2 = zString2 + "0";
+                sb.append(zString2);
+                for(int r= zString2.length(); r < 9; r++) {
+                    sb.append("0");
+                }
+                zString2 = sb.toString();
                 percent2.setText(zString2);
             }
 
