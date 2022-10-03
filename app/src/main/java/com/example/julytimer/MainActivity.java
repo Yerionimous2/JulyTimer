@@ -1360,11 +1360,13 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 editor = sharedPref.edit();
                 if(percentage > sharedPref.getInt("Percent", 0)) {
+                    System.out.println(sharedPref.getInt("Percent", 0));
                     Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, sharedPref.getInt("Percent", 0)), Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
             ran = true;
+            save((int) percentage, "Percent");
 
             if(percentage >= 100) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_done_toast), Toast.LENGTH_LONG);
