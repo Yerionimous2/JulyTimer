@@ -1197,6 +1197,7 @@ public class MainActivity extends AppCompatActivity {
             if ((percentage < Math.floor(z)) && (ran)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_percent), Toast.LENGTH_LONG);
                 toast.show();
+                save((int) percentage, "Percent");
             }
 
             /*
@@ -1347,6 +1348,14 @@ public class MainActivity extends AppCompatActivity {
             sendMileStoneNotifications();
 
             percentage = Math.floor(z);
+            if(!ran) {
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                editor = sharedPref.edit();
+                if(percentage > sharedPref.getInt("Percent", 0)) {
+                    Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, sharedPref.getInt("Percent", 0)), Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
             ran = true;
 
             if(percentage >= 100) {
@@ -1383,6 +1392,10 @@ public class MainActivity extends AppCompatActivity {
                     getString(R.string.still_there) + " " + z + " " + getString(R.string.percent_done));
         });
         ran2 = true;
+    }
+
+    private String createMissedPercentString(double percentage, int percent) {
+        return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2);
     }
 
     /*
