@@ -1,4 +1,4 @@
-<h>Supported Languages:</h>
+# Supported Languages:
 
 - German(default)
 - English
