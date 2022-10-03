@@ -517,11 +517,11 @@ public class MainActivity extends AppCompatActivity {
                 secondsDone.setY((float) (darkmodeSettings.getY() + darkmodeSettings.getMeasuredHeight() + secondsDone.getMeasuredHeight() * 1.5));
                 changeDates.setVisibility(View.INVISIBLE);
             }
-            secondsDone2.setY(secondsDone.getY() + secondsDone.getMeasuredHeight());
+            secondsDone2.setY(secondsDone.getY() + secondsDone.getMeasuredHeight() - 1);
             secondsLeft.setY((float) (secondsDone2.getY() + secondsDone2.getMeasuredHeight() + secondsLeft.getMeasuredHeight() / 3.0));
-            secondsLeft2.setY(secondsLeft.getY() + secondsLeft.getMeasuredHeight());
+            secondsLeft2.setY(secondsLeft.getY() + secondsLeft.getMeasuredHeight() - 1);
             percent.setY((float) (secondsLeft2.getY() + secondsLeft2.getMeasuredHeight() + percent.getMeasuredHeight() / 3.0));
-            percent2.setY(percent.getY() + percent.getMeasuredHeight());
+            percent2.setY(percent.getY() + percent.getMeasuredHeight() - 1);
             darkmodeSwitch.setY(secondsSwitch.getY());
             darkmodeBegin.setY(darkmodeBeginText1.getY());
             darkmodeEnd.setY(darkmodeEndText1.getY());
@@ -1015,8 +1015,8 @@ public class MainActivity extends AppCompatActivity {
              */
             int horizontal = width / 27;
             int vertical = horizontal / 2;
-            int buttonWidth = textSize * 27 + horizontal * 2;
-            int buttonHeight = textSize * 12 + vertical * 2;
+            int buttonWidth = (int) (width / 2.5);
+            int buttonHeight = (int) (buttonWidth / 2.2);
             lbstartDate.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             lbendDate.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             showStartDatePicker.setWidth(buttonWidth);
@@ -1035,11 +1035,11 @@ public class MainActivity extends AppCompatActivity {
             showStartDatePicker.setX((float) (width / 2.0 - showStartDatePicker.getMeasuredWidth() / 2.0));
             done.setX((float) (width / 2.0 - done.getMeasuredWidth() / 2.0));
             showEndDatePicker.setX((float) (width / 2.0 - showEndDatePicker.getMeasuredWidth() / 2.0));
-            lbstartDate.setY((float) (height / 2.0 - height/4.0 - textSize * 10));
-            showStartDatePicker.setY((float) (height / 2.0 - height / 4.0));
+            lbstartDate.setY((float) (lbstartDate.getMeasuredHeight()));
+            showStartDatePicker.setY((float) (lbstartDate.getY() + lbstartDate.getMeasuredHeight() + showStartDatePicker.getMeasuredHeight() * 0.2));
             done.setY((float) (height/2.0 + height / 4.0));
-            lbendDate.setY((float) (height / 2.0 - textSize * 10));
-            showEndDatePicker.setY((float) (height / 2.0));
+            lbendDate.setY((float) (showStartDatePicker.getY() + showStartDatePicker.getMeasuredHeight() + lbendDate.getMeasuredHeight() * 2.0));
+            showEndDatePicker.setY((float) (lbendDate.getY() + lbendDate.getMeasuredHeight() + showEndDatePicker.getMeasuredHeight() * 0.2));
             ConstraintLayout lyout = findViewById(R.id.Layout1);
             lyout.addView(lbstartDate);
             lyout.addView(lbendDate);
@@ -1399,7 +1399,7 @@ public class MainActivity extends AppCompatActivity {
             PROGRESS_CURRENT = (int) x * multiper;
             PROGRESS_MAX = (int) (completeTime / 1000);
             sendNotification(1, y + " " +secondsSwitch.getText().toString(),
-                    getString(R.string.still_there) + " " + z + " " + getString(R.string.percent_done));
+                    getString(R.string.still_there) + " " + zString2+ " " + getString(R.string.percent_done));
         });
         ran2 = true;
     }
