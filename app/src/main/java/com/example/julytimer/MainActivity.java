@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager notificationManager2;
     NotificationCompat.Builder builder;
     NotificationCompat.Builder builder2;
+    public Drawable background;
     public final Timer tm1 = new Timer();
     public int begin = 0;
     public int end = 0;
@@ -531,29 +533,35 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Updates the colorscheme and makes everything look good.
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void setColors() {
         runOnUiThread(() -> {
             if(darkMode == 0) {
                 backgroundcolor = "#99B9F9"; //#B7C8EA
+                background = getDrawable(R.drawable.brightmodebackground);
                 textcolor = "#3A5A9B"; //#3A5A9B
                 buttoncolor = "#B7C8EA"; //#648AD6
             }
             if (darkMode == 1) {
                 backgroundcolor = "#2E2E2E";
+                background = getDrawable(R.drawable.darkmodebackground);
                 textcolor = "#C5C5C5";
                 buttoncolor = "#464646";
             }
             if(darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
                     backgroundcolor = "#2E2E2E";
+                    background = getDrawable(R.drawable.darkmodebackground);
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
                 } else {
                     backgroundcolor = "#99B9F9"; //#B7C8EA
+                    background = getDrawable(R.drawable.brightmodebackground);
                     textcolor = "#3A5A9B"; //#3A5A9B
                     buttoncolor = "#B7C8EA"; //#648AD6
                 }
-            layout.setBackgroundColor(Color.parseColor(backgroundcolor));
+            //layout.setBackgroundColor(Color.parseColor(backgroundcolor));
+            layout.setBackground(background);
             secondsDone.setTextColor(Color.parseColor(textcolor));
             secondsDone2.setTextColor(Color.parseColor(textcolor));
             secondsLeft.setTextColor(Color.parseColor(textcolor));
