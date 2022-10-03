@@ -52,8 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private DecimalFormat dform;
     TimerTask tmTk1;
     private TextView secondsLeft;
+    private TextView secondsLeft2;
     public TextView secondsDone;
+    public TextView secondsDone2;
     private TextView percent;
+    private TextView percent2;
     private TextView darkmodeBeginText1;
     private TextView darkmodeBeginText2;
     private TextView darkmodeEndText1;
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     private String buttoncolor = "#000000";
     public String a;
     public String xString, yString, zString;
+    public String xString2, yString2, zString2;
     public String startDate = "2022-08-24 09:30:00.000";
     public String endDate = "2023-07-23 21:40:00.000";
     private long completeTime;
@@ -122,8 +126,11 @@ public class MainActivity extends AppCompatActivity {
         Context a = this;
         runOnUiThread(() -> {
             secondsDone = new TextView(a);
+            secondsDone2 = new TextView(a);
             secondsLeft = new TextView(a);
+            secondsLeft2 = new TextView(a);
             percent = new TextView(a);
+            percent2 = new TextView(a);
             darkmodeBeginText1 = new TextView(a);
             darkmodeBeginText2 = new TextView(a);
             darkmodeEndText1 = new TextView(a);
@@ -332,8 +339,11 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSwitch.measure(0, 0);
             darkmodeSettings.measure(0, 0);
             secondsLeft.measure(0, 0);
+            secondsLeft2.measure(0, 0);
             secondsDone.measure(0, 0);
+            secondsDone2.measure(0, 0);
             percent.measure(0, 0);
+            percent2.measure(0, 0);
             darkmodeBeginText1.measure(0, 0);
             darkmodeBeginText2.measure(0, 0);
             darkmodeEndText1.measure(0, 0);
@@ -354,8 +364,11 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSwitch.setTextSize(textSize);
             darkmodeSettings.setTextSize(textSize);
             secondsLeft.setTextSize(textSize);
+            secondsLeft2.setTextSize((float) (textSize * 1.5));
             secondsDone.setTextSize(textSize);
+            secondsDone2.setTextSize((float) (textSize * 1.5));
             percent.setTextSize(textSize);
+            percent2.setTextSize((float) (textSize * 1.5));
             darkmodeBeginText1.setTextSize(textSize);
             darkmodeBeginText2.setTextSize(textSize);
             darkmodeEndText1.setTextSize(textSize);
@@ -372,8 +385,14 @@ public class MainActivity extends AppCompatActivity {
     public void setText() {
         runOnUiThread(() -> {
             secondsDone.setText(xString);
+            secondsDone2.setText(xString2);
             secondsLeft.setText(yString);
+            secondsLeft2.setText(yString2);
             percent.setText(zString);
+            if(zString2 != null) {
+                while (zString2.length() < 9) zString2 = zString2 + "0";
+                percent2.setText(zString2);
+            }
 
             if(multiper == 60) {
                 secondsSwitch.setText(getString(R.string.minutes));
@@ -408,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
      * Sets the Boundaries of the things on screen.
      * Depends from the width of the screen and the textSize.
      */
-    public void setPaddingSizes(int width, int textSize) {
+    public void setPaddingSizes(int width) {
         runOnUiThread(() -> {
             measure();
             int horizontal = width / 27;
@@ -426,6 +445,16 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             secondsDone.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             percent.setPaddingRelative(horizontal, vertical, horizontal, vertical);
+            secondsLeft2.setPaddingRelative(0, vertical, 0, vertical);
+            secondsDone2.setPaddingRelative(0, vertical, 0, vertical);
+            percent2.setPaddingRelative(0, vertical, 0, vertical);
+            measure();
+            secondsLeft2.setPaddingRelative((secondsLeft.getMeasuredWidth()-secondsLeft2.getMeasuredWidth()) / 2, vertical,
+                    (secondsLeft.getMeasuredWidth()-secondsLeft2.getMeasuredWidth()) / 2, vertical);
+            secondsDone2.setPaddingRelative((secondsDone.getMeasuredWidth()-secondsDone2.getMeasuredWidth()) / 2, vertical,
+                    (secondsDone.getMeasuredWidth()-secondsDone2.getMeasuredWidth()) / 2, vertical);
+            percent2.setPaddingRelative((percent.getMeasuredWidth()-percent2.getMeasuredWidth()) / 2, vertical,
+                    (percent.getMeasuredWidth()-percent2.getMeasuredWidth()) / 2, vertical);
             darkmodeBeginText1.setPaddingRelative(horizontal, vertical, 0, vertical);
             darkmodeBeginText2.setPaddingRelative(0, vertical, horizontal, vertical);
             darkmodeEndText1.setPaddingRelative(horizontal, vertical, 0, vertical);
@@ -445,11 +474,15 @@ public class MainActivity extends AppCompatActivity {
     public void setPositions(int height, int width, int mode) {
         runOnUiThread(() -> {
             measure();
+            // <----------------- [X Values] -----------------> \\
             secondsSwitch.setX((float) (width / 2.0 - secondsSwitch.getMeasuredWidth() / 2.0 - width / 4.0));
             darkmodeSwitch.setX((float) (width / 2.0 - darkmodeSwitch.getMeasuredWidth() / 2.0 + width / 4.0));
             secondsDone.setX((float) ((float) (width / 2.0) - secondsDone.getMeasuredWidth() / 2.0));
+            secondsDone2.setX((float) ((float) (width / 2.0) - secondsDone2.getMeasuredWidth() / 2.0));
             secondsLeft.setX((float) (width / 2.0 - secondsLeft.getMeasuredWidth() / 2.0));
+            secondsLeft2.setX((float) (width / 2.0 - secondsLeft2.getMeasuredWidth() / 2.0));
             percent.setX((float) (width / 2.0 - percent.getMeasuredWidth() / 2.0));
+            percent2.setX((float) (width / 2.0 - percent2.getMeasuredWidth() / 2.0));
             darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth()
                     + darkmodeBeginText2.getMeasuredWidth()) / 2.0));
             darkmodeBegin.setX(darkmodeBeginText1.getX() + darkmodeBeginText1.getMeasuredWidth());
@@ -465,23 +498,28 @@ public class MainActivity extends AppCompatActivity {
             else
                 changeDates.setX((float) (width / 2.0 - changeDates.getMeasuredWidth() / 2.0));
 
-            darkmodeBeginText1.setY((float) (height/10.0));
+            // <----------------- [Y Values] -----------------> \\
+
+            darkmodeBeginText1.setY((float) (darkmodeBeginText1.getMeasuredHeight() * 1.0));
+            darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
             if(mode == 0) {
                 secondsSwitch.setY(height - secondsSwitch.getMeasuredHeight() * 4);
-                secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight() / 2.0 - height / 4.0));
+                secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight() / 2.0 - height / 3.5));
                 darkmodeSettings.setY((float) (secondsSwitch.getY() + darkmodeSettings.getMeasuredHeight() + darkmodeSettings.getMeasuredHeight() / 4.0));
                 changeDates.setY(darkmodeSettings.getY());
                 changeDates.setVisibility(View.VISIBLE);
             }
             if(mode == 1) {
                 secondsSwitch.setY((float) (height - secondsSwitch.getMeasuredHeight() * 2.5));
-                secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight()));
-                darkmodeSettings.setY(darkmodeEndText1.getY() + textSize * 15); //?
+                darkmodeSettings.setY((float) (darkmodeEndText1.getY() + darkmodeEndText1.getMeasuredHeight() * 2.0));
+                secondsDone.setY((float) (darkmodeSettings.getY() + darkmodeSettings.getMeasuredHeight() + secondsDone.getMeasuredHeight() * 1.5));
                 changeDates.setVisibility(View.INVISIBLE);
             }
-            secondsLeft.setY((float) (secondsDone.getY() + secondsLeft.getMeasuredHeight() + secondsLeft.getMeasuredHeight() / 3.0));
-            percent.setY((float) (secondsLeft.getY() + percent.getMeasuredHeight() + percent.getMeasuredHeight() / 3.0));
-            darkmodeEndText1.setY(darkmodeBeginText1.getY() + textSize * 10); //?
+            secondsDone2.setY(secondsDone.getY() + secondsDone.getMeasuredHeight());
+            secondsLeft.setY((float) (secondsDone2.getY() + secondsDone2.getMeasuredHeight() + secondsLeft.getMeasuredHeight() / 3.0));
+            secondsLeft2.setY(secondsLeft.getY() + secondsLeft.getMeasuredHeight());
+            percent.setY((float) (secondsLeft2.getY() + secondsLeft2.getMeasuredHeight() + percent.getMeasuredHeight() / 3.0));
+            percent2.setY(percent.getY() + percent.getMeasuredHeight());
             darkmodeSwitch.setY(secondsSwitch.getY());
             darkmodeBegin.setY(darkmodeBeginText1.getY());
             darkmodeEnd.setY(darkmodeEndText1.getY());
@@ -517,8 +555,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             layout.setBackgroundColor(Color.parseColor(backgroundcolor));
             secondsDone.setTextColor(Color.parseColor(textcolor));
+            secondsDone2.setTextColor(Color.parseColor(textcolor));
             secondsLeft.setTextColor(Color.parseColor(textcolor));
+            secondsLeft2.setTextColor(Color.parseColor(textcolor));
             percent.setTextColor(Color.parseColor(textcolor));
+            percent2.setTextColor(Color.parseColor(textcolor));
             darkmodeBeginText1.setTextColor(Color.parseColor(textcolor));
             darkmodeBeginText2.setTextColor(Color.parseColor(textcolor));
             darkmodeEndText1.setTextColor(Color.parseColor(textcolor));
@@ -530,8 +571,11 @@ public class MainActivity extends AppCompatActivity {
             darkmodeBegin.setTextColor(Color.parseColor(textcolor));
             darkmodeEnd.setTextColor(Color.parseColor(textcolor));
             secondsDone.setBackgroundColor(Color.parseColor(buttoncolor));
+            secondsDone2.setBackgroundColor(Color.parseColor(buttoncolor));
             secondsLeft.setBackgroundColor(Color.parseColor(buttoncolor));
+            secondsLeft2.setBackgroundColor(Color.parseColor(buttoncolor));
             percent.setBackgroundColor(Color.parseColor(buttoncolor));
+            percent2.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeBeginText1.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeBeginText2.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeEndText1.setBackgroundColor(Color.parseColor(buttoncolor));
@@ -552,14 +596,14 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             measure();
             if(!ran2) {
-                xString = setString(1, getString(R.string.since_seen) + " " + completeTime/1000);
+                xString = setString(1, getString(R.string.since_seen));
                 setText();
                 textSize = measureMaxTextsize();
-                xString = setString(multiper, getString(R.string.since_seen) + " " + x);
+                xString = setString(multiper, getString(R.string.since_seen));
             }
             setText();
             setTextSizes(textSize);
-            setPaddingSizes(width, textSize);
+            setPaddingSizes(width);
             setPositions(height, width, mode);
             setColors();
             changeDates.setText(getString(R.string.change_data_button));
@@ -578,7 +622,9 @@ public class MainActivity extends AppCompatActivity {
     public void initialiseUI() {
         runOnUiThread(() -> {
             secondsDone.setTypeface(Typeface.MONOSPACE);
+            secondsDone2.setTypeface(Typeface.MONOSPACE);
             secondsLeft.setTypeface(Typeface.MONOSPACE);
+            secondsLeft2.setTypeface(Typeface.MONOSPACE);
             percent.setTypeface(Typeface.MONOSPACE);
             darkmodeBeginText1.setTypeface(Typeface.MONOSPACE);
             darkmodeBeginText2.setTypeface(Typeface.MONOSPACE);
@@ -613,7 +659,7 @@ public class MainActivity extends AppCompatActivity {
             textSize = 12/*measureMaxTextsize()*/;
             setTextSizes(textSize);
             setText();
-            setPaddingSizes(width, textSize);
+            setPaddingSizes(width);
             setPositions(height, width, 0);
             setColors();
         });
@@ -898,8 +944,11 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             secondsSwitch.setVisibility(View.INVISIBLE);
             secondsDone.setVisibility(View.INVISIBLE);
+            secondsDone2.setVisibility(View.INVISIBLE);
             percent.setVisibility(View.INVISIBLE);
+            percent2.setVisibility(View.INVISIBLE);
             secondsLeft.setVisibility(View.INVISIBLE);
+            secondsLeft2.setVisibility(View.INVISIBLE);
             darkmodeSettings.setVisibility(View.INVISIBLE);
             darkmodeSwitch.setVisibility(View.INVISIBLE);
             changeDates.setVisibility(View.INVISIBLE);
@@ -1091,8 +1140,11 @@ public class MainActivity extends AppCompatActivity {
 
                 secondsSwitch.setVisibility(View.VISIBLE);
                 secondsDone.setVisibility(View.VISIBLE);
+                secondsDone2.setVisibility(View.VISIBLE);
                 percent.setVisibility(View.VISIBLE);
+                percent2.setVisibility(View.VISIBLE);
                 secondsLeft.setVisibility(View.VISIBLE);
+                secondsLeft2.setVisibility(View.VISIBLE);
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 changeDates.setVisibility(View.VISIBLE);
                 if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto)))
@@ -1274,9 +1326,13 @@ public class MainActivity extends AppCompatActivity {
         x = x / 1000;
         x = x / multiper;
         y = y / multiper;
-        xString = setString(multiper, getString(R.string.since_seen) + " " + x);
-        yString = setString(multiper, getString(R.string.until_seeing)+ " " + y);
-        zString = dform.format(z) + " " + getString(R.string.percent_done);
+        xString = setString(multiper, getString(R.string.since_seen));
+        xString2 = "" + x;
+        yString = setString(multiper, getString(R.string.until_seeing));
+        yString2 = "" + y;
+        zString = getString(R.string.percent_done);
+        zString2 = dform.format(z) + "";
+
     }
 
     /*
@@ -1297,9 +1353,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_done_toast), Toast.LENGTH_LONG);
                 toast.show();
                 tm1.cancel();
-                secondsDone.setText(getString(R.string.seconds) + getString(R.string.since_seen) + " " + completeTime);
-                secondsLeft.setText(getString(R.string.seconds) + getString(R.string.until_seeing) + " 0");
-                percent.setText("100" + " " + getString(R.string.percent_done));
+                secondsDone.setText(getString(R.string.seconds) + getString(R.string.since_seen));
+                secondsDone2.setText("" + completeTime/1000);
+                secondsLeft.setText(getString(R.string.seconds) + getString(R.string.until_seeing));
+                secondsLeft2.setText("0");
+                percent.setText(getString(R.string.percent_done));
+                percent2.setText("100,000000");
             }
             if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto))) {
                 if(darkmodeSettings.getText().equals(getString(R.string.setup)))
@@ -1368,8 +1427,11 @@ public class MainActivity extends AppCompatActivity {
                     if(!timerBool) {
                         secondsSwitch.setVisibility(View.INVISIBLE);
                         secondsDone.setVisibility(View.INVISIBLE);
+                        secondsDone2.setVisibility(View.INVISIBLE);
                         percent.setVisibility(View.INVISIBLE);
+                        percent2.setVisibility(View.INVISIBLE);
                         secondsLeft.setVisibility(View.INVISIBLE);
+                        secondsLeft2.setVisibility(View.INVISIBLE);
                         darkmodeSettings.setVisibility(View.INVISIBLE);
                         darkmodeSwitch.setVisibility(View.INVISIBLE);
                         changeDates.setVisibility(View.INVISIBLE);
@@ -1383,8 +1445,11 @@ public class MainActivity extends AppCompatActivity {
              * Only here the TimerTask tm1 gets executed the first time.
              */
             homeScreenLayout.addView(secondsDone);
+            homeScreenLayout.addView(secondsDone2);
             homeScreenLayout.addView(secondsLeft);
+            homeScreenLayout.addView(secondsLeft2);
             homeScreenLayout.addView(percent);
+            homeScreenLayout.addView(percent2);
             homeScreenLayout.addView(darkmodeBeginText1);
             homeScreenLayout.addView(darkmodeBeginText2);
             homeScreenLayout.addView(darkmodeEndText1);

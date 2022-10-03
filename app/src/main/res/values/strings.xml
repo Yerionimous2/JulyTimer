@@ -32,7 +32,7 @@
     <string name="change_data_button">Daten ändern</string>
     <string name="since_seen">, seit du mich gesehen hast: </string>
     <string name="until_seeing">, bis du mich wiedersiehst: </string>
-    <string name="percent_done"> Prozent schon geschafft!</string>
+    <string name="percent_done">" Prozent schon geschafft:"</string>
     <string name="app_name">JulyTimer</string>
 
     <!--[ Toast Strings ]-->

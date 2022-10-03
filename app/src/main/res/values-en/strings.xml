@@ -27,7 +27,7 @@
     <string name="change_data_button">change dates</string>
     <string name="since_seen">, since you\'ve seen me:</string>
     <string name="until_seeing">, until you see me:</string>
-    <string name="percent_done">Percent done already!</string>
+    <string name="percent_done">Percent done already:</string>
     <string name="milestone_third_toast">One third done already! How cool!</string>
     <string name="milestone_half_toast">One half done already! How cool!</string>
     <string name="milestone_two_third_toast">Two third done already! How cool!</string>

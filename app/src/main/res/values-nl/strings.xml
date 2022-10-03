@@ -27,7 +27,7 @@
     <string name="change_data_button">gegevens wijzigen</string>
     <string name="since_seen">, sinds je me zag:</string>
     <string name="until_seeing">, totdat je me weer ziet:</string>
-    <string name="percent_done">" procent al gedaan!"</string>
+    <string name="percent_done">" procent al gedaan:"</string>
     <string name="milestone_third_toast">Een derde is al klaar! Hoe cool!</string>
     <string name="milestone_half_toast">De helft is al klaar! Hoe cool!</string>
     <string name="milestone_two_third_toast">Twee derde is al klaar! Hoe cool!</string>
