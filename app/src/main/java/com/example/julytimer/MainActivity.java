@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean ran, ran2;
     private boolean timerBool = true;
     public boolean changedStart, changedEnd;
-    private String backgroundcolor = "#000000";
     private String textcolor = "#000000";
     private String buttoncolor = "#000000";
     public String a;
@@ -391,8 +390,9 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft.setText(yString);
             secondsLeft2.setText(yString2);
             percent.setText(zString);
+            StringBuilder sb = new StringBuilder();
             if(zString2 != null) {
-                while (zString2.length() < 9) zString2 = zString2 + "0";
+                while (zString2.length() < 9) zString2 = sb.append(zString2).append("0").toString();
                 percent2.setText(zString2);
             }
 
@@ -537,25 +537,22 @@ public class MainActivity extends AppCompatActivity {
     public void setColors() {
         runOnUiThread(() -> {
             if(darkMode == 0) {
-                backgroundcolor = "#99B9F9"; //#B7C8EA
                 background = getDrawable(R.drawable.brightmodebackground);
                 textcolor = "#3A5A9B"; //#3A5A9B
                 buttoncolor = "#B7C8EA"; //#648AD6
             }
             if (darkMode == 1) {
-                backgroundcolor = "#2E2E2E";
                 background = getDrawable(R.drawable.darkmodebackground);
                 textcolor = "#C5C5C5";
                 buttoncolor = "#464646";
             }
             if(darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
-                    backgroundcolor = "#2E2E2E";
+
                     background = getDrawable(R.drawable.darkmodebackground);
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
                 } else {
-                    backgroundcolor = "#99B9F9"; //#B7C8EA
                     background = getDrawable(R.drawable.brightmodebackground);
                     textcolor = "#3A5A9B"; //#3A5A9B
                     buttoncolor = "#B7C8EA"; //#648AD6
@@ -690,7 +687,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Defines the Listeners for all Buttons and EditTexts.
      */
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void initialiseListeners() {
         runOnUiThread(() -> {
             /*
@@ -751,7 +748,7 @@ public class MainActivity extends AppCompatActivity {
                 darkmodeEnd.clearFocus();
                 if (darkMode == 0) {
                     darkMode = 1;
-                    backgroundcolor = "#2E2E2E";
+                    background = getDrawable(R.drawable.darkmodebackground);
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
                     darkmodeSwitch.setText(getString(R.string.darkmode_on));
@@ -764,7 +761,7 @@ public class MainActivity extends AppCompatActivity {
                         darkmodeSettings.setVisibility(View.VISIBLE);
                     } else {
                         darkMode = 0;
-                        backgroundcolor = "#99B9F9"; //#B7C8EA
+                        background = getDrawable(R.drawable.brightmodebackground);
                         textcolor = "#3A5A9B"; //#3A5A9B
                         buttoncolor = "#B7C8EA"; //#648AD6
                         darkmodeSettings.setVisibility(View.INVISIBLE);
