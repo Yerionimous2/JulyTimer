@@ -1484,7 +1484,7 @@ public class MainActivity extends AppCompatActivity {
             homeScreenLayout.addView(changeDates);
             homeScreenLayout.addView(darkmodeSwitch);
             homeScreenLayout.addView(darkmodeSettings);
-            tm1.schedule(tmTk1, 0, 400);
+            tm1.schedule(tmTk1, 0, 500);
         });
     }
 }
