@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
      * initialise initialises the UI and loads the saved Values in the Variables
-     * uses initialiseNotifications and initialiseUI. Tim Pohl stinkt.
+     * uses initialiseNotifications and initialiseUI.
      */
     public void initialise() {
         Context a = this;
