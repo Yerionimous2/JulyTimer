@@ -1359,7 +1359,7 @@ public class MainActivity extends AppCompatActivity {
     private String convertToReadableString(long r) {
         String result = "" + r;
         int length = result.length();
-        for(int i = length-1; i >= 0; i--) {
+        for(int i = length-1; i >= 1; i--) {
             if(((length - i) % 3) == 0) {
                 result = result.substring(0, i) + "." + result.substring(i);
             }
