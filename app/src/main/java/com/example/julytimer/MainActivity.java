@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     public String endDate = "2023-07-23 21:40:00.000";
     private long completeTime;
     private long x;
-    private long y;
     private double z;
     private double percentage;
 
@@ -1338,7 +1337,7 @@ public class MainActivity extends AppCompatActivity {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
         x = calcMilSeconds(now.format(dr), startDate);
-        y = calcMilSeconds(now.format(dr), endDate);
+        long y = calcMilSeconds(now.format(dr), endDate);
         completeTime = calcMilSeconds(startDate, endDate);
 
         y = y / 1000;
@@ -1422,7 +1421,7 @@ public class MainActivity extends AppCompatActivity {
             });
             PROGRESS_CURRENT = (int) x * multiper;
             PROGRESS_MAX = (int) (completeTime / 1000);
-            sendNotification(1, y + " " +secondsSwitch.getText().toString(),
+            sendNotification(1, yString2 + " " +secondsSwitch.getText().toString(),
                     getString(R.string.still_there) + " " + zString2+ " " + getString(R.string.percent_done));
         });
         ran2 = true;
