@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SuspiciousIndentation")
     public void removeNotification() {
         if(notificationManager!=null)
         notificationManager.cancel(1);
@@ -405,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
             StringBuilder sb = new StringBuilder();
             if(zString2 != null) {
                 sb.append(zString2);
+                if(zString2.length() <= 2) sb.append(",");
                 for(int r= zString2.length(); r < 9; r++) {
                     sb.append("0");
                 }

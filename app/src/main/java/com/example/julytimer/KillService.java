@@ -16,7 +16,6 @@ public class KillService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         MainActivity c = new MainActivity();
         c.removeNotification();
-        System.out.println("Wird ausgeführt!");
         //stop service
         stopSelf();
     }
