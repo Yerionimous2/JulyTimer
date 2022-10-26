@@ -12,6 +12,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
             //getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
             initialiseUI();
+            startService(new Intent(getBaseContext(), KillService.class));
             measure();
             initialiseListeners();
         });
@@ -180,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription(getString(R.string.notification_name_1));
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            removeNotification();
             builder = new NotificationCompat.Builder(context, "35");
             builder.setContentText("")
                     .setContentTitle("")
@@ -299,6 +302,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void removeNotification() {
+        if(notificationManager!=null)
+        notificationManager.cancel(1);
+    }
+
     public int getScreenWidth(@NonNull Activity activity) {
         WindowMetrics windowMetrics;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -378,6 +386,11 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEnd.setTextSize(textSize);
         });
 
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        removeNotification();
     }
 
     /*
