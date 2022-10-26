@@ -975,9 +975,7 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSwitch.setVisibility(View.INVISIBLE);
             changeDates.setVisibility(View.INVISIBLE);
             PROGRESS_CURRENT = PROGRESS_MAX;
-            String srigjhs4r = "x " + getString(R.string.seconds);
-            String siegjose4 = getString(R.string.still_there) + " y " + getString(R.string.percent_done);
-            sendNotification(1, srigjhs4r, siegjose4);
+            removeNotification();
         });
     }
 
