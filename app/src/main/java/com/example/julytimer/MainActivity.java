@@ -614,7 +614,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Updates the UI with new Texts, new Textsizes, new Positions and new Colorscheme.
      */
-    public void updateUI2(int mode) {
+    public void updateUI(int mode) {
         runOnUiThread(() -> {
             measure();
             if(!ran2) {
@@ -802,7 +802,7 @@ public class MainActivity extends AppCompatActivity {
              */
             darkmodeSettings.setOnClickListener(view -> {
                 if (!darkmodeSettings.getText().equals(getString(R.string.done))) {
-                    updateUI2(1);
+                    updateUI(1);
                     darkmodeBegin.setVisibility(View.VISIBLE);
                     darkmodeEnd.setVisibility(View.VISIBLE);
                     darkmodeBeginText1.setVisibility(View.VISIBLE);
@@ -811,7 +811,7 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeEndText2.setVisibility(View.VISIBLE);
                     darkmodeSettings.setText(getString(R.string.done));
                 } else {
-                    updateUI2(0);
+                    updateUI(0);
                     darkmodeBegin.setVisibility(View.INVISIBLE);
                     darkmodeEnd.setVisibility(View.INVISIBLE);
                     darkmodeBeginText1.setVisibility(View.INVISIBLE);
@@ -1348,12 +1348,23 @@ public class MainActivity extends AppCompatActivity {
         x = x / multiper;
         y = y / multiper;
         xString = setString(multiper, getString(R.string.since_seen));
-        xString2 = "" + x;
+        xString2 = convertToReadableString(x);
         yString = setString(multiper, getString(R.string.until_seeing));
-        yString2 = "" + y;
+        yString2 = convertToReadableString(y);
         zString = getString(R.string.percent_done);
         zString2 = dform.format(z) + "";
 
+    }
+
+    private String convertToReadableString(long r) {
+        String result = "" + r;
+        int length = result.length();
+        for(int i = length-1; i >= 0; i--) {
+            if(((length - i) % 3) == 0) {
+                result = result.substring(0, i) + "." + result.substring(i);
+            }
+        }
+        return result;
     }
 
     /*
@@ -1381,6 +1392,7 @@ public class MainActivity extends AppCompatActivity {
             save((int) percentage, "Percent");
 
             if(percentage >= 100) {
+                timerBool = false;
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_done_toast), Toast.LENGTH_LONG);
                 toast.show();
                 tm1.cancel();
@@ -1393,11 +1405,11 @@ public class MainActivity extends AppCompatActivity {
             }
             if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto))) {
                 if(darkmodeSettings.getText().equals(getString(R.string.setup)))
-                    updateUI2(0);
+                    updateUI(0);
                 if(darkmodeSettings.getText().equals(getString(R.string.done)))
-                    updateUI2(1);
+                    updateUI(1);
             } else {
-                updateUI2(0);
+                updateUI(0);
                 runOnUiThread(() -> darkmodeSettings.setText(getString(R.string.setup)));
             }
             runOnUiThread(() -> {
