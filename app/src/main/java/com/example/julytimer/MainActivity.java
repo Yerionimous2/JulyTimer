@@ -158,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
             initialiseNotifications();
 
-            //getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
             initialiseUI();
             startService(new Intent(getBaseContext(), KillService.class));
             measure();
@@ -305,12 +303,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    /*
+     * Removes the Notification from the Notification center.
+     */
     @SuppressLint("SuspiciousIndentation")
     public void removeNotification() {
         if(notificationManager!=null)
         notificationManager.cancel(1);
     }
 
+    /*
+     * returns the width from the primary Display.
+     */
     public int getScreenWidth(@NonNull Activity activity) {
         WindowMetrics windowMetrics;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -325,6 +330,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * returns the height from the primary Display.
+     */
     public int getScreenHeight(@NonNull Activity activity) {
         WindowMetrics windowMetrics;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -392,6 +400,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
+     * Gets called when the App gets closed.
+     */
     public void onDestroy() {
         super.onDestroy();
         removeNotification();
@@ -402,11 +413,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setText() {
         runOnUiThread(() -> {
-            secondsDone.setText(xString);
-            secondsDone2.setText(xString2);
-            secondsLeft.setText(yString);
-            secondsLeft2.setText(yString2);
-            percent.setText(zString);
+            if(xString != null)  if(secondsDone  != null) secondsDone.setText(xString);
+            if(xString2 != null) if(secondsDone2 != null) secondsDone2.setText(xString2);
+            if(yString != null)  if(secondsLeft  != null) secondsLeft.setText(yString);
+            if(yString2 != null) if(secondsLeft2 != null) secondsLeft2.setText(yString2);
+            if(zString != null)  if(percent      != null) percent.setText(zString);
             StringBuilder sb = new StringBuilder();
             if(zString2 != null) {
                 sb.append(zString2);
@@ -415,33 +426,37 @@ public class MainActivity extends AppCompatActivity {
                     sb.append("0");
                 }
                 zString2 = sb.toString();
-                percent2.setText(zString2);
+                if(percent2 != null) percent2.setText(zString2);
             }
 
-            if(multiper == 60) {
-                secondsSwitch.setText(getString(R.string.minutes));
+            if(secondsSwitch != null) {
+                if (multiper == 60) {
+                    secondsSwitch.setText(getString(R.string.minutes));
+                }
+                if (multiper == 3600) {
+                    secondsSwitch.setText(getString(R.string.hours));
+                }
+                if (multiper == 86400) {
+                    secondsSwitch.setText(getString(R.string.days));
+                }
+                if (multiper == 1) {
+                    secondsSwitch.setText(getString(R.string.seconds));
+                }
             }
-            if(multiper == 3600) {
-                secondsSwitch.setText(getString(R.string.hours));
-            }
-            if(multiper == 86400) {
-                secondsSwitch.setText(getString(R.string.days));
-            }
-            if(multiper == 1) {
-                secondsSwitch.setText(getString(R.string.seconds));
-            }
-            darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
-            darkmodeBeginText2.setText(getString(R.string.o_clock));
-            darkmodeEndText1.setText(getString(R.string.begin_bright_mode));
-            darkmodeEndText2.setText(getString(R.string.o_clock));
-            if(darkMode == 0) {
-                darkmodeSwitch.setText(getString(R.string.darkmode_off));
-            }
-            if(darkMode == 1) {
-                darkmodeSwitch.setText(getString(R.string.darkmode_on));
-            }
-            if(darkMode == 2) {
-                darkmodeSwitch.setText(getString(R.string.darkmode_auto));
+            if(darkmodeBeginText1 != null) darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
+            if(darkmodeBeginText2 != null) darkmodeBeginText2.setText(getString(R.string.o_clock));
+            if(darkmodeEndText1   != null) darkmodeEndText1.setText(getString(R.string.begin_bright_mode));
+            if(darkmodeEndText2   != null) darkmodeEndText2.setText(getString(R.string.o_clock));
+            if(darkmodeSwitch != null) {
+                if(darkMode == 0) {
+                    darkmodeSwitch.setText(getString(R.string.darkmode_off));
+                }
+                if(darkMode == 1) {
+                    darkmodeSwitch.setText(getString(R.string.darkmode_on));
+                }
+                if(darkMode == 2) {
+                    darkmodeSwitch.setText(getString(R.string.darkmode_auto));
+                }
             }
         });
 
@@ -682,9 +697,10 @@ public class MainActivity extends AppCompatActivity {
             darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
             measure();
-
-            textSize = 12/*measureMaxTextsize()*/;
+            System.out.println("Debug: Initalized the Elements on Screen.");
+            textSize = measureMaxTextsize();
             setTextSizes(textSize);
+            System.out.println("Debug: Set the Textsize.");
             setText();
             setPaddingSizes(width);
             setPositions(height, width, 0);
@@ -697,13 +713,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public int measureMaxTextsize() {
         int ts;
+        width = getScreenWidth(this);
         setTextSizes(0);
+        secondsDone.setText(setString(multiper, getString(R.string.since_seen)));
         secondsDone.measure(0, 0);
-        for(ts = 0; width >= secondsDone.getMeasuredWidth(); ts += 1) {
+        for(ts = 0; (width-200) >= secondsDone.getMeasuredWidth(); ts += 1) {
             setTextSizes(ts);
             secondsDone.measure(0, 0);
         }
-        return ts - 2;
+        return ts - 3;
     }
 
     /*
@@ -712,6 +730,14 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void initialiseListeners() {
         runOnUiThread(() -> {
+            darkmodeBegin.setOnKeyListener((v, keyCode, event) -> {
+                resetEditTexts();
+                return false;
+            });
+            darkmodeEnd.setOnKeyListener((v, keyCode, event) -> {
+                resetEditTexts();
+                return false;
+            });
             /*
              * When the Focus on the EditText is lost, the Number gets Validated and moved to the
              *  start variable. The Focus is lost when a Button is pushed or the other EditText gets
@@ -855,6 +881,25 @@ public class MainActivity extends AppCompatActivity {
                 save(multiper, "timeMode");
             });
         });
+    }
+
+    private void resetEditTexts() {
+        measure();
+        darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth()
+                + darkmodeBeginText2.getMeasuredWidth()) / 2.0));
+        darkmodeBegin.setX(darkmodeBeginText1.getX() + darkmodeBeginText1.getMeasuredWidth());
+        darkmodeBeginText2.setX(darkmodeBegin.getX() + darkmodeBegin.getMeasuredWidth());
+        darkmodeEndText1.setX((float) (width / 2.0 - (darkmodeEndText1.getMeasuredWidth() + darkmodeEnd.getMeasuredWidth()
+                + darkmodeEndText2.getMeasuredWidth()) / 2.0));
+        darkmodeEnd.setX(darkmodeEndText1.getX() + darkmodeEndText1.getMeasuredWidth());
+        darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
+        darkmodeBeginText1.setY((float) (percent2.getY() + percent2.getMeasuredHeight() + darkmodeBeginText1.getMeasuredHeight() * 2.0));
+        darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
+        darkmodeBegin.setY(darkmodeBeginText1.getY());
+        darkmodeEnd.setY(darkmodeEndText1.getY());
+        darkmodeBeginText2.setY(darkmodeBeginText1.getY());
+        darkmodeEndText2.setY(darkmodeEndText1.getY());
+
     }
 
     /*
@@ -1433,6 +1478,9 @@ public class MainActivity extends AppCompatActivity {
         ran2 = true;
     }
 
+    /*
+     * puts together a String for a missed Percent.
+     */
     private String createMissedPercentString(double percentage, int percent) {
         return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2);
     }
@@ -1459,16 +1507,17 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         layout = findViewById(R.id.Layout1);
         ConstraintLayout homeScreenLayout = (ConstraintLayout) layout;
 
         runOnUiThread(() -> {
+            System.out.println("Debug: App started.");
             initialise();
-
+            System.out.println("Debug: App UI initialised.");
             loadVariables();
+            System.out.println("Debug: App initialised.");
 
             tmTk1 = new TimerTask() {
                 @SuppressLint("SetTextI18n")
@@ -1513,6 +1562,7 @@ public class MainActivity extends AppCompatActivity {
             homeScreenLayout.addView(darkmodeSwitch);
             homeScreenLayout.addView(darkmodeSettings);
             tm1.schedule(tmTk1, 0, 500);
+            System.out.println("Debug: App start done.");
         });
     }
 }
