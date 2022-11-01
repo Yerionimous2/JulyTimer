@@ -309,8 +309,15 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint("SuspiciousIndentation")
     public void removeNotification() {
-        if(notificationManager!=null)
-        notificationManager.cancel(1);
+        if(notificationManager != null) {
+            notificationManager.cancel(1);
+        } else {
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            NotificationChannel channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
+            channel.setDescription(getString(R.string.notification_name_1));
+            notificationManager.createNotificationChannel(channel);
+            notificationManager.cancel(1);
+        }
     }
 
     /*
@@ -697,10 +704,8 @@ public class MainActivity extends AppCompatActivity {
             darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
             measure();
-            System.out.println("Debug: Initalized the Elements on Screen.");
             textSize = measureMaxTextsize();
             setTextSizes(textSize);
-            System.out.println("Debug: Set the Textsize.");
             setText();
             setPaddingSizes(width);
             setPositions(height, width, 0);
@@ -1433,7 +1438,6 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 editor = sharedPref.edit();
                 if(percentage > sharedPref.getInt("Percent", 0)) {
-                    System.out.println(sharedPref.getInt("Percent", 0));
                     Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, sharedPref.getInt("Percent", 0)), Toast.LENGTH_LONG);
                     toast.show();
                 }
@@ -1513,11 +1517,8 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout homeScreenLayout = (ConstraintLayout) layout;
 
         runOnUiThread(() -> {
-            System.out.println("Debug: App started.");
             initialise();
-            System.out.println("Debug: App UI initialised.");
             loadVariables();
-            System.out.println("Debug: App initialised.");
 
             tmTk1 = new TimerTask() {
                 @SuppressLint("SetTextI18n")
@@ -1562,7 +1563,6 @@ public class MainActivity extends AppCompatActivity {
             homeScreenLayout.addView(darkmodeSwitch);
             homeScreenLayout.addView(darkmodeSettings);
             tm1.schedule(tmTk1, 0, 500);
-            System.out.println("Debug: App start done.");
         });
     }
 }
