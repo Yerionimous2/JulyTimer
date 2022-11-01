@@ -524,8 +524,6 @@ public class MainActivity extends AppCompatActivity {
 
             // <----------------- [Y Values] -----------------> \\
 
-            darkmodeBeginText1.setY((float) (darkmodeBeginText1.getMeasuredHeight() * 1.0));
-            darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
             if(mode == 0) {
                 secondsSwitch.setY(height - secondsSwitch.getMeasuredHeight() * 4);
                 secondsDone.setY((float) (height / 2.0 - secondsDone.getMeasuredHeight() / 2.0 - height / 3.5));
@@ -535,8 +533,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if(mode == 1) {
                 secondsSwitch.setY((float) (height - secondsSwitch.getMeasuredHeight() * 2.5));
-                darkmodeSettings.setY((float) (darkmodeEndText1.getY() + darkmodeEndText1.getMeasuredHeight() * 2.0));
-                secondsDone.setY((float) (darkmodeSettings.getY() + darkmodeSettings.getMeasuredHeight() + secondsDone.getMeasuredHeight() * 1.5));
+                secondsDone.setY((float) (secondsDone.getMeasuredHeight() * 1.5));
                 changeDates.setVisibility(View.INVISIBLE);
             }
             secondsDone2.setY(secondsDone.getY() + secondsDone.getMeasuredHeight() - 1);
@@ -545,10 +542,13 @@ public class MainActivity extends AppCompatActivity {
             percent.setY((float) (secondsLeft2.getY() + secondsLeft2.getMeasuredHeight() + percent.getMeasuredHeight() / 3.0));
             percent2.setY(percent.getY() + percent.getMeasuredHeight() - 1);
             darkmodeSwitch.setY(secondsSwitch.getY());
+            darkmodeBeginText1.setY((float) (percent2.getY() + percent2.getMeasuredHeight() + darkmodeBeginText1.getMeasuredHeight() * 2.0));
+            darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
             darkmodeBegin.setY(darkmodeBeginText1.getY());
             darkmodeEnd.setY(darkmodeEndText1.getY());
             darkmodeBeginText2.setY(darkmodeBeginText1.getY());
             darkmodeEndText2.setY(darkmodeEndText1.getY());
+            if(mode == 1) darkmodeSettings.setY((float) (darkmodeEndText1.getY() + darkmodeEndText1.getMeasuredHeight() * 2.0));
         });
     }
 
