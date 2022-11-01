@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -183,10 +184,13 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
             removeNotification();
             builder = new NotificationCompat.Builder(context, "35");
+            @SuppressLint("UnspecifiedImmutableFlag") PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentText("")
                     .setContentTitle("")
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setStyle(new NotificationCompat.BigTextStyle());
+                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setContentIntent(contentIntent);
 
             /*
              * Stuff needed for the Milestone Notifications
