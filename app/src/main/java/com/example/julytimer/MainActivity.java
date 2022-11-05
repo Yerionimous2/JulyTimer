@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     private int PROGRESS_CURRENT = 0;
     private int PROGRESS_MAX;
     public int textSize;
+    private int lastReset;
+    private int standardChannel;
     private boolean ran, ran2;
     private boolean timerBool = true;
     public boolean changedStart, changedEnd;
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     private long x;
     private double z;
     private double percentage;
+    private double percentageLastOpened;
 
     /*
      * save(int) saves the given int for later use under the given name.
@@ -145,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
             darkmodeEnd = new EditText(a);
             ran = false;
             ran2 = false;
+            standardChannel = 1;
+            lastReset = 0;
             PROGRESS_MAX = 28814999;                                // Failsafe for Notification
             darkmodeBegin.setVisibility(View.INVISIBLE);
             darkmodeEnd.setVisibility(View.INVISIBLE);
@@ -167,6 +172,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
+     * Makes the Notification open the App.
+     */
+    public void onPause() {
+        percentageLastOpened = percentage;
+
+        Intent startIntent = new Intent(this, this.getClass());
+        startIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.setAction(Intent.ACTION_MAIN);
+        resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        @SuppressLint("UnspecifiedImmutableFlag")
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                resultIntent, 0);
+        builder.setContentIntent(pendingIntent);
+        super.onPause();
+    }
+
+    public void onResume() {
+        resetNotification();
+        if(percentage > percentageLastOpened) {
+            Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, (int) percentageLastOpened), Toast.LENGTH_LONG);
+            toast.show();
+        }
+        super.onResume();
+    }
+
+    private void resetNotification() {
+        removeNotification();
+        Context context = this;
+        runOnUiThread(() -> {
+            /*
+             * Stuff needed for the Progressbar Notification
+             */
+            channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
+            channel.setDescription(getString(R.string.notification_name_1));
+            notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            removeNotification();
+            builder = new NotificationCompat.Builder(context, "35");
+            builder.setContentText("")
+                    .setContentTitle("")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setStyle(new NotificationCompat.BigTextStyle());
+
+            /*
+             * Stuff needed for the Milestone Notifications
+             */
+            channel2 = new NotificationChannel("36", "channel2", NotificationManager.IMPORTANCE_HIGH);
+            channel2.setDescription(getString(R.string.notification_name_2));
+            notificationManager2 = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel2);
+            builder2 = new NotificationCompat.Builder(context, "36");
+        });
+    }
+
+    /*
      * initialiseNotifications initialises the Notificationchannels and their builders needed to send
      *  Notifications to the User.
      */
@@ -180,15 +241,11 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription(getString(R.string.notification_name_1));
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            removeNotification();
             builder = new NotificationCompat.Builder(context, "35");
-            @SuppressLint("UnspecifiedImmutableFlag")
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentText("")
                     .setContentTitle("")
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setStyle(new NotificationCompat.BigTextStyle())
-                    .setContentIntent(contentIntent);
+                    .setStyle(new NotificationCompat.BigTextStyle());
 
             /*
              * Stuff needed for the Milestone Notifications
@@ -285,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void sendNotification(int channel, String title, String message) {
         runOnUiThread(() -> {
+            lastReset +=1;
             if(channel == 1) {
                 builder.setContentText(message)
                         .setContentTitle(title)
@@ -292,13 +350,23 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-            }
+                if(lastReset > 120) removeNotification();
+            } else
             if(channel == 2) {
                 builder2.setContentText(message)
                         .setContentTitle(title)
                         .setSmallIcon(R.drawable.herz)
                         .setStyle(new NotificationCompat.BigTextStyle());
                 notificationManager2.notify(2, builder2.build());
+            } else
+            if(channel == 3) {
+                builder.setContentText(message)
+                        .setContentTitle(title)
+                        .setSmallIcon(R.drawable.herz)
+                        .setStyle(new NotificationCompat.BigTextStyle())
+                        .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+                notificationManager.notify(1, builder.build());
+                if(lastReset > 120) removeNotification();
             }
         });
     }
@@ -310,14 +378,17 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SuspiciousIndentation")
     public void removeNotification() {
         if(notificationManager != null) {
-            notificationManager.cancel(1);
+            notificationManager.cancel(standardChannel);
         } else {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             NotificationChannel channel = new NotificationChannel("35", "channel", NotificationManager.IMPORTANCE_LOW);
             channel.setDescription(getString(R.string.notification_name_1));
             notificationManager.createNotificationChannel(channel);
-            notificationManager.cancel(1);
+            notificationManager.cancel(standardChannel);
         }
+        lastReset = 0;
+        if(standardChannel == 1) standardChannel +=2;
+        if(standardChannel == 3) standardChannel -=2;
     }
 
     /*
@@ -888,6 +959,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * resets the Positions of the Edittexts and the surrounding Textviews.
+     */
     private void resetEditTexts() {
         measure();
         darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth()
@@ -1476,7 +1550,8 @@ public class MainActivity extends AppCompatActivity {
             });
             PROGRESS_CURRENT = (int) x * multiper;
             PROGRESS_MAX = (int) (completeTime / 1000);
-            sendNotification(1, yString2 + " " +secondsSwitch.getText().toString(),
+
+            sendNotification(standardChannel, yString2 + " " +secondsSwitch.getText().toString(),
                     getString(R.string.still_there) + " " + zString2+ " " + getString(R.string.percent_done));
         });
         ran2 = true;
@@ -1486,7 +1561,8 @@ public class MainActivity extends AppCompatActivity {
      * puts together a String for a missed Percent.
      */
     private String createMissedPercentString(double percentage, int percent) {
-        return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2);
+        if((percentage - percent) > 1) return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2_singular);
+        return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2_plural);
     }
 
     /*

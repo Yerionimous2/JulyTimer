@@ -35,7 +35,8 @@
     <string name="milestone_almost_done_toast">Almost done! See you soon :)</string>
     <string name="milestone_month_toast">Another month done! I am proud of you!</string>
     <string name="milestone_done_toast">Yeeeeeeees!</string>
-    <string name="app_name" translatable="false">JulyTimer</string>
     <string name="missed_percent_1">You\'ve missed</string>
-    <string name="missed_percent_2">Percent jumps. Very Sad,</string>
+    <string name="app_name">JulyTimer</string>
+    <string name="missed_percent_2_singular">Percent jump. Very Sad.</string>
+    <string name="missed_percent_2_plural">Percent jumps. Very Sad.</string>
 </resources>

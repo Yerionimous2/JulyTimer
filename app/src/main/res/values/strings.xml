@@ -28,7 +28,8 @@
     <string name="milestone_almost_done_notification">Fast geschafft! Bis bald :)</string>
     <string name="milestone_month_notification">Noch einen Monat geschafft! Ich bin stolz auf dich!</string>
     <string name="missed_percent_1">Du hast</string>
-    <string name="missed_percent_2">Prozentsprünge verpasst. Wie schade :(</string>
+    <string name="missed_percent_2_singular">Prozentsprünge verpasst. Wie schade :(</string>
+    <string name="missed_percent_2_plural">Prozentsprung verpasst. Wie schade :(</string>
 
     <!--[ UI Strings ]-->
     <string name="change_data_button">Daten ändern</string>
