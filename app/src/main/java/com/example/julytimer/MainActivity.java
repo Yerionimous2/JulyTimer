@@ -378,9 +378,9 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                if(lastReset > 120) {
+                /*if(lastReset > 120) {
                     resetNotification();
-                }
+                }*/
             } else
             if(channel == 2) {
                 builder2.setContentText(message)
@@ -396,9 +396,9 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                if(lastReset > 120) {
+                /*if(lastReset > 120) {
                     resetNotification();
-                }
+                }*/
             }
         });
     }
