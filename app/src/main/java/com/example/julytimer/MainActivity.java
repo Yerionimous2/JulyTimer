@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -105,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
     private double z;
     private double percentage;
     private double percentageLastOpened;
+    private long startDateUNIX;
+    private long endDateUNIX;
+
+    /*
+     * save(long) saves the given int for later use under the given name.
+     */
+    public void save(long a, String name) {
+        editor.putLong(name, a);
+        editor.apply();
+    }
 
     /*
      * save(int) saves the given int for later use under the given name.
@@ -198,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    /*
+     * re-initialises all the Notification Channels, Managers and Builders so that they operate exactly as a completely new one.
+     */
     private void resetNotification() {
         removeNotification();
         Context context = this;
@@ -209,7 +223,6 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription(getString(R.string.notification_name_1));
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            removeNotification();
             builder = new NotificationCompat.Builder(context, "35");
             builder.setContentText("")
                     .setContentTitle("")
@@ -277,6 +290,8 @@ public class MainActivity extends AppCompatActivity {
          *  darkMode
          *  startDate
          *  endDate
+         *  startDateUNIX
+         *  endDateUNIX
          * df, dr, dz, dform are used for formatting purposes
          * displayMetrics is used to measure the Display
          * secondsLeft displays the seconds left to the endDate
@@ -312,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
          *  1 = been changed
          * backgroundcolor, textcolor, buttoncolor are used to store the current colorscheme
          * xString, yString, zString are used to convert x, y, z to their String and surround them with Text
-         * startDate, endDate are used to Store the start and end date
+         * startDate, endDate, startDateUNIX, endDateUNIX are used to Store the start and end date
          * completeTime is used to save the amount of seconds between start and end date
          * x is used to save the amount of seconds passed since the startDate
          * y is used to save the amount of seconds between now and the endDate
@@ -329,6 +344,19 @@ public class MainActivity extends AppCompatActivity {
 
         startDate = sharedPref.getString("Start", "2022-08-24 09:30:00.000");
         endDate = sharedPref.getString("Ende", "2023-07-23 21:40:00.000");
+
+        startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
+        endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
+
+        System.out.println("Loaded Variables: ");
+        System.out.println("begin         = " + begin);
+        System.out.println("end           = " + end);
+        System.out.println("multiper      = " + multiper);
+        System.out.println("darkMode      = " + darkMode);
+        System.out.println("startDate     = " + startDate);
+        System.out.println("endDate       = " + endDate);
+        System.out.println("startDateUNIX = " + startDateUNIX);
+        System.out.println("endDateUNIX   = " + endDateUNIX);
     }
 
     /*
@@ -350,7 +378,9 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                if(lastReset > 120) removeNotification();
+                if(lastReset > 120) {
+                    resetNotification();
+                }
             } else
             if(channel == 2) {
                 builder2.setContentText(message)
@@ -366,11 +396,12 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                if(lastReset > 120) removeNotification();
+                if(lastReset > 120) {
+                    resetNotification();
+                }
             }
         });
     }
-
 
     /*
      * Removes the Notification from the Notification center.
@@ -746,6 +777,7 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft.setTypeface(Typeface.MONOSPACE);
             secondsLeft2.setTypeface(Typeface.MONOSPACE);
             percent.setTypeface(Typeface.MONOSPACE);
+            percent2.setTypeface(Typeface.MONOSPACE);
             darkmodeBeginText1.setTypeface(Typeface.MONOSPACE);
             darkmodeBeginText2.setTypeface(Typeface.MONOSPACE);
             darkmodeEndText1.setTypeface(Typeface.MONOSPACE);
@@ -756,7 +788,6 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSettings.setTypeface(Typeface.MONOSPACE);
             darkmodeBegin.setTypeface(Typeface.MONOSPACE);
             darkmodeEnd.setTypeface(Typeface.MONOSPACE);
-            //secondsDone.setText("Sekunden, seit du mich gesehen hast: " + calcMilSeconds(startDate, endDate) / 1000);
             secondsLeft.setText("");
             percent.setText("");
             darkmodeBeginText1.setText("");
@@ -1189,14 +1220,19 @@ public class MainActivity extends AppCompatActivity {
             lyout.addView(showEndDatePicker);
 
             /*
-             * Initialises the Datapickers and defines the Button onClickListeners
+             * Initialises the Datapickers and defines the Button onClickListener Events
              */
-            int[] a = parseDate(startDate);
-            a = correctDate(a, 1);
+
+            Date date = new java.util.Date(startDateUNIX * 1000L - calcOffHours());
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String formattedDate = sdf.format(date);
+            int[] a = parseDate(formattedDate);
             showStartDatePicker.setText(createReadableDate(a));
 
-            int[] c = parseDate(endDate);
-            c = correctDate(c, 1);
+            date = new java.util.Date(endDateUNIX * 1000L - calcOffHours());
+            formattedDate = sdf.format(date);
+
+            int[] c = parseDate(formattedDate);
             showEndDatePicker.setText(createReadableDate(c));
 
             int[] b = new int[5];
@@ -1262,29 +1298,50 @@ public class MainActivity extends AppCompatActivity {
                 showEndDatePicker.setVisibility(View.INVISIBLE);
                 done.setVisibility(View.INVISIBLE);
 
-                if(changedStart) {
-                    correctDate(b, 2);
-                }
-                if(changedEnd) {
-                    correctDate(d, 2);
-                }
-
                 if(changedStart && changedEnd)
                     if(checkDates(dateParseString(b), dateParseString(d))) {
                         startDate = dateParseString(b);
+                        try {
+                            startDateUNIX = timestamp(startDate) + calcOffHours();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        startDateUNIX /= 1000;
                         save(startDate, "Start");
+                        save(startDateUNIX, "StartUNIX");
                         endDate = dateParseString(d);
+                        try {
+                            endDateUNIX = timestamp(endDate) + calcOffHours();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        endDateUNIX /= 1000;
                         save(endDate, "Ende");
+                        save(endDateUNIX, "EndUNIX");
                     }
                 if(changedStart && !changedEnd)
                     if(checkDates(dateParseString(b), endDate)) {
                         startDate = dateParseString(b);
+                        try {
+                            startDateUNIX = timestamp(startDate) + calcOffHours();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        startDateUNIX /= 1000;
                         save(startDate, "Start");
+                        save(startDateUNIX, "StartUNIX");
                     }
                 if(!changedStart && changedEnd)
                     if(checkDates(startDate, dateParseString(d))) {
                         endDate = dateParseString(d);
+                        try {
+                            endDateUNIX = timestamp(endDate) + calcOffHours();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        endDateUNIX /= 1000;
                         save(endDate, "Ende");
+                        save(endDateUNIX, "EndeUNIX");
                     }
 
                 secondsSwitch.setVisibility(View.VISIBLE);
@@ -1302,30 +1359,6 @@ public class MainActivity extends AppCompatActivity {
                 timerBool = true;
             });
         });
-    }
-
-    /*
-     * corrects for Errors happening because of correcting for Timezones.
-     *  (i.e. the Hour may be < 0 or > 24.)
-     */
-    private int[] correctDate(int[] b, int mode) {
-        float a = 0;
-        try {
-            a = timestamp(dateParseString(b));
-        } catch(ParseException oi) {
-            System.out.println("Debug: ParseException in timestamp");
-        }
-        if(mode == 1) {
-            a += calcOffHours();
-        }
-        if(mode == 2) {
-            a -= calcOffHours();
-        }
-        b = parseDate(df.format(a));
-        if(mode == 1) {
-            b[4] += 1;
-        }
-        return b;
     }
 
     /*
@@ -1426,14 +1459,11 @@ public class MainActivity extends AppCompatActivity {
         return Objects.requireNonNull(df.parse(arg)).getTime();
     }
 
-    /*
-     * Calculates the Seconds between two given Dates.
-     */
-    public long calcMilSeconds(String first, String second) {
-        long a = 0, b = 0;
+    public long calcMilSeconds(String first, long second) {
+        long a = 0, b;
+        b = second * 1000;
         try {
             a = timestamp(first);
-            b = timestamp(second);
         } catch(ParseException oi) {
             System.out.println("Debug: ParseException in timestamp");
         }
@@ -1466,9 +1496,10 @@ public class MainActivity extends AppCompatActivity {
     public void setXYZ() {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
-        x = calcMilSeconds(now.format(dr), startDate);
-        long y = calcMilSeconds(now.format(dr), endDate);
-        completeTime = calcMilSeconds(startDate, endDate);
+
+        x = calcMilSeconds(now.format(dr), startDateUNIX - calcOffHours());
+        long y = calcMilSeconds(now.format(dr), endDateUNIX - calcOffHours());
+        completeTime = x + y;
 
         y = y / 1000;
         z = (double) x / (double) (completeTime);
@@ -1578,7 +1609,7 @@ public class MainActivity extends AppCompatActivity {
         } catch(ParseException oi) {
             System.out.println("Debug: ParseException in timestamp");
         }
-        return (int)(b-a)/(1000 * 60 * 60);
+        return (int)(b-a)/1000;
     }
 
     /*
