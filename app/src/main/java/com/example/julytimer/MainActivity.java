@@ -378,9 +378,9 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                /*if(lastReset > 120) {
+                if(lastReset > 120) {
                     resetNotification();
-                }*/
+                }
             } else
             if(channel == 2) {
                 builder2.setContentText(message)
@@ -396,9 +396,9 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                /*if(lastReset > 120) {
+                if(lastReset > 120) {
                     resetNotification();
-                }*/
+                }
             }
         });
     }
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
         }
         lastReset = 0;
         if(standardChannel == 1) standardChannel +=2;
-        if(standardChannel == 3) standardChannel -=2;
+        else if(standardChannel == 3) standardChannel -=2;
     }
 
     /*
@@ -1223,13 +1223,13 @@ public class MainActivity extends AppCompatActivity {
              * Initialises the Datapickers and defines the Button onClickListener Events
              */
 
-            Date date = new java.util.Date(startDateUNIX * 1000L - calcOffHours());
+            Date date = new java.util.Date(startDateUNIX * 1000L - calcOffSeconds());
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             String formattedDate = sdf.format(date);
             int[] a = parseDate(formattedDate);
             showStartDatePicker.setText(createReadableDate(a));
 
-            date = new java.util.Date(endDateUNIX * 1000L - calcOffHours());
+            date = new java.util.Date(endDateUNIX * 1000L - calcOffSeconds());
             formattedDate = sdf.format(date);
 
             int[] c = parseDate(formattedDate);
@@ -1302,7 +1302,7 @@ public class MainActivity extends AppCompatActivity {
                     if(checkDates(dateParseString(b), dateParseString(d))) {
                         startDate = dateParseString(b);
                         try {
-                            startDateUNIX = timestamp(startDate) + calcOffHours();
+                            startDateUNIX = timestamp(startDate) + calcOffSeconds();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -1311,7 +1311,7 @@ public class MainActivity extends AppCompatActivity {
                         save(startDateUNIX, "StartUNIX");
                         endDate = dateParseString(d);
                         try {
-                            endDateUNIX = timestamp(endDate) + calcOffHours();
+                            endDateUNIX = timestamp(endDate) + calcOffSeconds();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -1323,7 +1323,7 @@ public class MainActivity extends AppCompatActivity {
                     if(checkDates(dateParseString(b), endDate)) {
                         startDate = dateParseString(b);
                         try {
-                            startDateUNIX = timestamp(startDate) + calcOffHours();
+                            startDateUNIX = timestamp(startDate) + calcOffSeconds();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -1335,7 +1335,7 @@ public class MainActivity extends AppCompatActivity {
                     if(checkDates(startDate, dateParseString(d))) {
                         endDate = dateParseString(d);
                         try {
-                            endDateUNIX = timestamp(endDate) + calcOffHours();
+                            endDateUNIX = timestamp(endDate) + calcOffSeconds();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -1497,8 +1497,8 @@ public class MainActivity extends AppCompatActivity {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
 
-        x = calcMilSeconds(now.format(dr), startDateUNIX - calcOffHours());
-        long y = calcMilSeconds(now.format(dr), endDateUNIX - calcOffHours());
+        x = calcMilSeconds(now.format(dr), startDateUNIX - calcOffSeconds());
+        long y = calcMilSeconds(now.format(dr), endDateUNIX - calcOffSeconds());
         completeTime = x + y;
 
         y = y / 1000;
@@ -1597,9 +1597,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Calculates the Hours the users Time is off to the Time in Berlin(GMT+2).
+     * Calculates the Seconds the users Time is off to the Time in Berlin(GMT+2).
      */
-    public int calcOffHours() {
+    public int calcOffSeconds() {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
         float a = 0,b = 0;
