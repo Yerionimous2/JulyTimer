@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     private int PROGRESS_CURRENT = 0;
     private int PROGRESS_MAX;
     public int textSize;
-    private int lastReset;
     private int standardChannel;
     private boolean ran, ran2;
     private boolean timerBool = true;
@@ -101,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public String xString2, yString2, zString2;
     public String startDate = "2022-08-24 09:30:00.000";
     public String endDate = "2023-07-23 21:40:00.000";
+    private String[] log;
     private long completeTime;
     private long x;
     private double z;
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     public void save(long a, String name) {
         editor.putLong(name, a);
         editor.apply();
+        log("Saved long " + a + " as " + "\"" + name + "\".");
     }
 
     /*
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
     public void save(String a, String name) {
         editor.putString(name, a);
         editor.apply();
+        log("Saved String " + a + " as " + "\"" + name + "\".");
     }
 
 
@@ -160,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
             ran = false;
             ran2 = false;
             standardChannel = 1;
-            lastReset = 0;
             PROGRESS_MAX = 28814999;                                // Failsafe for Notification
             darkmodeBegin.setVisibility(View.INVISIBLE);
             darkmodeEnd.setVisibility(View.INVISIBLE);
@@ -172,11 +173,14 @@ public class MainActivity extends AppCompatActivity {
             darkmodeSettings.setText(getString(R.string.setup_darkmode_times));
             dform = new DecimalFormat("#.######");
 
+            log("Initialising Notifications.");
             initialiseNotifications();
-
+            log("Initialising the UI.");
             initialiseUI();
+            log("Starting Services.");
             startService(new Intent(getBaseContext(), KillService.class));
             measure();
+            log("Initialising the Listeners.");
             initialiseListeners();
         });
 
@@ -186,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
      * Makes the Notification open the App.
      */
     public void onPause() {
+        log("The App has been closed but not terminated.");
         percentageLastOpened = percentage;
 
         Intent startIntent = new Intent(this, this.getClass());
@@ -201,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onResume() {
+        log("The App has been opened again.");
         resetNotification();
         if(percentage > percentageLastOpened) {
             Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, (int) percentageLastOpened), Toast.LENGTH_LONG);
@@ -348,15 +354,15 @@ public class MainActivity extends AppCompatActivity {
         startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
         endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
 
-        System.out.println("Loaded Variables: ");
-        System.out.println("begin         = " + begin);
-        System.out.println("end           = " + end);
-        System.out.println("multiper      = " + multiper);
-        System.out.println("darkMode      = " + darkMode);
-        System.out.println("startDate     = " + startDate);
-        System.out.println("endDate       = " + endDate);
-        System.out.println("startDateUNIX = " + startDateUNIX);
-        System.out.println("endDateUNIX   = " + endDateUNIX);
+        log("Loaded Variables: ");
+        log("begin         = " + begin);
+        log("end           = " + end);
+        log("multiper      = " + multiper);
+        log("darkMode      = " + darkMode);
+        log("startDate     = " + startDate);
+        log("endDate       = " + endDate);
+        log("startDateUNIX = " + startDateUNIX);
+        log("endDateUNIX   = " + endDateUNIX);
     }
 
     /*
@@ -370,7 +376,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void sendNotification(int channel, String title, String message) {
         runOnUiThread(() -> {
-            lastReset +=1;
             if(channel == 1) {
                 builder.setContentText(message)
                         .setContentTitle(title)
@@ -378,9 +383,6 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                if(lastReset > 120) {
-                    resetNotification();
-                }
             } else
             if(channel == 2) {
                 builder2.setContentText(message)
@@ -396,9 +398,6 @@ public class MainActivity extends AppCompatActivity {
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
                 notificationManager.notify(1, builder.build());
-                if(lastReset > 120) {
-                    resetNotification();
-                }
             }
         });
     }
@@ -417,9 +416,6 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
             notificationManager.cancel(standardChannel);
         }
-        lastReset = 0;
-        if(standardChannel == 1) standardChannel +=2;
-        else if(standardChannel == 3) standardChannel -=2;
     }
 
     /*
@@ -513,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
      * Gets called when the App gets closed.
      */
     public void onDestroy() {
+        log("The App has been terminated.");
         super.onDestroy();
         removeNotification();
     }
@@ -929,6 +926,7 @@ public class MainActivity extends AppCompatActivity {
                         darkmodeSwitch.setText(getString(R.string.darkmode_off));
                     }
                 }
+                log("Changed the Darkmode to " + darkmodeSwitch.getText());
                 update();
                 save(darkMode, "Darkmode");
             });
@@ -957,6 +955,7 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeEndText1.setVisibility(View.INVISIBLE);
                     darkmodeEndText2.setVisibility(View.INVISIBLE);
                     darkmodeSettings.setText(getString(R.string.setup));
+                    log("Set the Darkmode-Times: From " + darkmodeBegin.getText() + " to " + darkmodeEnd.getText() + " o' clock.");
                 }
                 hideSoftKeyboard(findViewById(R.id.Layout1));
             });
@@ -984,6 +983,7 @@ public class MainActivity extends AppCompatActivity {
                         multiper = 1;
                     }
                 }
+                log("Set the time display mode to " + secondsSwitch.getText());
                 update();
                 save(multiper, "timeMode");
             });
@@ -1009,7 +1009,6 @@ public class MainActivity extends AppCompatActivity {
         darkmodeEnd.setY(darkmodeEndText1.getY());
         darkmodeBeginText2.setY(darkmodeBeginText1.getY());
         darkmodeEndText2.setY(darkmodeEndText1.getY());
-
     }
 
     /*
@@ -1356,6 +1355,11 @@ public class MainActivity extends AppCompatActivity {
                 if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto)))
                     darkmodeSettings.setVisibility(View.VISIBLE);
 
+                log("Changed Dates: ");
+                if(changedStart) log(" Startdate = " + startDateUNIX + ", " + createReadableDate(b));
+                else log(" Startdate = " + startDateUNIX + ", " + createReadableDate(a));
+                if(changedEnd) log(" Startdate = " + startDateUNIX + ", " + createReadableDate(d));
+                else log(" Enddate   = " + endDateUNIX + ", " + createReadableDate(c));
                 timerBool = true;
             });
         });
@@ -1379,6 +1383,7 @@ public class MainActivity extends AppCompatActivity {
             if ((percentage < Math.floor(z)) && (ran)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_percent), Toast.LENGTH_LONG);
                 toast.show();
+                log("Send Milestone-Notification for a percentjump.");
                 save((int) percentage, "Percent");
             }
 
@@ -1391,6 +1396,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_third_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_third_notification));
+                log("Send Milestone-Notification for one third done.");
             }
 
             /*
@@ -1402,6 +1408,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_half_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_half_notification));
+                log("Send Milestone-Notification for one half done.");
             }
 
             /*
@@ -1413,6 +1420,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_two_third_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_two_third_notification));
+                log("Send Milestone-Notification for two thirds done.");
             }
 
             /*
@@ -1424,6 +1432,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_almost_done_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_almost_done_notification));
+                log("Send Milestone-Notification for 90% done.");
             }
 
             /*
@@ -1436,6 +1445,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_month_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_month_notification));
+                log("Send Milestone-Notification for a Month done.");
             }
         });
     }
@@ -1513,8 +1523,29 @@ public class MainActivity extends AppCompatActivity {
         yString2 = convertToReadableString(y);
         zString = getString(R.string.percent_done);
         zString2 = dform.format(z) + "";
-
     }
+
+    private void log(String messageline) {
+        System.out.println(messageline);
+        log = addLine(log, messageline);
+    }
+
+    private String[] addLine(String[] log, String messageline) {
+        String[] result;
+        if(log != null) result = new String[log.length + 1];
+        else result = new String[1];
+        if(log != null) System.arraycopy(log, 0, result, 0, log.length);
+        if(log != null) result[log.length] = "[" + now.format(dr) + "]: " + messageline;
+        else result[0] = "[" + LocalDateTime.now(ZoneId.of("Europe/Berlin")).format(dr) + "]: " + messageline;
+        return result;
+    }
+
+    private void printlog(String[] log) {
+        if(log != null) {
+            for (String s : log) System.out.println(s);
+        }
+    }
+
 
     private String convertToReadableString(long r) {
         String result = "" + r;
@@ -1561,6 +1592,7 @@ public class MainActivity extends AppCompatActivity {
                 secondsLeft2.setText("0");
                 percent.setText(getString(R.string.percent_done));
                 percent2.setText("100,000000");
+                log("100% are reached.");
             }
             if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto))) {
                 if(darkmodeSettings.getText().equals(getString(R.string.setup)))
@@ -1619,12 +1651,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+        log("Initialising...");
         setContentView(R.layout.activity_main);
         layout = findViewById(R.id.Layout1);
         ConstraintLayout homeScreenLayout = (ConstraintLayout) layout;
 
         runOnUiThread(() -> {
             initialise();
+            log("Loading Variables...");
             loadVariables();
 
             tmTk1 = new TimerTask() {
@@ -1670,6 +1705,9 @@ public class MainActivity extends AppCompatActivity {
             homeScreenLayout.addView(darkmodeSwitch);
             homeScreenLayout.addView(darkmodeSettings);
             tm1.schedule(tmTk1, 0, 500);
+            log("Initialised!");
+            System.out.println("InitialiseLog:");
+            printlog(log);
         });
     }
 }
