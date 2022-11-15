@@ -1650,7 +1650,9 @@ public class MainActivity extends AppCompatActivity {
                     darkmodeEnd.setText(Integer.toString(end));
                 }
             });
-            PROGRESS_CURRENT = (int) x * multiper;
+            if(multiper != 15000) {
+                PROGRESS_CURRENT = (int) x * multiper;
+            } else PROGRESS_CURRENT = (int) x;
             PROGRESS_MAX = (int) (completeTime / 1000);
 
             sendNotification(standardChannel, yString2 + " " +secondsSwitch.getText().toString(),
