@@ -1655,8 +1655,13 @@ public class MainActivity extends AppCompatActivity {
             } else PROGRESS_CURRENT = (int) x;
             PROGRESS_MAX = (int) (completeTime / 1000);
 
-            sendNotification(standardChannel, yString2 + " " +secondsSwitch.getText().toString(),
-                    getString(R.string.still_there) + " " + zString2+ " " + getString(R.string.percent_done));
+            if(multiper != 15000) {
+                sendNotification(standardChannel, yString2 + " " +secondsSwitch.getText().toString(),
+                        getString(R.string.still_there) + " " + zString2+ " " + getString(R.string.percent_done));
+            } else {
+                sendNotification(standardChannel, yString2,
+                        getString(R.string.still_there) + " " + zString2+ " " + getString(R.string.percent_done));
+            }
         });
         ran2 = true;
     }
