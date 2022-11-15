@@ -548,6 +548,9 @@ public class MainActivity extends AppCompatActivity {
                 if (multiper == 1) {
                     secondsSwitch.setText(getString(R.string.seconds));
                 }
+                if(multiper == 15000) {
+                    secondsSwitch.setText(getString(R.string.customTime));
+                }
             }
             if(darkmodeBeginText1 != null) darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
             if(darkmodeBeginText2 != null) darkmodeBeginText2.setText(getString(R.string.o_clock));
@@ -978,6 +981,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if(secondsSwitch.getText().equals(getString(R.string.hours))){
                         secondsSwitch.setText(getString(R.string.days));
                         multiper = 86400;
+                    } else if(secondsSwitch.getText().equals(getString(R.string.days))){
+                        secondsSwitch.setText(getString(R.string.customTime));
+                        multiper = 15000;
                     } else {
                         secondsSwitch.setText(getString(R.string.seconds));
                         multiper = 1;
@@ -1497,6 +1503,9 @@ public class MainActivity extends AppCompatActivity {
         if(multiper == 3600) {
             return getString(R.string.hours) + message;
         }
+        if(multiper == 15000) {
+            return getString(R.string.customTime) + message;
+        }
         return getString(R.string.days) + message;
     }
 
@@ -1515,14 +1524,44 @@ public class MainActivity extends AppCompatActivity {
         z = (double) x / (double) (completeTime);
         z = z * 100;
         x = x / 1000;
-        x = x / multiper;
-        y = y / multiper;
+        if(multiper != 15000) x = x / multiper;
+        if(multiper != 15000) y = y / multiper;
         xString = setString(multiper, getString(R.string.since_seen));
-        xString2 = convertToReadableString(x);
+        if(secondsSwitch.getText().equals(getString(R.string.customTime))) {
+            xString2 = createCustomTime(x);
+        } else xString2 = convertToReadableString(x);
         yString = setString(multiper, getString(R.string.until_seeing));
-        yString2 = convertToReadableString(y);
+        if(secondsSwitch.getText().equals(getString(R.string.customTime))) {
+            yString2 = createCustomTime(y);
+        } else yString2 = convertToReadableString(y);
         zString = getString(R.string.percent_done);
         zString2 = dform.format(z) + "";
+    }
+
+    private String createCustomTime(long x) {
+        System.out.println("CreateCustomTime called with Value " + x);
+        String result = "";
+        if(x >= 86400) {
+            result += (int)x/86400;
+            result += "d ";
+        }
+        x = x % 86400;
+        if(x >= 3600) {
+            result += (int)x/3600;
+            result += "h ";
+        }
+        x = x % 3600;
+        if(x >= 60) {
+            result += (int)x/60;
+            result += "min ";
+        }
+        x = x % 60;
+        if(x >= 0) {
+            result += x;
+            result += "s";
+        }
+        System.out.println("  result = " + result);
+        return result;
     }
 
     private void log(String messageline) {

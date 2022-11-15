@@ -39,4 +39,5 @@
     <string name="app_name">JulyTimer</string>
     <string name="missed_percent_2_singular">Percent jump. Very Sad.</string>
     <string name="missed_percent_2_plural">Percent jumps. Very Sad.</string>
+    <string name="customTime">Time</string>
 </resources>

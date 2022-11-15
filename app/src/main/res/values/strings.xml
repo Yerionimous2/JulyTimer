@@ -46,5 +46,6 @@
     <string name="milestone_almost_done_toast">Fast alles geschafft! Bis bald :)</string>
     <string name="milestone_month_toast">Noch einen Monat geschafft! Ich bin stolz auf dich!</string>
     <string name="milestone_done_toast">Jaaaaaaa!</string>
+    <string name="customTime">Zeit</string>
 
 </resources>
