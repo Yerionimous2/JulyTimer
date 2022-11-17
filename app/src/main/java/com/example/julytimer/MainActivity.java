@@ -350,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
 
         startDate = sharedPref.getString("Start", "2022-08-24 09:30:00.000");
         endDate = sharedPref.getString("Ende", "2023-07-23 21:40:00.000");
-
         startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
         endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
 

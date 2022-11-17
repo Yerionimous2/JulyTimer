@@ -4,6 +4,7 @@
     <string name="minutes">Minuten</string>
     <string name="hours">Uur</string>
     <string name="days">Dagen</string>
+    <string name="customTime">tijd</string>
     <string name="begin_dark_mode">Begin van de donkere modus:</string>
     <string name="begin_bright_mode">Start van de lichtmodus:</string>
     <string name="o_clock">Horloge</string>
@@ -39,5 +40,4 @@
     <string name="app_name">JulyTimer</string>
     <string name="missed_percent_2_singular">procent gemist</string>
     <string name="missed_percent_2_plural">procent gemist</string>
-    <string name="customTime">tijd</string>
 </resources>

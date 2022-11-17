@@ -4,6 +4,7 @@
     <string name="minutes">Minutes</string>
     <string name="hours">Hours</string>
     <string name="days">Days</string>
+    <string name="customTime">Time</string>
     <string name="begin_dark_mode">Begin of darkmode:</string>
     <string name="begin_bright_mode">Begin of brightmode:</string>
     <string name="o_clock">O\' clock</string>
@@ -39,5 +40,4 @@
     <string name="app_name">JulyTimer</string>
     <string name="missed_percent_2_singular">Percent jump. Very Sad.</string>
     <string name="missed_percent_2_plural">Percent jumps. Very Sad.</string>
-    <string name="customTime">Time</string>
 </resources>
