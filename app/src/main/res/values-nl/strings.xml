@@ -40,4 +40,5 @@
     <string name="app_name">JulyTimer</string>
     <string name="missed_percent_2_singular">procent gemist</string>
     <string name="missed_percent_2_plural">procent gemist</string>
+    <string name="title_activity_settings">" ideeën"</string>
 </resources>

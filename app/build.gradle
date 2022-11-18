@@ -26,6 +26,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'com.example.julytimer'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
