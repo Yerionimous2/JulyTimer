@@ -108,9 +108,107 @@ public class SettingsActivity extends AppCompatActivity {
         log("Saved String " + a + " as " + "\"" + name + "\".");
     }
 
+    /*
+     * All the stored Data is being loaded from the Disk.
+     * The default Values are:
+     *  multiper:  1
+     *  darkmode:  0
+     *  begin:     19
+     *  end:       7
+     *  startDate: "2022-08-24 09:30:00.000"
+     *  endDate:   "2023-07-23 21:40:00.000"
+     */
+    public void loadVariables() {
+        /*
+         * sharedPref and editor are used to save the Variables:
+         *  begin
+         *  end
+         *  multiper
+         *  darkMode
+         *  startDate
+         *  endDate
+         *  startDateUNIX
+         *  endDateUNIX
+         * df, dr, dz, dform are used for formatting purposes
+         * displayMetrics is used to measure the Display
+         * secondsLeft displays the seconds left to the endDate
+         * secondsDone displays the seconds elapsed since the startDate
+         * percent displays the percentage of seconds done
+         * darkmodeBeginText1, darkmodeBeginText2, darkmodeEndText1, darkmodeEndText2 display the labels used for editing the darkmode auto mode
+         * secondsSwitch switches the Displays between seconds, minutes, hours and days
+         * changeDates accesses the Options to change the times
+         * darkmodeSwitch switches the Colorscheme between darkmode, brightmode and the auto mode
+         * darkmodeSettings accesses the Options for editing the darkmode auto mode
+         * darkmodeBegin is used to let the user change the Time when the auto changes to dark mode
+         * darkmodeEnd is used to let the user change the Time when the auto changes to bright mode
+         * channel, channel2, notificationManager, notificationManager2, builder, builder2 are used to send the notifications
+         * begin, end set the times when the dark mode begins or ends
+         * height, width are used to save the height and width of the screen
+         * multiper is used to save the modes in which the time is displayed:
+         *  1     = seconds
+         *  60    = minutes
+         *  3600  = hours
+         *  86400 = days
+         * darkmode is used to save the mode in which the colorscheme changes:
+         *  0 = bright mode
+         *  1 = dark mode
+         *  2 = auto mode
+         * PROGRESS_CURRENT, PROGRESS_MAX are used to display the progressbar
+         * textsize is used to scale the text and all display elements
+         * ran is used to check weather the update() method has run already
+         * timerbool is used to pause the timer
+         *  0 = timer paused
+         *  1 = timer running
+         * changedStart, changedEnd are used to check weather the start or end date have been changed
+         *  0 = not been changed
+         *  1 = been changed
+         * backgroundcolor, textcolor, buttoncolor are used to store the current colorscheme
+         * xString, yString, zString are used to convert x, y, z to their String and surround them with Text
+         * startDate, endDate, startDateUNIX, endDateUNIX are used to Store the start and end date
+         * completeTime is used to save the amount of seconds between start and end date
+         * x is used to save the amount of seconds passed since the startDate
+         * y is used to save the amount of seconds between now and the endDate
+         * z is used to save the percentage of time passed
+         */
+        SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+        int beginSave = begin;
+        int endSave   = end;
+        int multiperSave = multiper;
+        int darkModeSave = darkMode;
+        String startDateSave = startDate;
+        String endDateSave = endDate;
+
+        begin = sharedPref.getInt("darkmodeBegin", 19);
+        end = sharedPref.getInt("darkmodeEnd", 7);
+        multiper = sharedPref.getInt("timeMode", 1);
+
+        darkMode = sharedPref.getInt("Darkmode", 0);
+
+        startDate = sharedPref.getString("Start", "2022-08-24 09:30:00.000");
+        endDate = sharedPref.getString("Ende", "2023-07-23 21:40:00.000");
+        startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
+        endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
+
+        if((beginSave != begin)||(endSave != end)||(multiperSave != multiper)||(darkModeSave != darkMode)||(!startDateSave.equals(startDate))||(!endDateSave.equals(endDate))) {
+            log("Loaded Variables: ");
+            log("begin         = " + begin);
+            log("end           = " + end);
+            log("multiper      = " + multiper);
+            log("darkMode      = " + darkMode);
+            log("startDate     = " + startDate);
+            log("endDate       = " + endDate);
+            log("startDateUNIX = " + startDateUNIX);
+            log("endDateUNIX   = " + endDateUNIX);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+        loadVariables();
         setContentView(R.layout.activity_settings);
         layout = findViewById(R.id.Layout2);
         ConstraintLayout homeScreenLayout = (ConstraintLayout) layout;
@@ -136,7 +234,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void initialise() {
         Context a = this;
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         dform = new DecimalFormat("#.######");
         multiper = 1;
@@ -409,6 +507,8 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeEnd.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
+            measure();
+            setPositions(height, width, 0);
         });
     }
 
@@ -481,14 +581,16 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeEnd.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) {
                     a = darkmodeEnd.getText().toString();
-                    int aNum = Integer.parseInt(a);
-                    if ((aNum > 24) || ((aNum < 0)) || (aNum > begin)) {
-                        darkmodeEnd.setText(Integer.toString(end));
-                    } else {
-                        end = aNum;
-                        darkmodeEnd.setText(Integer.toString(end));
-                        save(end, "darkmodeEnd");
-                    }
+                    if(!a.equals("")) {
+                        int aNum = Integer.parseInt(a);
+                        if ((aNum > 24) || ((aNum < 0)) || (aNum > begin)) {
+                            darkmodeEnd.setText(Integer.toString(end));
+                        } else {
+                            end = aNum;
+                            darkmodeEnd.setText(Integer.toString(end));
+                            save(end, "darkmodeEnd");
+                        }
+                    } else darkmodeEnd.setText(Integer.toString(end));
                 }
             });
 
@@ -529,6 +631,8 @@ public class SettingsActivity extends AppCompatActivity {
              * The Settings are validated and saved. The Keyboard gets closed.
              */
             darkmodeSettings.setOnClickListener(view -> {
+                darkmodeEnd.setText(Integer.toString(end));
+                darkmodeBegin.setText(Integer.toString(begin));
                 if (!darkmodeSettings.getText().equals(getString(R.string.done))) {
                     updateUI(1);
                     darkmodeBegin.setVisibility(View.VISIBLE);
@@ -549,7 +653,7 @@ public class SettingsActivity extends AppCompatActivity {
                     darkmodeSettings.setText(getString(R.string.setup));
                     log("Set the Darkmode-Times: From " + darkmodeBegin.getText() + " to " + darkmodeEnd.getText() + " o' clock.");
                 }
-                hideSoftKeyboard(findViewById(R.id.Layout1));
+                hideSoftKeyboard(findViewById(R.id.Layout2));
             });
 
             /*
@@ -606,7 +710,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     /*
      * hideSoftKeyboard is used to close the Android soft Keyboard.
-     * The Input "view" is usually just (View) findViewById(R.id.Layout1)
+     * The Input "view" is usually just (View) findViewById(R.id.Layout2)
      */
     public void hideSoftKeyboard(View view){
         runOnUiThread(() -> {
@@ -626,6 +730,7 @@ public class SettingsActivity extends AppCompatActivity {
             updateUI(0);
             runOnUiThread(() -> darkmodeSettings.setText(getString(R.string.setup)));
         }
+        if(darkMode == 2) darkmodeSettings.setVisibility(View.VISIBLE);
         setPaddingSizes();
     }
 

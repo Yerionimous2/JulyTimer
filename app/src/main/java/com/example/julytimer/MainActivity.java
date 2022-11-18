@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private double percentageLastOpened;
     private long startDateUNIX;
     private long endDateUNIX;
+    private boolean settingsOpen;
 
     /*
      * save(int) saves the given int for later use under the given name.
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         log("The App has been opened again.");
         resetNotification();
+        settingsOpen = false;
         if(percentage > percentageLastOpened) {
             Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, (int) percentageLastOpened), Toast.LENGTH_LONG);
             toast.show();
@@ -285,8 +287,15 @@ public class MainActivity extends AppCompatActivity {
          * y is used to save the amount of seconds between now and the endDate
          * z is used to save the percentage of time passed
          */
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+
+        int beginSave = begin;
+        int endSave   = end;
+        int multiperSave = multiper;
+        int darkModeSave = darkMode;
+        String startDateSave = startDate;
+        String endDateSave = endDate;
 
         begin = sharedPref.getInt("darkmodeBegin", 19);
         end = sharedPref.getInt("darkmodeEnd", 7);
@@ -299,15 +308,17 @@ public class MainActivity extends AppCompatActivity {
         startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
         endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
 
-        log("Loaded Variables: ");
-        log("begin         = " + begin);
-        log("end           = " + end);
-        log("multiper      = " + multiper);
-        log("darkMode      = " + darkMode);
-        log("startDate     = " + startDate);
-        log("endDate       = " + endDate);
-        log("startDateUNIX = " + startDateUNIX);
-        log("endDateUNIX   = " + endDateUNIX);
+        if((beginSave != begin)||(endSave != end)||(multiperSave != multiper)||(darkModeSave != darkMode)||(!startDateSave.equals(startDate))||(!endDateSave.equals(endDate))) {
+            log("Loaded Variables: ");
+            log("begin         = " + begin);
+            log("end           = " + end);
+            log("multiper      = " + multiper);
+            log("darkMode      = " + darkMode);
+            log("startDate     = " + startDate);
+            log("endDate       = " + endDate);
+            log("startDateUNIX = " + startDateUNIX);
+            log("endDateUNIX   = " + endDateUNIX);
+        }
     }
 
     /*
@@ -648,7 +659,10 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void initialiseListeners() {
-        runOnUiThread(() -> settings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class))));
+        runOnUiThread(() -> settings.setOnClickListener(view -> {
+            settingsOpen = true;
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        }));
     }
 
     /*
@@ -979,6 +993,9 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
+                    if(settingsOpen) {
+                        loadVariables();
+                    }
                     if(timerBool)
                         update();
                     if(!timerBool) {
