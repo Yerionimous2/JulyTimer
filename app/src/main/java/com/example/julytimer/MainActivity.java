@@ -661,6 +661,7 @@ public class MainActivity extends AppCompatActivity {
     public void initialiseListeners() {
         runOnUiThread(() -> settings.setOnClickListener(view -> {
             settingsOpen = true;
+            save(textSize, "textSize");
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }));
     }

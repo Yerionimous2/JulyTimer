@@ -26,7 +26,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -61,7 +60,6 @@ public class SettingsActivity extends AppCompatActivity {
     public Button secondsSwitch;
     public Button changeDates;
     public Button darkmodeSwitch;
-    private DecimalFormat dform;
     private int height;
     private int width;
     private int darkMode;
@@ -74,13 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
     public String endDate = "2023-07-23 21:40:00.000";
     private String a;
     private int multiper;
-    private long x;
-    private long completeTime;
-    private double z;
-    private int textSize = 12; //TODO: An Bildschirm anpassen.
+    private int textSize;
     private long startDateUNIX, endDateUNIX;
     public boolean changedStart, changedEnd;
-    private String xString2, yString2, zString2;
 
     /*
      * save(long) saves the given int for later use under the given name.
@@ -191,6 +185,8 @@ public class SettingsActivity extends AppCompatActivity {
         startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
         endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
 
+        textSize = sharedPref.getInt("textSize", 12);
+
         if((beginSave != begin)||(endSave != end)||(multiperSave != multiper)||(darkModeSave != darkMode)||(!startDateSave.equals(startDate))||(!endDateSave.equals(endDate))) {
             log("Loaded Variables: ");
             log("begin         = " + begin);
@@ -236,7 +232,6 @@ public class SettingsActivity extends AppCompatActivity {
         Context a = this;
         SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
-        dform = new DecimalFormat("#.######");
         multiper = 1;
         editor = sharedPref.edit();
         darkmodeBegin = new EditText(a);
@@ -635,6 +630,8 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeBegin.setText(Integer.toString(begin));
                 if (!darkmodeSettings.getText().equals(getString(R.string.done))) {
                     updateUI(1);
+                    darkmodeSwitch.setVisibility(View.INVISIBLE);
+                    secondsSwitch.setVisibility(View.INVISIBLE);
                     darkmodeBegin.setVisibility(View.VISIBLE);
                     darkmodeEnd.setVisibility(View.VISIBLE);
                     darkmodeBeginText1.setVisibility(View.VISIBLE);
@@ -644,6 +641,8 @@ public class SettingsActivity extends AppCompatActivity {
                     darkmodeSettings.setText(getString(R.string.done));
                 } else {
                     updateUI(0);
+                    secondsSwitch.setVisibility(View.VISIBLE);
+                    darkmodeSwitch.setVisibility(View.VISIBLE);
                     darkmodeBegin.setVisibility(View.INVISIBLE);
                     darkmodeEnd.setVisibility(View.INVISIBLE);
                     darkmodeBeginText1.setVisibility(View.INVISIBLE);
@@ -720,7 +719,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void update() {
-        setXYZ();
+        setTime();
+        setPaddingSizes();
         if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto))) {
             if(darkmodeSettings.getText().equals(getString(R.string.setup)))
                 updateUI(0);
@@ -731,7 +731,6 @@ public class SettingsActivity extends AppCompatActivity {
             runOnUiThread(() -> darkmodeSettings.setText(getString(R.string.setup)));
         }
         if(darkMode == 2) darkmodeSettings.setVisibility(View.VISIBLE);
-        setPaddingSizes();
     }
 
     private void log(String s) {
@@ -1057,82 +1056,12 @@ public class SettingsActivity extends AppCompatActivity {
         return result;
     }
 
-    public long calcMilSeconds(String first, long second) {
-        long a = 0, b;
-        b = second * 1000;
-        try {
-            a = timestamp(first);
-        } catch(ParseException oi) {
-            System.out.println("Debug: ParseException in timestamp");
-        }
-        if(a > b) {
-            return a - b;
-        } else {
-            return b - a;
-        }
-    }
-
     /*
      * Does the Math to set x, y and z and their corresponding Strings.
      */
-    public void setXYZ() {
+    public void setTime() {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
-
-        x = calcMilSeconds(now.format(dr), startDateUNIX - calcOffSeconds());
-        long y = calcMilSeconds(now.format(dr), endDateUNIX - calcOffSeconds());
-        completeTime = x + y;
-
-        y = y / 1000;
-        z = (double) x / (double) (completeTime);
-        z = z * 100;
-        x = x / 1000;
-        if(multiper != 15000) x = x / multiper;
-        if(multiper != 15000) y = y / multiper;
-        if(multiper == 15000) {
-            xString2 = createCustomTime(x);
-        } else xString2 = convertToReadableString(x);
-        if(multiper == 15000) {
-            yString2 = createCustomTime(y);
-        } else yString2 = convertToReadableString(y);
-        zString2 = dform.format(z) + "";
-    }
-
-    private String convertToReadableString(long r) {
-        String result = "" + r;
-        int length = result.length();
-        for(int i = length-1; i >= 1; i--) {
-            if(((length - i) % 3) == 0) {
-                result = result.substring(0, i) + "." + result.substring(i);
-            }
-        }
-        return result;
-    }
-
-    private String createCustomTime(long x) {
-        System.out.println("CreateCustomTime called with Value " + x);
-        String result = "";
-        if(x >= 86400) {
-            result += (int)x/86400;
-            result += "d ";
-        }
-        x = x % 86400;
-        if(x >= 3600) {
-            result += (int)x/3600;
-            result += "h ";
-        }
-        x = x % 3600;
-        if(x >= 60) {
-            result += (int)x/60;
-            result += "min ";
-        }
-        x = x % 60;
-        if(x >= 0) {
-            result += x;
-            result += "s";
-        }
-        System.out.println("  result = " + result);
-        return result;
     }
 
     /*
