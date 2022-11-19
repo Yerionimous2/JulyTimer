@@ -16,13 +16,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
     private DecimalFormat dform;
+    private ImageView backgroundImage;
     TimerTask tmTk1;
     private TextView secondsLeft;
     private TextView secondsLeft2;
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager notificationManager2;
     NotificationCompat.Builder builder;
     NotificationCompat.Builder builder2;
-    public Drawable background;
     public final Timer tm1 = new Timer();
     public int begin = 0;
     public int end = 0;
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     private long startDateUNIX;
     private long endDateUNIX;
     private boolean settingsOpen;
+    private String backgroundcolor;
 
     /*
      * save(int) saves the given int for later use under the given name.
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
      * initialise initialises the UI and loads the saved Values in the Variables
      * uses initialiseNotifications and initialiseUI.
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void initialise() {
         Context a = this;
         runOnUiThread(() -> {
@@ -115,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
             percent = new TextView(a);
             percent2 = new TextView(a);
             settings = new Button(a);
+            backgroundImage = new ImageView(a);
+            backgroundImage.setBackground(getDrawable(R.drawable.normalbackground));
+            backgroundImage.setAlpha(0.23F);
             ran = false;
             ran2 = false;
             standardChannel = 1;
@@ -550,27 +555,26 @@ public class MainActivity extends AppCompatActivity {
     public void setColors() {
         runOnUiThread(() -> {
             if(darkMode == 0) {
-                background = getDrawable(R.drawable.brightmodebackground);
+                backgroundcolor = "#7CA3F1";
                 textcolor = "#3A5A9B"; //#3A5A9B
                 buttoncolor = "#B7C8EA"; //#648AD6
             }
             if (darkMode == 1) {
-                background = getDrawable(R.drawable.darkmodebackground);
+                backgroundcolor = "#555555";
                 textcolor = "#C5C5C5";
                 buttoncolor = "#464646";
             }
             if(darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
-
-                    background = getDrawable(R.drawable.darkmodebackground);
+                    backgroundcolor = "#555555";
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
                 } else {
-                    background = getDrawable(R.drawable.brightmodebackground);
+                    backgroundcolor = "#7CA3F1";
                     textcolor = "#3A5A9B"; //#3A5A9B
                     buttoncolor = "#B7C8EA"; //#648AD6
                 }
-            layout.setBackground(background);
+            layout.setBackgroundColor(Color.parseColor(backgroundcolor));
             secondsDone.setTextColor(Color.parseColor(textcolor));
             secondsDone2.setTextColor(Color.parseColor(textcolor));
             secondsLeft.setTextColor(Color.parseColor(textcolor));
@@ -1019,6 +1023,7 @@ public class MainActivity extends AppCompatActivity {
              * The Timer gets started and the Timertask gets executed roughly every 100 Milliseconds.
              * Only here the TimerTask tm1 gets executed the first time.
              */
+            homeScreenLayout.addView(backgroundImage);
             homeScreenLayout.addView(secondsDone);
             homeScreenLayout.addView(secondsDone2);
             homeScreenLayout.addView(secondsLeft);

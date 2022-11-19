@@ -46,4 +46,6 @@
     <string name="settings_hours">Showing time in hours</string>
     <string name="settings_days">Showing time in days</string>
     <string name="settings_customTime">Showing time combined</string>
+    <string name="pickBackground">Choose Backgroundimage</string>
+    <string name="pick_Image">pick image</string>
 </resources>

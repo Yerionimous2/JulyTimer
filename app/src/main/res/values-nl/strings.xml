@@ -46,4 +46,6 @@
     <string name="settings_hours">tijdweergave: Uur</string>
     <string name="settings_days">tijdweergave: Dagen</string>
     <string name="settings_customTime">tijdweergave: Gecombineerd</string>
+    <string name="pickBackground">" Verander achtergrond"</string>
+    <string name="pick_Image">kies foto</string>
 </resources>

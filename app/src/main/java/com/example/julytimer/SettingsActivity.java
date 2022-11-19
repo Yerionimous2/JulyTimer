@@ -5,11 +5,13 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -19,6 +21,7 @@ import android.view.WindowMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
     LocalDateTime nowWithoutZone;
     private final Timer tm2 = new Timer();
     TimerTask tmTk2;
+    private ImageView backgroundImage;
     private TextView darkmodeBeginText1;
     private TextView darkmodeBeginText2;
     private TextView darkmodeEndText1;
@@ -62,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
     public Button changeDates;
     public Button darkmodeSwitch;
     public Button backToMain;
+    public Button pickBackgroundImage;
     private int height;
     private int width;
     private int darkMode;
@@ -77,6 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
     private int textSize;
     private long startDateUNIX, endDateUNIX;
     public boolean changedStart, changedEnd;
+    private String backgroundcolor;
 
 
     /*
@@ -218,6 +224,7 @@ public class SettingsActivity extends AppCompatActivity {
                 update();
             }
         };
+        homeScreenLayout.addView(backgroundImage);
         homeScreenLayout.addView(darkmodeBeginText1);
         homeScreenLayout.addView(darkmodeBeginText2);
         homeScreenLayout.addView(darkmodeEndText1);
@@ -230,9 +237,11 @@ public class SettingsActivity extends AppCompatActivity {
         homeScreenLayout.addView(changeDates);
         homeScreenLayout.addView(darkmodeSwitch);
         homeScreenLayout.addView(backToMain);
+        homeScreenLayout.addView(pickBackgroundImage);
         tm2.schedule(tmTk2, 0, 500);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void initialise() {
         Context a = this;
         SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
@@ -240,6 +249,7 @@ public class SettingsActivity extends AppCompatActivity {
         editor = sharedPref.edit();
         darkmodeBegin = new EditText(a);
         darkmodeEnd = new EditText(a);
+        backgroundImage = new ImageView(a);
         darkmodeBeginText1 = new TextView(a);
         darkmodeBeginText2 = new TextView(a);
         darkmodeEndText1 = new TextView(a);
@@ -248,8 +258,11 @@ public class SettingsActivity extends AppCompatActivity {
         changeDates = new Button(a);
         darkmodeSwitch = new Button(a);
         backToMain = new Button(a);
+        pickBackgroundImage = new Button(a);
         darkmodeSettings = new Button(a);
         darkmodeSettingsDone = new Button(a);
+        backgroundImage.setBackground(getDrawable(R.drawable.normalbackground));
+        backgroundImage.setAlpha(0.23F);
         runOnUiThread(()-> {
             darkmodeBeginText1.setVisibility(View.INVISIBLE);
             darkmodeBeginText2.setVisibility(View.INVISIBLE);
@@ -276,6 +289,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.measure(0, 0);
             darkmodeSwitch.measure(0, 0);
             backToMain.measure(0, 0);
+            pickBackgroundImage.measure(0, 0);
             darkmodeSettings.measure(0, 0);
             darkmodeSettingsDone.measure(0, 0);
             darkmodeBegin.measure(0, 0);
@@ -293,6 +307,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setTextSize(textSize);
             darkmodeSwitch.setTextSize(textSize);
             backToMain.setTextSize(textSize);
+            pickBackgroundImage.setTextSize(textSize);
             darkmodeSettingsDone.setTextSize(textSize);
             darkmodeSettings.setTextSize(textSize);
             darkmodeBegin.setTextSize(textSize);
@@ -324,6 +339,7 @@ public class SettingsActivity extends AppCompatActivity {
                     secondsSwitch.setText(getString(R.string.settings_customTime));
                 }
             }
+            if(pickBackgroundImage != null) pickBackgroundImage.setText(getString(R.string.pickBackground));
             if(backToMain != null) {
                 backToMain.setText(getString(R.string.back));
             }
@@ -359,12 +375,14 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setWidth(buttonWidth);
             darkmodeSwitch.setWidth(buttonWidth);
             backToMain.setWidth(buttonWidth);
+            pickBackgroundImage.setWidth(buttonWidth);
             darkmodeSettings.setWidth(buttonWidth);
             darkmodeSettingsDone.setWidth(buttonWidth2);
             secondsSwitch.setHeight(buttonHeight);
             changeDates.setHeight(buttonHeight);
             darkmodeSwitch.setHeight(buttonHeight);
             backToMain.setHeight(buttonHeight);
+            pickBackgroundImage.setHeight(buttonHeight);
             darkmodeSettings.setHeight(buttonHeight);
             darkmodeSettingsDone.setHeight(buttonHeight);
         });
@@ -408,11 +426,12 @@ public class SettingsActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             measure();
             // <----------------- [X Values] -----------------> \\
-            backToMain.setX((float) (width / 2.0 - darkmodeSwitch.getMeasuredWidth() / 2.0));
+            backToMain.setX((float) (width / 2.0 - backToMain.getMeasuredWidth() / 2.0));
             secondsSwitch.setX((float) (width / 2.0 - secondsSwitch.getMeasuredWidth() / 2.0));
             darkmodeSwitch.setX((float) (width / 2.0 - darkmodeSwitch.getMeasuredWidth() / 2.0));
             darkmodeSettings.setX((float) (width / 2.0 - darkmodeSettings.getMeasuredWidth() / 2.0));
             changeDates.setX((float) (width / 2.0 - changeDates.getMeasuredWidth() / 2.0));
+            pickBackgroundImage.setX((float) (width / 2.0 - pickBackgroundImage.getMeasuredWidth() / 2.0));
 
             darkmodeSettingsDone.setX((float) (width / 2.0 - darkmodeSettingsDone.getMeasuredWidth() / 2.0));
             darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth()
@@ -430,6 +449,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setY((float) (secondsSwitch.getY() + secondsSwitch.getMeasuredHeight() + changeDates.getMeasuredHeight() / 6.0));
             darkmodeSwitch.setY((float) (changeDates.getY() + changeDates.getMeasuredHeight() + darkmodeSwitch.getMeasuredHeight() / 6.0));
             darkmodeSettings.setY((float) (darkmodeSwitch.getY() + darkmodeSwitch.getMeasuredHeight() + darkmodeSettings.getMeasuredHeight() / 6.0));
+            pickBackgroundImage.setY((float) (darkmodeSettings.getY() + darkmodeSettings.getMeasuredHeight() + pickBackgroundImage.getMeasuredHeight() / 6.0));
 
             darkmodeBeginText1.setY((float) (height / 2.0 - darkmodeBeginText1.getMeasuredHeight() * 2.0));
             darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
@@ -446,26 +466,26 @@ public class SettingsActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             nowWithoutZone = LocalDateTime.now();
             if(darkMode == 0) {
-                background = getDrawable(R.drawable.brightmodebackground);
+                backgroundcolor = "#7CA3F1";
                 textcolor = "#3A5A9B"; //#3A5A9B
                 buttoncolor = "#B7C8EA"; //#648AD6
             }
             if (darkMode == 1) {
-                background = getDrawable(R.drawable.darkmodebackground);
+                backgroundcolor = "#555555";
                 textcolor = "#C5C5C5";
                 buttoncolor = "#464646";
             }
             if(darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
-                    background = getDrawable(R.drawable.darkmodebackground);
+                    backgroundcolor = "#555555";
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
                 } else {
-                    background = getDrawable(R.drawable.brightmodebackground);
+                    backgroundcolor = "#7CA3F1";
                     textcolor = "#3A5A9B"; //#3A5A9B
                     buttoncolor = "#B7C8EA"; //#648AD6
                 }
-            layout.setBackground(background);
+            layout.setBackgroundColor(Color.parseColor(backgroundcolor));
             darkmodeBeginText1.setTextColor(Color.parseColor(textcolor));
             darkmodeBeginText2.setTextColor(Color.parseColor(textcolor));
             darkmodeEndText1.setTextColor(Color.parseColor(textcolor));
@@ -474,6 +494,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setTextColor(Color.parseColor(textcolor));
             darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
             backToMain.setTextColor(Color.parseColor(textcolor));
+            pickBackgroundImage.setTextColor(Color.parseColor(textcolor));
             darkmodeSettings.setTextColor(Color.parseColor(textcolor));
             darkmodeSettingsDone.setTextColor(Color.parseColor(textcolor));
             darkmodeBegin.setTextColor(Color.parseColor(textcolor));
@@ -486,6 +507,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
             backToMain.setBackgroundColor(Color.parseColor(buttoncolor));
+            pickBackgroundImage.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSettings.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSettingsDone.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeBegin.setBackgroundColor(Color.parseColor(buttoncolor));
@@ -503,6 +525,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setTypeface(Typeface.MONOSPACE);
             darkmodeSwitch.setTypeface(Typeface.MONOSPACE);
             backToMain.setTypeface(Typeface.MONOSPACE);
+            pickBackgroundImage.setTypeface(Typeface.MONOSPACE);
             darkmodeSettings.setTypeface(Typeface.MONOSPACE);
             darkmodeSettingsDone.setTypeface(Typeface.MONOSPACE);
             darkmodeBegin.setTypeface(Typeface.MONOSPACE);
@@ -515,6 +538,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setText(getString(R.string.change_data_button));
             darkmodeSwitch.setText("");
             backToMain.setText("");
+            pickBackgroundImage.setText("");
             darkmodeBegin.setText("");
             darkmodeEnd.setText("");
             darkmodeBegin.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -602,6 +626,13 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            pickBackgroundImage.setOnClickListener(view -> {
+                Intent i = new Intent();
+                i.setType("image/*");
+                i.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(i, getString(R.string.pick_Image)), 1);
+            });
+
             /*
              * If the Button gets clicked, the mode of displaying the time is changed
              *  in this order: seconds, minutes, hours, days.
@@ -646,6 +677,7 @@ public class SettingsActivity extends AppCompatActivity {
                 changeDates.setVisibility(View.INVISIBLE);
                 darkmodeSwitch.setVisibility(View.INVISIBLE);
                 backToMain.setVisibility(View.INVISIBLE);
+                pickBackgroundImage.setVisibility(View.INVISIBLE);
                 secondsSwitch.setVisibility(View.INVISIBLE);
                 darkmodeBegin.setVisibility(View.VISIBLE);
                 darkmodeEnd.setVisibility(View.VISIBLE);
@@ -663,6 +695,7 @@ public class SettingsActivity extends AppCompatActivity {
                 changeDates.setVisibility(View.VISIBLE);
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 backToMain.setVisibility(View.VISIBLE);
+                pickBackgroundImage.setVisibility(View.VISIBLE);
                 darkmodeSettings.setVisibility(View.VISIBLE);
                 darkmodeBegin.setVisibility(View.INVISIBLE);
                 darkmodeEnd.setVisibility(View.INVISIBLE);
@@ -687,7 +720,6 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeEnd.clearFocus();
                 if (darkMode == 0) {
                     darkMode = 1;
-                    background = getDrawable(R.drawable.darkmodebackground);
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
                     darkmodeSwitch.setText(getString(R.string.darkmode_on));
@@ -700,7 +732,6 @@ public class SettingsActivity extends AppCompatActivity {
                         darkmodeSettings.setVisibility(View.VISIBLE);
                     } else {
                         darkMode = 0;
-                        background = getDrawable(R.drawable.brightmodebackground);
                         textcolor = "#3A5A9B"; //#3A5A9B
                         buttoncolor = "#B7C8EA"; //#648AD6
                         darkmodeBegin.setVisibility(View.INVISIBLE);
@@ -726,6 +757,24 @@ public class SettingsActivity extends AppCompatActivity {
              */
             changeDates.setOnClickListener(view -> pickDate());
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+
+            // compare the resultCode with the
+            // SELECT_PICTURE constant
+            if (requestCode == 1) {
+                // Get the url of the image from data
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    // update the preview image in the layout
+                    backgroundImage.setImageURI(selectedImageUri);
+                }
+            }
+        }
     }
 
     /*
@@ -969,6 +1018,7 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 changeDates.setVisibility(View.VISIBLE);
                 backToMain.setVisibility(View.VISIBLE);
+                pickBackgroundImage.setVisibility(View.VISIBLE);
                 darkmodeSettings.setVisibility(View.VISIBLE);
 
                 log("Changed Dates: ");
@@ -1116,6 +1166,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSettings.setVisibility(View.INVISIBLE);
             darkmodeSwitch.setVisibility(View.INVISIBLE);
             backToMain.setVisibility(View.INVISIBLE);
+            pickBackgroundImage.setVisibility(View.INVISIBLE);
             changeDates.setVisibility(View.INVISIBLE);
         });
     }

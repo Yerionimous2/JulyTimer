@@ -26,6 +26,8 @@
     <string name="back">Zurück</string>
     <string name="change_data_button">Daten ändern</string>
     <string name="title_activity_settings">Einstellungen</string>
+    <string name="pickBackground">Hintergrundbild ändern</string>
+    <string name="pick_Image">Bild aussuchen</string>
 
     <!--[ Notification Strings ]-->
     <string name="notification_name_1">Die coole progress-Bar</string>
