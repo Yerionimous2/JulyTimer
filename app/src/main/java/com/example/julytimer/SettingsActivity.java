@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -47,7 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
     private final DateTimeFormatter dz = DateTimeFormatter.ofPattern("HH");
     private final DateTimeFormatter dr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private SharedPreferences.Editor editor;
-    public Drawable background;
     LocalDateTime now;
     LocalDateTime nowWithoutZone;
     private final Timer tm2 = new Timer();
