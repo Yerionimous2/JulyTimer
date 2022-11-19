@@ -9,17 +9,25 @@
     <string name="begin_dark_mode">Beginn des dunklen Modus:</string>
     <string name="begin_bright_mode">Beginn des hellen Modus:</string>
     <string name="o_clock">Uhr</string>
-    <string name="darkmode_off">Darkmode: Aus</string>
-    <string name="darkmode_on">Darkmode: An</string>
-    <string name="darkmode_auto">Darkmode: Auto</string>
+
+    <!--[ Setting Strings ]-->
+    <string name="settings_seconds">Zeitanzeige: Sekunden</string>
+    <string name="settings_minutes">Zeitanzeige: Minuten</string>
+    <string name="settings_hours">Zeitanzeige: Stunden</string>
+    <string name="settings_days">Zeitanzeige: Tage</string>
+    <string name="settings_customTime">Zeitanzeige: Kombiniert</string>
+    <string name="darkmode_off">Farbmodus: Hell</string>
+    <string name="darkmode_on">Farbmodus: Dunkel</string>
+    <string name="darkmode_auto">Farbmodus: Automatisch</string>
     <string name="done">Fertig</string>
-    <string name="setup">Einstellen</string>
+    <string name="setup_darkmode_times">Farbmodi personalisieren</string>
     <string name="startdate">Startdatum:</string>
     <string name="enddate">Enddatum:</string>
     <string name="back">Zurück</string>
+    <string name="change_data_button">Daten ändern</string>
+    <string name="title_activity_settings">Einstellungen</string>
 
     <!--[ Notification Strings ]-->
-    <string name="setup_darkmode_times">Einstellen</string>
     <string name="notification_name_1">Die coole progress-Bar</string>
     <string name="notification_name_2">Die Meilensteinbenachrichtigung</string>
     <string name="still_there"> noch in Ghana! </string>
@@ -34,7 +42,6 @@
     <string name="missed_percent_2_plural">Prozentsprung verpasst. Wie schade :(</string>
 
     <!--[ UI Strings ]-->
-    <string name="change_data_button">Daten ändern</string>
     <string name="since_seen">, seit du mich gesehen hast: </string>
     <string name="until_seeing">, bis du mich wiedersiehst: </string>
     <string name="percent_done">" Prozent schon geschafft:"</string>
@@ -48,7 +55,5 @@
     <string name="milestone_almost_done_toast">Fast alles geschafft! Bis bald :)</string>
     <string name="milestone_month_toast">Noch einen Monat geschafft! Ich bin stolz auf dich!</string>
     <string name="milestone_done_toast">Jaaaaaaa!</string>
-    <string name="title_activity_settings">Einstellungen</string>
-    <!-- Strings used for fragments for navigation -->
 
 </resources>

@@ -12,7 +12,6 @@
     <string name="darkmode_on">darkmode: on</string>
     <string name="darkmode_auto">darkmode: auto</string>
     <string name="done">done</string>
-    <string name="setup">setup</string>
     <string name="startdate">Starting date:</string>
     <string name="enddate">Ending date:</string>
     <string name="setup_darkmode_times">setup</string>
@@ -42,4 +41,9 @@
     <string name="missed_percent_2_plural">Percent jumps. Very Sad.</string>
     <string name="title_activity_settings">Settings</string>
     <string name="back">Back</string>
+    <string name="settings_seconds">Showing time in seconds</string>
+    <string name="settings_minutes">Showing time in minutes</string>
+    <string name="settings_hours">Showing time in hours</string>
+    <string name="settings_days">Showing time in days</string>
+    <string name="settings_customTime">Showing time combined</string>
 </resources>

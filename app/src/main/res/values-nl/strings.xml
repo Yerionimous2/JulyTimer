@@ -12,7 +12,6 @@
     <string name="darkmode_on">Darkmode: An</string>
     <string name="darkmode_auto">Darkmode: Auto</string>
     <string name="done">Afgerond</string>
-    <string name="setup">Ingesteld op</string>
     <string name="startdate">Startdatum:</string>
     <string name="enddate">Einddatum:</string>
     <string name="setup_darkmode_times">Ingesteld op</string>
@@ -42,4 +41,9 @@
     <string name="missed_percent_2_plural">procent gemist</string>
     <string name="title_activity_settings">" ideeën"</string>
     <string name="back">opbrengst</string>
+    <string name="settings_seconds">tijdweergave: Seconden</string>
+    <string name="settings_minutes">tijdweergave: Minuten</string>
+    <string name="settings_hours">tijdweergave: Uur</string>
+    <string name="settings_days">tijdweergave: Dagen</string>
+    <string name="settings_customTime">tijdweergave: Gecombineerd</string>
 </resources>

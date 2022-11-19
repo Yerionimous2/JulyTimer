@@ -57,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
     public EditText darkmodeBegin;
     public EditText darkmodeEnd;
     public Button darkmodeSettings;
+    public Button darkmodeSettingsDone;
     public Button secondsSwitch;
     public Button changeDates;
     public Button darkmodeSwitch;
@@ -76,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
     private int textSize;
     private long startDateUNIX, endDateUNIX;
     public boolean changedStart, changedEnd;
+
 
     /*
      * save(long) saves the given int for later use under the given name.
@@ -223,6 +225,7 @@ public class SettingsActivity extends AppCompatActivity {
         homeScreenLayout.addView(darkmodeBegin);
         homeScreenLayout.addView(darkmodeEnd);
         homeScreenLayout.addView(darkmodeSettings);
+        homeScreenLayout.addView(darkmodeSettingsDone);
         homeScreenLayout.addView(secondsSwitch);
         homeScreenLayout.addView(changeDates);
         homeScreenLayout.addView(darkmodeSwitch);
@@ -246,15 +249,17 @@ public class SettingsActivity extends AppCompatActivity {
         darkmodeSwitch = new Button(a);
         backToMain = new Button(a);
         darkmodeSettings = new Button(a);
+        darkmodeSettingsDone = new Button(a);
         runOnUiThread(()-> {
             darkmodeBeginText1.setVisibility(View.INVISIBLE);
             darkmodeBeginText2.setVisibility(View.INVISIBLE);
             darkmodeEndText1.setVisibility(View.INVISIBLE);
             darkmodeEndText2.setVisibility(View.INVISIBLE);
-            darkmodeSettings.setVisibility(View.INVISIBLE);
             darkmodeBegin.setVisibility(View.INVISIBLE);
             darkmodeEnd.setVisibility(View.INVISIBLE);
+            darkmodeSettingsDone.setVisibility(View.INVISIBLE);
             darkmodeSettings.setText(getString(R.string.setup_darkmode_times));
+            darkmodeSettingsDone.setText(getString(R.string.done));
         });
         initialiseListeners();
         initialiseUI();
@@ -272,6 +277,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSwitch.measure(0, 0);
             backToMain.measure(0, 0);
             darkmodeSettings.measure(0, 0);
+            darkmodeSettingsDone.measure(0, 0);
             darkmodeBegin.measure(0, 0);
             darkmodeEnd.measure(0, 0);
         });
@@ -287,6 +293,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setTextSize(textSize);
             darkmodeSwitch.setTextSize(textSize);
             backToMain.setTextSize(textSize);
+            darkmodeSettingsDone.setTextSize(textSize);
             darkmodeSettings.setTextSize(textSize);
             darkmodeBegin.setTextSize(textSize);
             darkmodeEnd.setTextSize(textSize);
@@ -295,25 +302,26 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void setText() {
         runOnUiThread(() -> {
+            if(changeDates != null) changeDates.setText(getString(R.string.change_data_button));
             if(darkmodeBeginText1 != null) darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
             if(darkmodeBeginText2 != null) darkmodeBeginText2.setText(getString(R.string.o_clock));
             if(darkmodeEndText1   != null) darkmodeEndText1.setText(getString(R.string.begin_bright_mode));
             if(darkmodeEndText2   != null) darkmodeEndText2.setText(getString(R.string.o_clock));
             if(secondsSwitch != null) {
                 if (multiper == 60) {
-                    secondsSwitch.setText(getString(R.string.minutes));
+                    secondsSwitch.setText(getString(R.string.settings_minutes));
                 }
                 if (multiper == 3600) {
-                    secondsSwitch.setText(getString(R.string.hours));
+                    secondsSwitch.setText(getString(R.string.settings_hours));
                 }
                 if (multiper == 86400) {
-                    secondsSwitch.setText(getString(R.string.days));
+                    secondsSwitch.setText(getString(R.string.settings_days));
                 }
                 if (multiper == 1) {
-                    secondsSwitch.setText(getString(R.string.seconds));
+                    secondsSwitch.setText(getString(R.string.settings_seconds));
                 }
                 if(multiper == 15000) {
-                    secondsSwitch.setText(getString(R.string.customTime));
+                    secondsSwitch.setText(getString(R.string.settings_customTime));
                 }
             }
             if(backToMain != null) {
@@ -338,8 +346,9 @@ public class SettingsActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             int horizontal = width / 27;
             int vertical = horizontal / 2;
-            int buttonWidth = (int) (width / 2.5);
-            int buttonHeight = (int) (buttonWidth / 2.2);
+            int buttonWidth = width - 50;
+            int buttonHeight = (int) (width / 5.5);
+            int buttonWidth2 = (int) (width / 2.2);
             darkmodeBeginText1.setPaddingRelative(horizontal, vertical, 0, vertical);
             darkmodeBeginText2.setPaddingRelative(0, vertical, horizontal, vertical);
             darkmodeEndText1.setPaddingRelative(horizontal, vertical, 0, vertical);
@@ -351,11 +360,13 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSwitch.setWidth(buttonWidth);
             backToMain.setWidth(buttonWidth);
             darkmodeSettings.setWidth(buttonWidth);
+            darkmodeSettingsDone.setWidth(buttonWidth2);
             secondsSwitch.setHeight(buttonHeight);
             changeDates.setHeight(buttonHeight);
             darkmodeSwitch.setHeight(buttonHeight);
             backToMain.setHeight(buttonHeight);
             darkmodeSettings.setHeight(buttonHeight);
+            darkmodeSettingsDone.setHeight(buttonHeight);
         });
     }
 
@@ -393,12 +404,17 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public void setPositions(int height, int width, int mode) {
+    public void setPositions() {
         runOnUiThread(() -> {
             measure();
             // <----------------- [X Values] -----------------> \\
-            secondsSwitch.setX((float) (width / 2.0 - secondsSwitch.getMeasuredWidth() / 2.0 - width / 4.0));
-            darkmodeSwitch.setX((float) (width / 2.0 - darkmodeSwitch.getMeasuredWidth() / 2.0 + width / 4.0));
+            backToMain.setX((float) (width / 2.0 - darkmodeSwitch.getMeasuredWidth() / 2.0));
+            secondsSwitch.setX((float) (width / 2.0 - secondsSwitch.getMeasuredWidth() / 2.0));
+            darkmodeSwitch.setX((float) (width / 2.0 - darkmodeSwitch.getMeasuredWidth() / 2.0));
+            darkmodeSettings.setX((float) (width / 2.0 - darkmodeSettings.getMeasuredWidth() / 2.0));
+            changeDates.setX((float) (width / 2.0 - changeDates.getMeasuredWidth() / 2.0));
+
+            darkmodeSettingsDone.setX((float) (width / 2.0 - darkmodeSettingsDone.getMeasuredWidth() / 2.0));
             darkmodeBeginText1.setX((float) (width / 2.0 - (darkmodeBeginText1.getMeasuredWidth() + darkmodeBegin.getMeasuredWidth()
                     + darkmodeBeginText2.getMeasuredWidth()) / 2.0));
             darkmodeBegin.setX(darkmodeBeginText1.getX() + darkmodeBeginText1.getMeasuredWidth());
@@ -407,32 +423,21 @@ public class SettingsActivity extends AppCompatActivity {
                     + darkmodeEndText2.getMeasuredWidth()) / 2.0));
             darkmodeEnd.setX(darkmodeEndText1.getX() + darkmodeEndText1.getMeasuredWidth());
             darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
-            if(mode == 0) darkmodeSettings.setX(darkmodeSwitch.getX());
-            if(mode == 1) darkmodeSettings.setX((float) (width / 2.0 - darkmodeSettings.getMeasuredWidth() / 2.0));
-            if(darkmodeSwitch.getText().toString().equals(getString(R.string.darkmode_auto)))
-                changeDates.setX(secondsSwitch.getX());
-            else
-                changeDates.setX((float) (width / 2.0 - changeDates.getMeasuredWidth() / 2.0));
 
             // <----------------- [Y Values] -----------------> \\
-            if(mode == 0) {
-                secondsSwitch.setY(height - secondsSwitch.getMeasuredHeight() * 4);
-                darkmodeSettings.setY((float) (secondsSwitch.getY() + darkmodeSettings.getMeasuredHeight() + darkmodeSettings.getMeasuredHeight() / 4.0));
-                changeDates.setY(darkmodeSettings.getY());
-                changeDates.setVisibility(View.VISIBLE);
-            }
-            if(mode == 1) {
-                secondsSwitch.setY((float) (height - secondsSwitch.getMeasuredHeight() * 2.5));
-                changeDates.setVisibility(View.INVISIBLE);
-            }
-            darkmodeBeginText1.setY((float) (/*percent2.getY() + percent2.getMeasuredHeight() + */darkmodeBeginText1.getMeasuredHeight() * 2.0));
+            backToMain.setY((float) (backToMain.getMeasuredHeight() / 6.0));
+            secondsSwitch.setY((float) (backToMain.getY() + backToMain.getMeasuredHeight() + secondsSwitch.getMeasuredHeight() / 6.0));
+            changeDates.setY((float) (secondsSwitch.getY() + secondsSwitch.getMeasuredHeight() + changeDates.getMeasuredHeight() / 6.0));
+            darkmodeSwitch.setY((float) (changeDates.getY() + changeDates.getMeasuredHeight() + darkmodeSwitch.getMeasuredHeight() / 6.0));
+            darkmodeSettings.setY((float) (darkmodeSwitch.getY() + darkmodeSwitch.getMeasuredHeight() + darkmodeSettings.getMeasuredHeight() / 6.0));
+
+            darkmodeBeginText1.setY((float) (height / 2.0 - darkmodeBeginText1.getMeasuredHeight() * 2.0));
             darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
             darkmodeBegin.setY(darkmodeBeginText1.getY());
             darkmodeEnd.setY(darkmodeEndText1.getY());
             darkmodeBeginText2.setY(darkmodeBeginText1.getY());
             darkmodeEndText2.setY(darkmodeEndText1.getY());
-            darkmodeSwitch.setY(secondsSwitch.getY());
-            if(mode == 1) darkmodeSettings.setY((float) (darkmodeEndText1.getY() + darkmodeEndText1.getMeasuredHeight() * 2.0));
+            darkmodeSettingsDone.setY((float) (darkmodeEnd.getY() + darkmodeEnd.getMeasuredHeight() + darkmodeSettingsDone.getMeasuredHeight() / 1.5));
         });
     }
 
@@ -471,6 +476,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
             backToMain.setTextColor(Color.parseColor(textcolor));
             darkmodeSettings.setTextColor(Color.parseColor(textcolor));
+            darkmodeSettingsDone.setTextColor(Color.parseColor(textcolor));
             darkmodeBegin.setTextColor(Color.parseColor(textcolor));
             darkmodeEnd.setTextColor(Color.parseColor(textcolor));
             darkmodeBeginText1.setBackgroundColor(Color.parseColor(buttoncolor));
@@ -482,6 +488,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
             backToMain.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSettings.setBackgroundColor(Color.parseColor(buttoncolor));
+            darkmodeSettingsDone.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeBegin.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeEnd.setBackgroundColor(Color.parseColor(buttoncolor));
         });
@@ -498,6 +505,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSwitch.setTypeface(Typeface.MONOSPACE);
             backToMain.setTypeface(Typeface.MONOSPACE);
             darkmodeSettings.setTypeface(Typeface.MONOSPACE);
+            darkmodeSettingsDone.setTypeface(Typeface.MONOSPACE);
             darkmodeBegin.setTypeface(Typeface.MONOSPACE);
             darkmodeEnd.setTypeface(Typeface.MONOSPACE);
             darkmodeBeginText1.setText("");
@@ -508,15 +516,15 @@ public class SettingsActivity extends AppCompatActivity {
             changeDates.setText(getString(R.string.change_data_button));
             darkmodeSwitch.setText("");
             backToMain.setText("");
-            darkmodeSettings.setText("");
             darkmodeBegin.setText("");
             darkmodeEnd.setText("");
             darkmodeBegin.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             darkmodeEnd.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             darkmodeBegin.setInputType(InputType.TYPE_CLASS_NUMBER);
             darkmodeEnd.setInputType(InputType.TYPE_CLASS_NUMBER);
+            darkmodeSettings.setVisibility(View.VISIBLE);
             measure();
-            setPositions(height, width, 0);
+            setPositions();
         });
     }
 
@@ -534,22 +542,15 @@ public class SettingsActivity extends AppCompatActivity {
                     + darkmodeEndText2.getMeasuredWidth()) / 2.0));
             darkmodeEnd.setX(darkmodeEndText1.getX() + darkmodeEndText1.getMeasuredWidth());
             darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
-            darkmodeBeginText1.setY((float) (/*percent2.getY() + percent2.getMeasuredHeight() + */darkmodeBeginText1.getMeasuredHeight() * 2.0));
-            darkmodeEndText1.setY((float) (darkmodeBeginText1.getY() + darkmodeEndText1.getMeasuredHeight() * 1.5));
-            darkmodeBegin.setY(darkmodeBeginText1.getY());
-            darkmodeEnd.setY(darkmodeEndText1.getY());
-            darkmodeBeginText2.setY(darkmodeBeginText1.getY());
-            darkmodeEndText2.setY(darkmodeEndText1.getY());
         });
     }
 
-    public void updateUI(int mode) {
-        runOnUiThread(() -> changeDates.setText(getString(R.string.change_data_button)));
+    public void updateUI() {
         setColors();
         setText();
         setTextSizes(textSize);
         measure();
-        setPositions(height, width, mode);
+        setPositions();
     }
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
@@ -610,21 +611,21 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setOnClickListener(view -> {
                 darkmodeBegin.clearFocus();
                 darkmodeEnd.clearFocus();
-                if (secondsSwitch.getText().equals(getString(R.string.seconds))) {
-                    secondsSwitch.setText(getString(R.string.minutes));
+                if (secondsSwitch.getText().equals(getString(R.string.settings_seconds))) {
+                    secondsSwitch.setText(getString(R.string.settings_minutes));
                     multiper = 60;
                 } else {
-                    if (secondsSwitch.getText().equals(getString(R.string.minutes))) {
-                        secondsSwitch.setText(getString(R.string.hours));
+                    if (secondsSwitch.getText().equals(getString(R.string.settings_minutes))) {
+                        secondsSwitch.setText(getString(R.string.settings_hours));
                         multiper = 3600;
-                    } else if(secondsSwitch.getText().equals(getString(R.string.hours))){
-                        secondsSwitch.setText(getString(R.string.days));
+                    } else if(secondsSwitch.getText().equals(getString(R.string.settings_hours))){
+                        secondsSwitch.setText(getString(R.string.settings_days));
                         multiper = 86400;
-                    } else if(secondsSwitch.getText().equals(getString(R.string.days))){
-                        secondsSwitch.setText(getString(R.string.customTime));
+                    } else if(secondsSwitch.getText().equals(getString(R.string.settings_days))){
+                        secondsSwitch.setText(getString(R.string.settings_customTime));
                         multiper = 15000;
                     } else {
-                        secondsSwitch.setText(getString(R.string.seconds));
+                        secondsSwitch.setText(getString(R.string.settings_seconds));
                         multiper = 1;
                     }
                 }
@@ -641,32 +642,37 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSettings.setOnClickListener(view -> {
                 darkmodeEnd.setText(Integer.toString(end));
                 darkmodeBegin.setText(Integer.toString(begin));
-                if (!darkmodeSettings.getText().equals(getString(R.string.done))) {
-                    updateUI(1);
-                    darkmodeSwitch.setVisibility(View.INVISIBLE);
-                    backToMain.setVisibility(View.INVISIBLE);
-                    secondsSwitch.setVisibility(View.INVISIBLE);
-                    darkmodeBegin.setVisibility(View.VISIBLE);
-                    darkmodeEnd.setVisibility(View.VISIBLE);
-                    darkmodeBeginText1.setVisibility(View.VISIBLE);
-                    darkmodeBeginText2.setVisibility(View.VISIBLE);
-                    darkmodeEndText1.setVisibility(View.VISIBLE);
-                    darkmodeEndText2.setVisibility(View.VISIBLE);
-                    darkmodeSettings.setText(getString(R.string.done));
-                } else {
-                    updateUI(0);
-                    secondsSwitch.setVisibility(View.VISIBLE);
-                    darkmodeSwitch.setVisibility(View.VISIBLE);
-                    backToMain.setVisibility(View.VISIBLE);
-                    darkmodeBegin.setVisibility(View.INVISIBLE);
-                    darkmodeEnd.setVisibility(View.INVISIBLE);
-                    darkmodeBeginText1.setVisibility(View.INVISIBLE);
-                    darkmodeBeginText2.setVisibility(View.INVISIBLE);
-                    darkmodeEndText1.setVisibility(View.INVISIBLE);
-                    darkmodeEndText2.setVisibility(View.INVISIBLE);
-                    darkmodeSettings.setText(getString(R.string.setup));
-                    log("Set the Darkmode-Times: From " + darkmodeBegin.getText() + " to " + darkmodeEnd.getText() + " o' clock.");
-                }
+                updateUI();
+                darkmodeSettings.setVisibility(View.INVISIBLE);
+                changeDates.setVisibility(View.INVISIBLE);
+                darkmodeSwitch.setVisibility(View.INVISIBLE);
+                backToMain.setVisibility(View.INVISIBLE);
+                secondsSwitch.setVisibility(View.INVISIBLE);
+                darkmodeBegin.setVisibility(View.VISIBLE);
+                darkmodeEnd.setVisibility(View.VISIBLE);
+                darkmodeBeginText1.setVisibility(View.VISIBLE);
+                darkmodeBeginText2.setVisibility(View.VISIBLE);
+                darkmodeEndText1.setVisibility(View.VISIBLE);
+                darkmodeEndText2.setVisibility(View.VISIBLE);
+                darkmodeSettingsDone.setVisibility(View.VISIBLE);
+                hideSoftKeyboard(findViewById(R.id.Layout2));
+            });
+
+            darkmodeSettingsDone.setOnClickListener(view -> {
+                updateUI();
+                secondsSwitch.setVisibility(View.VISIBLE);
+                changeDates.setVisibility(View.VISIBLE);
+                darkmodeSwitch.setVisibility(View.VISIBLE);
+                backToMain.setVisibility(View.VISIBLE);
+                darkmodeSettings.setVisibility(View.VISIBLE);
+                darkmodeBegin.setVisibility(View.INVISIBLE);
+                darkmodeEnd.setVisibility(View.INVISIBLE);
+                darkmodeBeginText1.setVisibility(View.INVISIBLE);
+                darkmodeBeginText2.setVisibility(View.INVISIBLE);
+                darkmodeEndText1.setVisibility(View.INVISIBLE);
+                darkmodeEndText2.setVisibility(View.INVISIBLE);
+                darkmodeSettingsDone.setVisibility(View.INVISIBLE);
+                log("Set the Darkmode-Times: From " + darkmodeBegin.getText() + " to " + darkmodeEnd.getText() + " o' clock.");
                 hideSoftKeyboard(findViewById(R.id.Layout2));
             });
 
@@ -698,7 +704,6 @@ public class SettingsActivity extends AppCompatActivity {
                         background = getDrawable(R.drawable.brightmodebackground);
                         textcolor = "#3A5A9B"; //#3A5A9B
                         buttoncolor = "#B7C8EA"; //#648AD6
-                        darkmodeSettings.setVisibility(View.INVISIBLE);
                         darkmodeBegin.setVisibility(View.INVISIBLE);
                         darkmodeEnd.setVisibility(View.INVISIBLE);
                         darkmodeBeginText1.setVisibility(View.INVISIBLE);
@@ -738,16 +743,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void update() {
         setTime();
         setPaddingSizes();
-        if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto))) {
-            if(darkmodeSettings.getText().equals(getString(R.string.setup)))
-                updateUI(0);
-            if(darkmodeSettings.getText().equals(getString(R.string.done)))
-                updateUI(1);
-        } else {
-            updateUI(0);
-            runOnUiThread(() -> darkmodeSettings.setText(getString(R.string.setup)));
-        }
-        if(darkMode == 2) darkmodeSettings.setVisibility(View.VISIBLE);
+        updateUI();
     }
 
     private void log(String s) {
@@ -974,8 +970,7 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 changeDates.setVisibility(View.VISIBLE);
                 backToMain.setVisibility(View.VISIBLE);
-                if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto)))
-                    darkmodeSettings.setVisibility(View.VISIBLE);
+                darkmodeSettings.setVisibility(View.VISIBLE);
 
                 log("Changed Dates: ");
                 if(changedStart) log(" Startdate = " + startDateUNIX + ", " + createReadableDate(b));
