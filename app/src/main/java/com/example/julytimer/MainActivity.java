@@ -570,7 +570,6 @@ public class MainActivity extends AppCompatActivity {
                     textcolor = "#3A5A9B"; //#3A5A9B
                     buttoncolor = "#B7C8EA"; //#648AD6
                 }
-            //layout.setBackgroundColor(Color.parseColor(backgroundcolor));
             layout.setBackground(background);
             secondsDone.setTextColor(Color.parseColor(textcolor));
             secondsDone2.setTextColor(Color.parseColor(textcolor));

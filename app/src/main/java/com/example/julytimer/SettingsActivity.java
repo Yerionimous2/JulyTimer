@@ -457,7 +457,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
             if(darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
-
                     background = getDrawable(R.drawable.darkmodebackground);
                     textcolor = "#C5C5C5";
                     buttoncolor = "#464646";
