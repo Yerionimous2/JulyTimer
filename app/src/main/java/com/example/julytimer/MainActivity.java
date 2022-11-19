@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private long completeTime;
     private long x;
     private double z;
+    private double zbefore;
     private double percentage;
     private double percentageLastOpened;
     private long startDateUNIX;
@@ -472,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                 zString2 = sb.toString();
                 if(percent2 != null) percent2.setText(zString2);
             }
-            if(settings != null) settings.setText(getString(R.string.setup));
+            if(settings != null) settings.setText(getString(R.string.title_activity_settings));
         });
 
     }
@@ -684,7 +685,7 @@ public class MainActivity extends AppCompatActivity {
             if ((percentage < Math.floor(z)) && (ran)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_percent), Toast.LENGTH_LONG);
                 toast.show();
-                log("Send Milestone-Notification for a percentjump.");
+                log("Sent Milestone-Notification for a percentjump.");
                 save((int) percentage, "Percent");
             }
 
@@ -693,11 +694,11 @@ public class MainActivity extends AppCompatActivity {
              *  with the messages set in milestone_third_toast(default: Ein Drittel ist schon geschafft! Wie cool!)
              *  and in milestone_third_notification(default: Ein Drittel ist schon geschafft!).
              */
-            if((z>33.334)&&(z<33.34)) {
+            if(jumpedTo(100.0/3)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_third_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_third_notification));
-                log("Send Milestone-Notification for one third done.");
+                log("Sent Milestone-Notification for one third done.");
             }
 
             /*
@@ -705,11 +706,11 @@ public class MainActivity extends AppCompatActivity {
              *  with the messages set in milestone_half_toast(default: Die Hälfte ist schon geschafft! Wie cool!)
              *  and milestone_half_notification(default: Die Hälfte ist schon geschafft!).
              */
-            if((z>50)&&(z<50.01)) {
+            if(jumpedTo(50)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_half_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_half_notification));
-                log("Send Milestone-Notification for one half done.");
+                log("Sent Milestone-Notification for one half done.");
             }
 
             /*
@@ -717,11 +718,11 @@ public class MainActivity extends AppCompatActivity {
              *  with the messages set in milestone_two_third_toast(default: Zwei Drittel sind schon geschafft! Wie cool!)
              *  and milestone_two_third_notification(default: Zwei Drittel sind schon geschafft!).
              */
-            if((z>66.667)&&(z<66.67)) {
+            if(jumpedTo(200.0/3)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_two_third_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_two_third_notification));
-                log("Send Milestone-Notification for two thirds done.");
+                log("Sent Milestone-Notification for two thirds done.");
             }
 
             /*
@@ -729,11 +730,11 @@ public class MainActivity extends AppCompatActivity {
              *  with the messages set in milestone_almost_done_toast(default: Fast alles geschafft! Bis bald :))
              *  and milestone_almost_done_notification(default: Fast alles geschafft! Bis bald :)).
              */
-            if((z>89.99)&&(z<90.01)) {
+            if(jumpedTo(50)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_almost_done_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_almost_done_notification));
-                log("Send Milestone-Notification for 90% done.");
+                log("Sent Milestone-Notification for 90% done.");
             }
 
             /*
@@ -746,9 +747,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_month_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_month_notification));
-                log("Send Milestone-Notification for a Month done.");
+                log("Sent Milestone-Notification for a Month done.");
             }
         });
+    }
+
+    private boolean jumpedTo(double i) {
+        return (zbefore < i) && (z >= i);
     }
 
     /*
@@ -805,6 +810,7 @@ public class MainActivity extends AppCompatActivity {
         completeTime = x + y;
 
         y = y / 1000;
+        zbefore = z;
         z = (double) x / (double) (completeTime);
         z = z * 100;
         x = x / 1000;
@@ -823,7 +829,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String createCustomTime(long x) {
-        System.out.println("CreateCustomTime called with Value " + x);
         String result = "";
         if(x >= 86400) {
             result += (int)x/86400;
@@ -844,7 +849,6 @@ public class MainActivity extends AppCompatActivity {
             result += x;
             result += "s";
         }
-        System.out.println("  result = " + result);
         return result;
     }
 

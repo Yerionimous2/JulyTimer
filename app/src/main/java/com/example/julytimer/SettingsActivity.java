@@ -60,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
     public Button secondsSwitch;
     public Button changeDates;
     public Button darkmodeSwitch;
+    public Button backToMain;
     private int height;
     private int width;
     private int darkMode;
@@ -225,6 +226,7 @@ public class SettingsActivity extends AppCompatActivity {
         homeScreenLayout.addView(secondsSwitch);
         homeScreenLayout.addView(changeDates);
         homeScreenLayout.addView(darkmodeSwitch);
+        homeScreenLayout.addView(backToMain);
         tm2.schedule(tmTk2, 0, 500);
     }
 
@@ -232,7 +234,6 @@ public class SettingsActivity extends AppCompatActivity {
         Context a = this;
         SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
-        multiper = 1;
         editor = sharedPref.edit();
         darkmodeBegin = new EditText(a);
         darkmodeEnd = new EditText(a);
@@ -243,6 +244,7 @@ public class SettingsActivity extends AppCompatActivity {
         secondsSwitch = new Button(a);
         changeDates = new Button(a);
         darkmodeSwitch = new Button(a);
+        backToMain = new Button(a);
         darkmodeSettings = new Button(a);
         runOnUiThread(()-> {
             darkmodeBeginText1.setVisibility(View.INVISIBLE);
@@ -268,6 +270,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.measure(0, 0);
             changeDates.measure(0, 0);
             darkmodeSwitch.measure(0, 0);
+            backToMain.measure(0, 0);
             darkmodeSettings.measure(0, 0);
             darkmodeBegin.measure(0, 0);
             darkmodeEnd.measure(0, 0);
@@ -283,6 +286,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setTextSize(textSize);
             changeDates.setTextSize(textSize);
             darkmodeSwitch.setTextSize(textSize);
+            backToMain.setTextSize(textSize);
             darkmodeSettings.setTextSize(textSize);
             darkmodeBegin.setTextSize(textSize);
             darkmodeEnd.setTextSize(textSize);
@@ -311,6 +315,9 @@ public class SettingsActivity extends AppCompatActivity {
                 if(multiper == 15000) {
                     secondsSwitch.setText(getString(R.string.customTime));
                 }
+            }
+            if(backToMain != null) {
+                backToMain.setText(getString(R.string.back));
             }
             if(darkmodeSwitch != null) {
                 if(darkMode == 0) {
@@ -342,10 +349,12 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setWidth(buttonWidth);
             changeDates.setWidth(buttonWidth);
             darkmodeSwitch.setWidth(buttonWidth);
+            backToMain.setWidth(buttonWidth);
             darkmodeSettings.setWidth(buttonWidth);
             secondsSwitch.setHeight(buttonHeight);
             changeDates.setHeight(buttonHeight);
             darkmodeSwitch.setHeight(buttonHeight);
+            backToMain.setHeight(buttonHeight);
             darkmodeSettings.setHeight(buttonHeight);
         });
     }
@@ -460,6 +469,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setTextColor(Color.parseColor(textcolor));
             changeDates.setTextColor(Color.parseColor(textcolor));
             darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
+            backToMain.setTextColor(Color.parseColor(textcolor));
             darkmodeSettings.setTextColor(Color.parseColor(textcolor));
             darkmodeBegin.setTextColor(Color.parseColor(textcolor));
             darkmodeEnd.setTextColor(Color.parseColor(textcolor));
@@ -470,6 +480,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
             changeDates.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
+            backToMain.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSettings.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeBegin.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeEnd.setBackgroundColor(Color.parseColor(buttoncolor));
@@ -485,6 +496,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setTypeface(Typeface.MONOSPACE);
             changeDates.setTypeface(Typeface.MONOSPACE);
             darkmodeSwitch.setTypeface(Typeface.MONOSPACE);
+            backToMain.setTypeface(Typeface.MONOSPACE);
             darkmodeSettings.setTypeface(Typeface.MONOSPACE);
             darkmodeBegin.setTypeface(Typeface.MONOSPACE);
             darkmodeEnd.setTypeface(Typeface.MONOSPACE);
@@ -495,6 +507,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setText("");
             changeDates.setText(getString(R.string.change_data_button));
             darkmodeSwitch.setText("");
+            backToMain.setText("");
             darkmodeSettings.setText("");
             darkmodeBegin.setText("");
             darkmodeEnd.setText("");
@@ -631,6 +644,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (!darkmodeSettings.getText().equals(getString(R.string.done))) {
                     updateUI(1);
                     darkmodeSwitch.setVisibility(View.INVISIBLE);
+                    backToMain.setVisibility(View.INVISIBLE);
                     secondsSwitch.setVisibility(View.INVISIBLE);
                     darkmodeBegin.setVisibility(View.VISIBLE);
                     darkmodeEnd.setVisibility(View.VISIBLE);
@@ -643,6 +657,7 @@ public class SettingsActivity extends AppCompatActivity {
                     updateUI(0);
                     secondsSwitch.setVisibility(View.VISIBLE);
                     darkmodeSwitch.setVisibility(View.VISIBLE);
+                    backToMain.setVisibility(View.VISIBLE);
                     darkmodeBegin.setVisibility(View.INVISIBLE);
                     darkmodeEnd.setVisibility(View.INVISIBLE);
                     darkmodeBeginText1.setVisibility(View.INVISIBLE);
@@ -654,6 +669,8 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 hideSoftKeyboard(findViewById(R.id.Layout2));
             });
+
+            backToMain.setOnClickListener(view -> finish());
 
             /*
              * Changes the Dark mode by adding 1 to the counter up to 2, otherwise set it to 0.
@@ -956,6 +973,7 @@ public class SettingsActivity extends AppCompatActivity {
                 secondsSwitch.setVisibility(View.VISIBLE);
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 changeDates.setVisibility(View.VISIBLE);
+                backToMain.setVisibility(View.VISIBLE);
                 if(darkmodeSwitch.getText().equals(getString(R.string.darkmode_auto)))
                     darkmodeSettings.setVisibility(View.VISIBLE);
 
@@ -1103,6 +1121,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setVisibility(View.INVISIBLE);
             darkmodeSettings.setVisibility(View.INVISIBLE);
             darkmodeSwitch.setVisibility(View.INVISIBLE);
+            backToMain.setVisibility(View.INVISIBLE);
             changeDates.setVisibility(View.INVISIBLE);
         });
     }

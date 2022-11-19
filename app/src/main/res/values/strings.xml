@@ -16,6 +16,7 @@
     <string name="setup">Einstellen</string>
     <string name="startdate">Startdatum:</string>
     <string name="enddate">Enddatum:</string>
+    <string name="back">Zurück</string>
 
     <!--[ Notification Strings ]-->
     <string name="setup_darkmode_times">Einstellen</string>
