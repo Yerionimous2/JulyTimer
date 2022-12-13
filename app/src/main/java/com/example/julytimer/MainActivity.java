@@ -15,7 +15,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private int PROGRESS_MAX;
     public int textSize;
     private int standardChannel;
+    public int buttonWidth;
     private boolean ran, ran2;
     private boolean timerBool = true;
     private Button settings;
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     public String startDate = "2022-08-24 09:30:00.000";
     public String endDate = "2023-07-23 21:40:00.000";
     private String[] log;
+    Drawable myIcon;
     private long completeTime;
     private long x;
     private double z;
@@ -241,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
      *  startDate: "2022-08-24 09:30:00.000"
      *  endDate:   "2023-07-23 21:40:00.000"
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void loadVariables() {
         /*
          * sharedPref and editor are used to save the Variables:
@@ -325,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
             log("startDateUNIX = " + startDateUNIX);
             log("endDateUNIX   = " + endDateUNIX);
         }
+        myIcon = getResources().getDrawable(R.drawable.settings_icon);
     }
 
     /*
@@ -478,7 +485,6 @@ public class MainActivity extends AppCompatActivity {
                 zString2 = sb.toString();
                 if(percent2 != null) percent2.setText(zString2);
             }
-            if(settings != null) settings.setText(getString(R.string.title_activity_settings));
         });
 
     }
@@ -492,16 +498,22 @@ public class MainActivity extends AppCompatActivity {
             measure();
             int horizontal = width / 27;
             int vertical = horizontal / 2;
-            int buttonWidth = (int) (width / 2.5);
-            int buttonHeight = (int) (buttonWidth / 2.2);
+            buttonWidth = width / 10;
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    buttonWidth, // width in dp
+                    buttonWidth // height in dp
+            );
+            settings.setLayoutParams(layoutParams);
+
+            settings.setHeight(buttonWidth);
+            settings.setWidth(buttonWidth);
             secondsLeft.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             secondsDone.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             percent.setPaddingRelative(horizontal, vertical, horizontal, vertical);
             secondsLeft2.setPaddingRelative(0, vertical, 0, vertical);
             secondsDone2.setPaddingRelative(0, vertical, 0, vertical);
             percent2.setPaddingRelative(0, vertical, 0, vertical);
-            settings.setHeight(buttonHeight);
-            settings.setWidth(buttonWidth);
             measure();
             secondsLeft2.setPaddingRelative((secondsLeft.getMeasuredWidth()-secondsLeft2.getMeasuredWidth()) / 2, vertical,
                     (secondsLeft.getMeasuredWidth()-secondsLeft2.getMeasuredWidth()) / 2, vertical);
@@ -529,7 +541,7 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft2.setX((float) (width / 2.0 - secondsLeft2.getMeasuredWidth() / 2.0));
             percent.setX((float) (width / 2.0 - percent.getMeasuredWidth() / 2.0));
             percent2.setX((float) (width / 2.0 - percent2.getMeasuredWidth() / 2.0));
-            settings.setX((float) (width / 2.0 - settings.getMeasuredWidth() / 2.0));
+            settings.setX((float) (width - buttonWidth - 20));
 
             // <----------------- [Y Values] -----------------> \\
 
@@ -544,7 +556,7 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft2.setY(secondsLeft.getY() + secondsLeft.getMeasuredHeight() - 1);
             percent.setY((float) (secondsLeft2.getY() + secondsLeft2.getMeasuredHeight() + percent.getMeasuredHeight() / 3.0));
             percent2.setY(percent.getY() + percent.getMeasuredHeight() - 1);
-            settings.setY((float) (height - settings.getMeasuredHeight() * 3.0));
+            settings.setY(20);
         });
     }
 
@@ -588,7 +600,8 @@ public class MainActivity extends AppCompatActivity {
             secondsLeft2.setBackgroundColor(Color.parseColor(buttoncolor));
             percent.setBackgroundColor(Color.parseColor(buttoncolor));
             percent2.setBackgroundColor(Color.parseColor(buttoncolor));
-            settings.setBackgroundColor(Color.parseColor(buttoncolor));
+            if(myIcon != null) myIcon.setColorFilter(Color.parseColor(textcolor), PorterDuff.Mode.SRC_IN);
+            settings.setBackground(myIcon);
         });
     }
 
@@ -899,7 +912,7 @@ public class MainActivity extends AppCompatActivity {
 
             updateUI(0);
 
-            sendMileStoneNotifications();
+            if(ran) sendMileStoneNotifications();
 
             percentage = Math.floor(z);
             if(!ran) {

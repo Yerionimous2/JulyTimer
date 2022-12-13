@@ -11,6 +11,7 @@
         android:launchMode="singleInstance"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/Theme.JulyTimer"
         tools:targetApi="31">
         <activity
