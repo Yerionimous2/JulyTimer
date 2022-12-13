@@ -48,4 +48,6 @@
     <string name="settings_customTime">tijdweergave: Gecombineerd</string>
     <string name="pickBackground">" Verander achtergrond"</string>
     <string name="pick_Image">kies foto</string>
+    <string name="showMilestones">" mijlpalen laten zien"</string>
+    <string name="milestone_ninety_percent">90% is al gedaan</string>
 </resources>

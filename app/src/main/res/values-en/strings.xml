@@ -48,4 +48,6 @@
     <string name="settings_customTime">Showing time combined</string>
     <string name="pickBackground">Choose Backgroundimage</string>
     <string name="pick_Image">pick image</string>
+    <string name="showMilestones">Show Milestones</string>
+    <string name="milestone_ninety_percent">90% done already!</string>
 </resources>

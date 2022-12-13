@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     private long endDateUNIX;
     private boolean settingsOpen;
     private String backgroundcolor;
+    SharedPreferences sharedPref;
 
     /*
      * save(int) saves the given int for later use under the given name.
@@ -106,6 +107,16 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(name, a);
         editor.apply();
     }
+
+    public void save(double a, String name) {
+        editor.putLong(name, Double.doubleToRawLongBits(a));
+    }
+
+    public double loadDouble(String name, double defaultValue) {
+        return Double.longBitsToDouble(sharedPref.getLong(name, Double.doubleToLongBits(defaultValue)));
+    }
+
+
 
     /*
      * initialise initialises the UI and loads the saved Values in the Variables
@@ -299,7 +310,6 @@ public class MainActivity extends AppCompatActivity {
          * y is used to save the amount of seconds between now and the endDate
          * z is used to save the percentage of time passed
          */
-        SharedPreferences sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
         int beginSave = begin;
@@ -746,7 +756,7 @@ public class MainActivity extends AppCompatActivity {
              *  with the messages set in milestone_almost_done_toast(default: Fast alles geschafft! Bis bald :))
              *  and milestone_almost_done_notification(default: Fast alles geschafft! Bis bald :)).
              */
-            if(jumpedTo(50)) {
+            if(jumpedTo(90)) {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.milestone_almost_done_toast), Toast.LENGTH_LONG);
                 toast.show();
                 sendNotification(2, getString(R.string.milestone_notification_title), getString(R.string.milestone_almost_done_notification));
@@ -842,6 +852,7 @@ public class MainActivity extends AppCompatActivity {
         } else yString2 = convertToReadableString(y);
         zString = getString(R.string.percent_done);
         zString2 = dform.format(z) + "";
+        save(z, "PercentZ");
     }
 
     private String createCustomTime(long x) {
@@ -999,6 +1010,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         log("Initialising...");
         setContentView(R.layout.activity_main);

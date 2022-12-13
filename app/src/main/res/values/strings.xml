@@ -28,6 +28,7 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="pickBackground">Hintergrundbild ändern</string>
     <string name="pick_Image">Bild aussuchen</string>
+    <string name="milestone_ninety_percent">90% sind schon geschafft!</string>
 
     <!--[ Notification Strings ]-->
     <string name="notification_name_1">Die coole progress-Bar</string>
@@ -57,5 +58,6 @@
     <string name="milestone_almost_done_toast">Fast alles geschafft! Bis bald :)</string>
     <string name="milestone_month_toast">Noch einen Monat geschafft! Ich bin stolz auf dich!</string>
     <string name="milestone_done_toast">Jaaaaaaa!</string>
+    <string name="showMilestones">Meilensteine anzeigen</string>
 
 </resources>
