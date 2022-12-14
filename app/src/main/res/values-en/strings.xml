@@ -50,4 +50,9 @@
     <string name="pick_Image">pick image</string>
     <string name="showMilestones">Show Milestones</string>
     <string name="milestone_ninety_percent">90% done already!</string>
+    <string name="darkmodeColorsNow">Colors in darkmode:</string>
+    <string name="brightmodeColorsNow">Colors in brightmode:</string>
+    <string name="button">Button</string>
+    <string name="text">Text</string>
+    <string name="back2">Back</string>
 </resources>

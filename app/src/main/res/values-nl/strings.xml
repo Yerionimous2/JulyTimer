@@ -50,4 +50,9 @@
     <string name="pick_Image">kies foto</string>
     <string name="showMilestones">" mijlpalen laten zien"</string>
     <string name="milestone_ninety_percent">90% is al gedaan</string>
+    <string name="darkmodeColorsNow">Huidige kleuren in donkere kleurmodus:</string>
+    <string name="brightmodeColorsNow">Huidige kleuren in lichte kleurmodus:</string>
+    <string name="button">" Knop"</string>
+    <string name="text">" Tekst"</string>
+    <string name="back2">achter</string>
 </resources>

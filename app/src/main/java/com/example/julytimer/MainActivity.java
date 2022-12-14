@@ -80,12 +80,21 @@ public class MainActivity extends AppCompatActivity {
     private boolean ran, ran2;
     private boolean timerBool = true;
     private Button settings;
+
+    private String darkmodeButtoncolor;
+    private String darkmodeTextcolor;
+    private String darkmodeBackgroundcolor;
+    private String brightmodeButtoncolor;
+    private String brightmodeTextcolor;
+    private String brightmodeBackgroundcolor;
+
     private String textcolor = "#000000";
     private String buttoncolor = "#000000";
     public String xString, yString, zString;
     public String xString2, yString2, zString2;
     public String startDate = "2022-08-24 09:30:00.000";
     public String endDate = "2023-07-23 21:40:00.000";
+
     private String[] log;
     Drawable myIcon;
     private long completeTime;
@@ -110,10 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void save(double a, String name) {
         editor.putLong(name, Double.doubleToRawLongBits(a));
-    }
-
-    public double loadDouble(String name, double defaultValue) {
-        return Double.longBitsToDouble(sharedPref.getLong(name, Double.doubleToLongBits(defaultValue)));
     }
 
 
@@ -323,7 +328,15 @@ public class MainActivity extends AppCompatActivity {
         end = sharedPref.getInt("darkmodeEnd", 7);
         multiper = sharedPref.getInt("timeMode", 1);
 
-        darkMode = sharedPref.getInt("Darkmode", 0);
+        darkmodeButtoncolor = sharedPref.getString("darkmodeButtoncolor", "#464646");
+        darkmodeTextcolor   = sharedPref.getString("darkmodeTextcolor", "#C5C5C5");
+        darkmodeBackgroundcolor = sharedPref.getString("darkmodeBackgroundcolor", "#555555");
+
+        brightmodeButtoncolor = sharedPref.getString("brightmodeButtoncolor", "#B7C8EA");
+        brightmodeTextcolor = sharedPref.getString("brightmodeTextcolor", "#3A5A9B");
+        brightmodeBackgroundcolor = sharedPref.getString("brightmodeBackgroundcolor", "#7CA3F1");
+
+        darkMode = sharedPref.getInt("Darkmode", 2);
 
         startDate = sharedPref.getString("Start", "2022-08-24 09:30:00.000");
         endDate = sharedPref.getString("Ende", "2023-07-23 21:40:00.000");
@@ -577,24 +590,24 @@ public class MainActivity extends AppCompatActivity {
     public void setColors() {
         runOnUiThread(() -> {
             if(darkMode == 0) {
-                backgroundcolor = "#7CA3F1";
-                textcolor = "#3A5A9B"; //#3A5A9B
-                buttoncolor = "#B7C8EA"; //#648AD6
+                backgroundcolor = brightmodeBackgroundcolor;
+                textcolor = brightmodeTextcolor;
+                buttoncolor = brightmodeButtoncolor;
             }
             if (darkMode == 1) {
-                backgroundcolor = "#555555";
-                textcolor = "#C5C5C5";
-                buttoncolor = "#464646";
+                backgroundcolor = darkmodeBackgroundcolor;
+                textcolor = darkmodeTextcolor;
+                buttoncolor = darkmodeButtoncolor;
             }
             if(darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
-                    backgroundcolor = "#555555";
-                    textcolor = "#C5C5C5";
-                    buttoncolor = "#464646";
+                    backgroundcolor = darkmodeBackgroundcolor;
+                    textcolor = darkmodeTextcolor;
+                    buttoncolor = darkmodeButtoncolor;
                 } else {
-                    backgroundcolor = "#7CA3F1";
-                    textcolor = "#3A5A9B"; //#3A5A9B
-                    buttoncolor = "#B7C8EA"; //#648AD6
+                    backgroundcolor = brightmodeBackgroundcolor;
+                    textcolor = brightmodeTextcolor;
+                    buttoncolor = brightmodeButtoncolor;
                 }
             layout.setBackgroundColor(Color.parseColor(backgroundcolor));
             secondsDone.setTextColor(Color.parseColor(textcolor));
@@ -661,7 +674,7 @@ public class MainActivity extends AppCompatActivity {
             setText();
             setPaddingSizes(width);
             setPositions(height, width, 0);
-            setColors();
+            if(ran) setColors();
         });
     }
 

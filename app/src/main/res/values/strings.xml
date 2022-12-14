@@ -59,5 +59,10 @@
     <string name="milestone_month_toast">Noch einen Monat geschafft! Ich bin stolz auf dich!</string>
     <string name="milestone_done_toast">Jaaaaaaa!</string>
     <string name="showMilestones">Meilensteine anzeigen</string>
+    <string name="darkmodeColorsNow">Aktuelle Farben im Farbmodus dunkel:</string>
+    <string name="brightmodeColorsNow">Aktuelle Farben im Farbmodus hell:</string>
+    <string name="button">Knopf</string>
+    <string name="text">Text</string>
+    <string name="back2">Hinten</string>
 
 </resources>
