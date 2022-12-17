@@ -1406,7 +1406,7 @@ public class SettingsActivity extends AppCompatActivity {
                         }
                         endDateUNIX /= 1000;
                         save(endDate, "Ende");
-                        save(endDateUNIX, "EndeUNIX");
+                        save(endDateUNIX, "EndUNIX");
                     }
 
                 secondsSwitch.setVisibility(View.VISIBLE);
