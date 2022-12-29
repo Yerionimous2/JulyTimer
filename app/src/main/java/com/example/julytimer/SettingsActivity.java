@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.view.inputmethod.InputMethodManager;
