@@ -7,14 +7,18 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.view.inputmethod.InputMethodManager;
@@ -27,12 +31,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Timer;
@@ -65,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView showDarkmodeColors;
     private TextView showBrightmodeColors;
     Context context;
+    public Bitmap BackgroundImageBitmap;
     public EditText darkmodeBegin;
     public EditText darkmodeEnd;
     public Button darkmodeSettings;
@@ -138,6 +145,28 @@ public class SettingsActivity extends AppCompatActivity {
         log("Saved String " + a + " as " + "\"" + name + "\".");
     }
 
+    private void save(Bitmap a, String name) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        a.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] imageInByte = stream.toByteArray();
+        save(imageInByte, name);
+        editor.apply();
+    }
+
+    private void save(byte[] a, String name) {
+        String byteArrayString = Base64.getEncoder().encodeToString(a);
+        System.out.println(byteArrayString);
+        save(byteArrayString, name);
+        editor.apply();
+    }
+
+    private byte[] loadByteArray(String name) {
+        String string = sharedPref.getString(name, null);
+        if(string == null) {return null;
+        }
+        return Base64.getDecoder().decode(string);
+    }
+
     /*
      * All the stored Data is being loaded from the Disk.
      * The default Values are:
@@ -202,6 +231,11 @@ public class SettingsActivity extends AppCompatActivity {
          */
         sharedPref = getSharedPreferences("JulyTimer", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+
+        byte[] BackgroundImageByteArray = loadByteArray("BackgroundImage");
+        if(BackgroundImageByteArray != null) {
+            BackgroundImageBitmap = BitmapFactory.decodeByteArray(BackgroundImageByteArray, 0, BackgroundImageByteArray.length);
+        }
 
         int beginSave = begin;
         int endSave   = end;
@@ -325,7 +359,9 @@ public class SettingsActivity extends AppCompatActivity {
         darkmodeSettingsDone = new Button(a);
         showMilestones = new Button(a);
         backgroundImage.setBackground(getDrawable(R.drawable.normalbackground));
+        backgroundImage.setImageBitmap(BackgroundImageBitmap);
         backgroundImage.setAlpha(0.23F);
+        backgroundImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         runOnUiThread(()-> {
             darkmodeBeginText1.setVisibility(View.INVISIBLE);
             darkmodeBeginText2.setVisibility(View.INVISIBLE);
@@ -1167,6 +1203,10 @@ public class SettingsActivity extends AppCompatActivity {
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
                     backgroundImage.setImageURI(selectedImageUri);
+                    backgroundImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    BitmapDrawable BitmapBackground = (BitmapDrawable) backgroundImage.getDrawable();
+                    Bitmap bitmap = BitmapBackground.getBitmap();
+                    save(bitmap, "BackgroundImage");
                 }
             }
         }
