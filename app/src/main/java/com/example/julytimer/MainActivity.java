@@ -128,6 +128,15 @@ public class MainActivity extends AppCompatActivity {
         return Base64.getDecoder().decode(string);
     }
 
+    /*
+     * save(String) saves the given String for later use under the given name.
+     */
+    public void save(String a, String name) {
+        editor.putString(name, a);
+        editor.apply();
+        log("Saved String " + a + " as " + "\"" + name + "\".");
+    }
+
     public void save(double a, String name) {
         editor.putLong(name, Double.doubleToRawLongBits(a));
     }
