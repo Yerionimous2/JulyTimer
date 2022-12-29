@@ -13,6 +13,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.PorterDuff;
@@ -36,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean settingsOpen;
     private String backgroundcolor;
     SharedPreferences sharedPref;
+    public Bitmap BackgroundImageBitmap;
 
     /*
      * save(int) saves the given int for later use under the given name.
@@ -115,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
     public void save(int a, String name) {
         editor.putInt(name, a);
         editor.apply();
+    }
+
+    private byte[] loadByteArray(String name) {
+        String string = sharedPref.getString(name, null);
+        if(string == null) {return null;
+        }
+        return Base64.getDecoder().decode(string);
     }
 
     public void save(double a, String name) {
@@ -140,7 +151,9 @@ public class MainActivity extends AppCompatActivity {
             settings = new Button(a);
             backgroundImage = new ImageView(a);
             backgroundImage.setBackground(getDrawable(R.drawable.normalbackground));
+            backgroundImage.setImageBitmap(BackgroundImageBitmap);
             backgroundImage.setAlpha(0.23F);
+            backgroundImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
             ran = false;
             ran2 = false;
             standardChannel = 1;
@@ -323,6 +336,11 @@ public class MainActivity extends AppCompatActivity {
         int darkModeSave = darkMode;
         String startDateSave = startDate;
         String endDateSave = endDate;
+
+        byte[] BackgroundImageByteArray = loadByteArray("BackgroundImage");
+        if(BackgroundImageByteArray != null) {
+            BackgroundImageBitmap = BitmapFactory.decodeByteArray(BackgroundImageByteArray, 0, BackgroundImageByteArray.length);
+        }
 
         begin = sharedPref.getInt("darkmodeBegin", 19);
         end = sharedPref.getInt("darkmodeEnd", 7);
@@ -939,6 +957,7 @@ public class MainActivity extends AppCompatActivity {
             if(ran) sendMileStoneNotifications();
 
             percentage = Math.floor(z);
+            if(backgroundImage != null)  backgroundImage.setImageBitmap(BackgroundImageBitmap);
             if(!ran) {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 editor = sharedPref.edit();

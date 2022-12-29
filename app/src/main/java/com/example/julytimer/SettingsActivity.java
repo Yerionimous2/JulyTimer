@@ -161,7 +161,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private byte[] loadByteArray(String name) {
         String string = sharedPref.getString(name, null);
-        if(string == null) {return null;
+        if (string == null) {
+            return null;
         }
         return Base64.getDecoder().decode(string);
     }
@@ -232,12 +233,12 @@ public class SettingsActivity extends AppCompatActivity {
         editor = sharedPref.edit();
 
         byte[] BackgroundImageByteArray = loadByteArray("BackgroundImage");
-        if(BackgroundImageByteArray != null) {
+        if (BackgroundImageByteArray != null) {
             BackgroundImageBitmap = BitmapFactory.decodeByteArray(BackgroundImageByteArray, 0, BackgroundImageByteArray.length);
         }
 
         int beginSave = begin;
-        int endSave   = end;
+        int endSave = end;
         int multiperSave = multiper;
         int darkModeSave = darkMode;
         String startDateSave = startDate;
@@ -248,7 +249,7 @@ public class SettingsActivity extends AppCompatActivity {
         multiper = sharedPref.getInt("timeMode", 1);
 
         darkmodeButtoncolor = sharedPref.getString("darkmodeButtoncolor", "#464646");
-        darkmodeTextcolor   = sharedPref.getString("darkmodeTextcolor", "#C5C5C5");
+        darkmodeTextcolor = sharedPref.getString("darkmodeTextcolor", "#C5C5C5");
         darkmodeBackgroundcolor = sharedPref.getString("darkmodeBackgroundcolor", "#555555");
 
         brightmodeButtoncolor = sharedPref.getString("brightmodeButtoncolor", "#B7C8EA");
@@ -264,7 +265,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         textSize = sharedPref.getInt("textSize", 12);
 
-        if((beginSave != begin)||(endSave != end)||(multiperSave != multiper)||(darkModeSave != darkMode)||(!startDateSave.equals(startDate))||(!endDateSave.equals(endDate))) {
+        if ((beginSave != begin) || (endSave != end) || (multiperSave != multiper) || (darkModeSave != darkMode) || (!startDateSave.equals(startDate)) || (!endDateSave.equals(endDate))) {
             log("Loaded Variables: ");
             log("begin         = " + begin);
             log("end           = " + end);
@@ -361,7 +362,7 @@ public class SettingsActivity extends AppCompatActivity {
         backgroundImage.setImageBitmap(BackgroundImageBitmap);
         backgroundImage.setAlpha(0.23F);
         backgroundImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        runOnUiThread(()-> {
+        runOnUiThread(() -> {
             darkmodeBeginText1.setVisibility(View.INVISIBLE);
             darkmodeBeginText2.setVisibility(View.INVISIBLE);
             darkmodeEndText1.setVisibility(View.INVISIBLE);
@@ -375,6 +376,7 @@ public class SettingsActivity extends AppCompatActivity {
         initialiseListeners();
         initialiseUI();
     }
+
     public void measure() {
         height = getScreenHeight(this);
         width = getScreenWidth(this);
@@ -434,21 +436,28 @@ public class SettingsActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void setText() {
         runOnUiThread(() -> {
-            if(changeDates != null) changeDates.setText(getString(R.string.change_data_button));
-            if(showDarkmodeColors != null) showDarkmodeColors.setText(R.string.darkmodeColorsNow);
-            if(showBrightmodeColors != null) showBrightmodeColors.setText(R.string.brightmodeColorsNow);
-            if(changeDarkmodeButtoncolor != null) changeDarkmodeButtoncolor.setText(R.string.button);
-            if(changeDarkmodeTextcolor != null) changeDarkmodeTextcolor.setText(R.string.text);
-            if(changeDarkmodeBackgroundcolor != null) changeDarkmodeBackgroundcolor.setText(R.string.back2);
-            if(changeBrightmodeButtoncolor != null) changeBrightmodeButtoncolor.setText(R.string.button);
-            if(changeBrightmodeTextcolor != null) changeBrightmodeTextcolor.setText(R.string.text);
-            if(changeBrightmodeBackgroundcolor != null) changeBrightmodeBackgroundcolor.setText(R.string.back2);
-            if(showMilestones != null) showMilestones.setText(getString(R.string.showMilestones));
-            if(darkmodeBeginText1 != null) darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
-            if(darkmodeBeginText2 != null) darkmodeBeginText2.setText(getString(R.string.o_clock));
-            if(darkmodeEndText1   != null) darkmodeEndText1.setText(getString(R.string.begin_bright_mode));
-            if(darkmodeEndText2   != null) darkmodeEndText2.setText(getString(R.string.o_clock));
-            if(secondsSwitch != null) {
+            if (changeDates != null) changeDates.setText(getString(R.string.change_data_button));
+            if (showDarkmodeColors != null) showDarkmodeColors.setText(R.string.darkmodeColorsNow);
+            if (showBrightmodeColors != null)
+                showBrightmodeColors.setText(R.string.brightmodeColorsNow);
+            if (changeDarkmodeButtoncolor != null)
+                changeDarkmodeButtoncolor.setText(R.string.button);
+            if (changeDarkmodeTextcolor != null) changeDarkmodeTextcolor.setText(R.string.text);
+            if (changeDarkmodeBackgroundcolor != null)
+                changeDarkmodeBackgroundcolor.setText(R.string.back2);
+            if (changeBrightmodeButtoncolor != null)
+                changeBrightmodeButtoncolor.setText(R.string.button);
+            if (changeBrightmodeTextcolor != null) changeBrightmodeTextcolor.setText(R.string.text);
+            if (changeBrightmodeBackgroundcolor != null)
+                changeBrightmodeBackgroundcolor.setText(R.string.back2);
+            if (showMilestones != null) showMilestones.setText(getString(R.string.showMilestones));
+            if (darkmodeBeginText1 != null)
+                darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
+            if (darkmodeBeginText2 != null) darkmodeBeginText2.setText(getString(R.string.o_clock));
+            if (darkmodeEndText1 != null)
+                darkmodeEndText1.setText(getString(R.string.begin_bright_mode));
+            if (darkmodeEndText2 != null) darkmodeEndText2.setText(getString(R.string.o_clock));
+            if (secondsSwitch != null) {
                 if (multiper == 60) {
                     secondsSwitch.setText(getString(R.string.settings_minutes));
                 }
@@ -461,22 +470,23 @@ public class SettingsActivity extends AppCompatActivity {
                 if (multiper == 1) {
                     secondsSwitch.setText(getString(R.string.settings_seconds));
                 }
-                if(multiper == 15000) {
+                if (multiper == 15000) {
                     secondsSwitch.setText(getString(R.string.settings_customTime));
                 }
             }
-            if(pickBackgroundImage != null) pickBackgroundImage.setText(getString(R.string.pickBackground) + " (beta..)");
-            if(backToMain != null) {
+            if (pickBackgroundImage != null)
+                pickBackgroundImage.setText(getString(R.string.pickBackground) + " (beta..)");
+            if (backToMain != null) {
                 backToMain.setText(getString(R.string.back));
             }
-            if(darkmodeSwitch != null) {
-                if(darkMode == 0) {
+            if (darkmodeSwitch != null) {
+                if (darkMode == 0) {
                     darkmodeSwitch.setText(getString(R.string.darkmode_off));
                 }
-                if(darkMode == 1) {
+                if (darkMode == 1) {
                     darkmodeSwitch.setText(getString(R.string.darkmode_on));
                 }
-                if(darkMode == 2) {
+                if (darkMode == 2) {
                     darkmodeSwitch.setText(getString(R.string.darkmode_auto));
                 }
             }
@@ -628,7 +638,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void setColors() {
         runOnUiThread(() -> {
             nowWithoutZone = LocalDateTime.now();
-            if(darkMode == 0) {
+            if (darkMode == 0) {
                 backgroundcolor = brightmodeBackgroundcolor;
                 textcolor = brightmodeTextcolor;
                 buttoncolor = brightmodeButtoncolor;
@@ -638,7 +648,7 @@ public class SettingsActivity extends AppCompatActivity {
                 textcolor = darkmodeTextcolor;
                 buttoncolor = darkmodeButtoncolor;
             }
-            if(darkMode == 2)
+            if (darkMode == 2)
                 if ((Integer.parseInt(nowWithoutZone.format(dz)) >= begin) || (Integer.parseInt(nowWithoutZone.format(dz)) < end)) {
                     backgroundcolor = darkmodeBackgroundcolor;
                     textcolor = darkmodeTextcolor;
@@ -792,7 +802,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeEnd.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) {
                     a = darkmodeEnd.getText().toString();
-                    if(!a.equals("")) {
+                    if (!a.equals("")) {
                         int aNum = Integer.parseInt(a);
                         if ((aNum > 24) || ((aNum < 0)) || (aNum > begin)) {
                             darkmodeEnd.setText(Integer.toString(end));
@@ -943,7 +953,6 @@ public class SettingsActivity extends AppCompatActivity {
                 ninetyPercent.setPaddingRelative(horizontal, vertical, horizontal, vertical);
 
 
-
                 oneThird.setWidth(buttonWidth);
                 oneHalf.setWidth(buttonWidth);
                 twoThird.setWidth(buttonWidth);
@@ -961,11 +970,11 @@ public class SettingsActivity extends AppCompatActivity {
                 ninetyPercent.measure(0, 0);
                 hideMilestones.measure(0, 0);
 
-                oneThird.setX((float)(width / 2.0 - oneThird.getMeasuredWidth() / 2.0));
-                oneHalf.setX((float)(width / 2.0 - oneHalf.getMeasuredWidth() / 2.0));
-                twoThird.setX((float)(width / 2.0 - twoThird.getMeasuredWidth() / 2.0));
-                ninetyPercent.setX((float)(width / 2.0 - ninetyPercent.getMeasuredWidth() / 2.0));
-                hideMilestones.setX((float)(width / 2.0 - hideMilestones.getMeasuredWidth() / 2.0));
+                oneThird.setX((float) (width / 2.0 - oneThird.getMeasuredWidth() / 2.0));
+                oneHalf.setX((float) (width / 2.0 - oneHalf.getMeasuredWidth() / 2.0));
+                twoThird.setX((float) (width / 2.0 - twoThird.getMeasuredWidth() / 2.0));
+                ninetyPercent.setX((float) (width / 2.0 - ninetyPercent.getMeasuredWidth() / 2.0));
+                hideMilestones.setX((float) (width / 2.0 - hideMilestones.getMeasuredWidth() / 2.0));
 
                 hideMilestones.setY((float) (hideMilestones.getMeasuredHeight() / 6.0));
                 oneThird.setY(hideMilestones.getY() + hideMilestones.getMeasuredHeight() + 60);
@@ -975,7 +984,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 hideMilestones.setBackgroundColor(Color.parseColor(buttoncolor));
                 hideMilestones.setTextColor(Color.parseColor(textcolor));
-                if(done(100.0/3)) {
+                if (done(100.0 / 3)) {
                     oneThird.setBackgroundColor(Color.parseColor("#20B000"));
                     oneThird.setTextColor(Color.parseColor("#76FF80"));
                 } else {
@@ -983,7 +992,7 @@ public class SettingsActivity extends AppCompatActivity {
                     oneThird.setTextColor(Color.parseColor(textcolor));
                 }
 
-                if(done(50)) {
+                if (done(50)) {
                     oneHalf.setBackgroundColor(Color.parseColor("#20B000"));
                     oneHalf.setTextColor(Color.parseColor("#76FF80"));
                 } else {
@@ -991,7 +1000,7 @@ public class SettingsActivity extends AppCompatActivity {
                     oneHalf.setTextColor(Color.parseColor(textcolor));
                 }
 
-                if(done(200.0/3)) {
+                if (done(200.0 / 3)) {
                     twoThird.setBackgroundColor(Color.parseColor("#20B000"));
                     twoThird.setTextColor(Color.parseColor("#76FF80"));
                 } else {
@@ -999,7 +1008,7 @@ public class SettingsActivity extends AppCompatActivity {
                     twoThird.setTextColor(Color.parseColor(textcolor));
                 }
 
-                if(done(90)) {
+                if (done(90)) {
                     ninetyPercent.setBackgroundColor(Color.parseColor("#20B000"));
                     ninetyPercent.setTextColor(Color.parseColor("#76FF80"));
                 } else {
@@ -1052,10 +1061,10 @@ public class SettingsActivity extends AppCompatActivity {
                     if (secondsSwitch.getText().equals(getString(R.string.settings_minutes))) {
                         secondsSwitch.setText(getString(R.string.settings_hours));
                         multiper = 3600;
-                    } else if(secondsSwitch.getText().equals(getString(R.string.settings_hours))){
+                    } else if (secondsSwitch.getText().equals(getString(R.string.settings_hours))) {
                         secondsSwitch.setText(getString(R.string.settings_days));
                         multiper = 86400;
-                    } else if(secondsSwitch.getText().equals(getString(R.string.settings_days))){
+                    } else if (secondsSwitch.getText().equals(getString(R.string.settings_days))) {
                         secondsSwitch.setText(getString(R.string.settings_customTime));
                         multiper = 15000;
                     } else {
@@ -1215,9 +1224,9 @@ public class SettingsActivity extends AppCompatActivity {
      * hideSoftKeyboard is used to close the Android soft Keyboard.
      * The Input "view" is usually just (View) findViewById(R.id.Layout2)
      */
-    public void hideSoftKeyboard(View view){
+    public void hideSoftKeyboard(View view) {
         runOnUiThread(() -> {
-            InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         });
     }
@@ -1235,11 +1244,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     private String[] addLine(String[] log, String messageline) {
         String[] result;
-        if(log != null) result = new String[log.length + 1];
+        if (log != null) result = new String[log.length + 1];
         else result = new String[1];
-        if(log != null) System.arraycopy(log, 0, result, 0, log.length);
-        if(log != null) result[log.length] = "[" + now.format(dr) + "]: " + messageline;
-        else result[0] = "[" + LocalDateTime.now(ZoneId.of("Europe/Berlin")).format(dr) + "]: " + messageline;
+        if (log != null) System.arraycopy(log, 0, result, 0, log.length);
+        if (log != null) result[log.length] = "[" + now.format(dr) + "]: " + messageline;
+        else
+            result[0] = "[" + LocalDateTime.now(ZoneId.of("Europe/Berlin")).format(dr) + "]: " + messageline;
         return result;
     }
 
@@ -1313,7 +1323,7 @@ public class SettingsActivity extends AppCompatActivity {
             showEndDatePicker.setX((float) (width / 2.0 - showEndDatePicker.getMeasuredWidth() / 2.0));
             lbstartDate.setY((float) (lbstartDate.getMeasuredHeight()));
             showStartDatePicker.setY((float) (lbstartDate.getY() + lbstartDate.getMeasuredHeight() + showStartDatePicker.getMeasuredHeight() * 0.2));
-            done.setY((float) (height/2.0 + height / 4.0));
+            done.setY((float) (height / 2.0 + height / 4.0));
             lbendDate.setY((float) (showStartDatePicker.getY() + showStartDatePicker.getMeasuredHeight() + lbendDate.getMeasuredHeight() * 2.0));
             showEndDatePicker.setY((float) (lbendDate.getY() + lbendDate.getMeasuredHeight() + showEndDatePicker.getMeasuredHeight() * 0.2));
             ConstraintLayout lyout = findViewById(R.id.Layout2);
@@ -1361,7 +1371,7 @@ public class SettingsActivity extends AppCompatActivity {
                         d[0] = year;
                         d[1] = monthOfYear + 1;
                         d[2] = dayOfMonth;
-                    },c[0], c[1] - 1, c[2]);
+                    }, c[0], c[1] - 1, c[2]);
             TimePickerDialog timePickerDialog2 = new TimePickerDialog(context,
                     (view, hourOfDay, minute) -> {
 
@@ -1402,8 +1412,8 @@ public class SettingsActivity extends AppCompatActivity {
                 showEndDatePicker.setVisibility(View.INVISIBLE);
                 done.setVisibility(View.INVISIBLE);
 
-                if(changedStart && changedEnd)
-                    if(checkDates(dateParseString(b), dateParseString(d))) {
+                if (changedStart && changedEnd)
+                    if (checkDates(dateParseString(b), dateParseString(d))) {
                         startDate = dateParseString(b);
                         try {
                             startDateUNIX = timestamp(startDate) + calcOffSeconds();
@@ -1423,8 +1433,8 @@ public class SettingsActivity extends AppCompatActivity {
                         save(endDate, "Ende");
                         save(endDateUNIX, "EndUNIX");
                     }
-                if(changedStart && !changedEnd)
-                    if(checkDates(dateParseString(b), endDate)) {
+                if (changedStart && !changedEnd)
+                    if (checkDates(dateParseString(b), endDate)) {
                         startDate = dateParseString(b);
                         try {
                             startDateUNIX = timestamp(startDate) + calcOffSeconds();
@@ -1435,8 +1445,8 @@ public class SettingsActivity extends AppCompatActivity {
                         save(startDate, "Start");
                         save(startDateUNIX, "StartUNIX");
                     }
-                if(!changedStart && changedEnd)
-                    if(checkDates(startDate, dateParseString(d))) {
+                if (!changedStart && changedEnd)
+                    if (checkDates(startDate, dateParseString(d))) {
                         endDate = dateParseString(d);
                         try {
                             endDateUNIX = timestamp(endDate) + calcOffSeconds();
@@ -1457,9 +1467,10 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeSettings.setVisibility(View.VISIBLE);
 
                 log("Changed Dates: ");
-                if(changedStart) log(" Startdate = " + startDateUNIX + ", " + createReadableDate(b));
+                if (changedStart)
+                    log(" Startdate = " + startDateUNIX + ", " + createReadableDate(b));
                 else log(" Startdate = " + startDateUNIX + ", " + createReadableDate(a));
-                if(changedEnd) log(" Startdate = " + startDateUNIX + ", " + createReadableDate(d));
+                if (changedEnd) log(" Startdate = " + startDateUNIX + ", " + createReadableDate(d));
                 else log(" Enddate   = " + endDateUNIX + ", " + createReadableDate(c));
             });
         });
@@ -1476,17 +1487,17 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private String dateParseString(int[] date) {
         String result = "";
-        if(date[0] < 1000) result += "0";
-        if(date[0] < 100) result += "0";
-        if(date[0] < 10) result += "0";
+        if (date[0] < 1000) result += "0";
+        if (date[0] < 100) result += "0";
+        if (date[0] < 10) result += "0";
         result += date[0] + "-";
-        if(date[1] < 10) result += "0";
+        if (date[1] < 10) result += "0";
         result += date[1] + "-";
-        if(date[2] < 10) result += "0";
+        if (date[2] < 10) result += "0";
         result += date[2] + " ";
-        if(date[3] < 10) result += "0";
+        if (date[3] < 10) result += "0";
         result += date[3] + ":";
-        if(date[4] < 10) result += "0";
+        if (date[4] < 10) result += "0";
         result += date[4] + ":00.000";
         return result;
     }
@@ -1504,7 +1515,7 @@ public class SettingsActivity extends AppCompatActivity {
             a = timestamp(beginDate);
             b = timestamp(endDate);
             c = timestamp(now.format(dr));
-        } catch(ParseException oi) {
+        } catch (ParseException oi) {
             System.out.println("Debug: ParseException in timestamp");
         }
         return (a < b) && (c <= b);
@@ -1522,34 +1533,52 @@ public class SettingsActivity extends AppCompatActivity {
     private String createReadableDate(int[] date) {
         String result = Integer.toString(date[2]);
         switch (date[1]) {
-            case 1:  result += " JAN ";
+            case 1:
+                result += " JAN ";
                 break;
-            case 2:  result += " FEB ";
+            case 2:
+                result += " FEB ";
                 break;
-            case 3:  result += " MAR ";
+            case 3:
+                result += " MAR ";
                 break;
-            case 4:  result += " APR ";
+            case 4:
+                result += " APR ";
                 break;
-            case 5:  result += " MAI ";
+            case 5:
+                result += " MAI ";
                 break;
-            case 6:  result += " JUN ";
+            case 6:
+                result += " JUN ";
                 break;
-            case 7:  result += " JUL ";
+            case 7:
+                result += " JUL ";
                 break;
-            case 8:  result += " AUG ";
+            case 8:
+                result += " AUG ";
                 break;
-            case 9:  result += " SEP ";
+            case 9:
+                result += " SEP ";
                 break;
-            case 10: result += " OKT ";
+            case 10:
+                result += " OKT ";
                 break;
-            case 11: result += " NOV ";
+            case 11:
+                result += " NOV ";
                 break;
-            case 12: result += " DEC ";
+            case 12:
+                result += " DEC ";
                 break;
-            default: result += " ERR ";
+            default:
+                result += " ERR ";
         }
         result += Integer.toString(date[0]);
-        result += " " + date[3] + ":" + date[4];
+        String date3, date4;
+        date3 = date[3] + "";
+        if (date3.length() < 2) date3 = "0" + date3;
+        date4 = date[4] + "";
+        if (date4.length() < 2) date4 = "0" + date4;
+        result += " " + date3 + ":" + date4;
         return result;
     }
 
@@ -1585,14 +1614,14 @@ public class SettingsActivity extends AppCompatActivity {
     public int calcOffSeconds() {
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
         nowWithoutZone = LocalDateTime.now();
-        float a = 0,b = 0;
+        float a = 0, b = 0;
         try {
             a = timestamp(now.format(dr));
             b = timestamp(nowWithoutZone.format(dr));
-        } catch(ParseException oi) {
+        } catch (ParseException oi) {
             System.out.println("Debug: ParseException in timestamp");
         }
-        return (int)(b-a)/1000;
+        return (int) (b - a) / 1000;
     }
 
     private void makeUIinvisible() {
