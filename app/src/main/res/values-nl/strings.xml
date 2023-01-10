@@ -17,7 +17,7 @@
     <string name="setup_darkmode_times">Ingesteld op</string>
     <string name="notification_name_1">voortgangsbalk</string>
     <string name="notification_name_2">Mijlpaalmelding</string>
-    <string name="still_there">nog altijd daar!</string>
+    <string name="still_there">" tot we elkaar weer ontmoeten!"</string>
     <string name="milestone_notification_title">JulyTimer-Mijlpaal</string>
     <string name="milestone_third_notification">Een derde is al klaar!</string>
     <string name="milestone_half_notification">De helft is al klaar!</string>

@@ -475,7 +475,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
             if (pickBackgroundImage != null)
-                pickBackgroundImage.setText(getString(R.string.pickBackground) + " (beta..)");
+                pickBackgroundImage.setText(getString(R.string.pickBackground));
             if (backToMain != null) {
                 backToMain.setText(getString(R.string.back));
             }

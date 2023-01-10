@@ -33,7 +33,7 @@
     <!--[ Notification Strings ]-->
     <string name="notification_name_1">Die coole progress-Bar</string>
     <string name="notification_name_2">Die Meilensteinbenachrichtigung</string>
-    <string name="still_there"> noch in Ghana! </string>
+    <string name="still_there">"bis wir uns wiedersehen!"</string>
     <string name="milestone_notification_title">JulyTimer-Meilenstein</string>
     <string name="milestone_third_notification">Ein Drittel ist schon geschafft!</string>
     <string name="milestone_half_notification">Die Hälfte ist schon geschafft!</string>
