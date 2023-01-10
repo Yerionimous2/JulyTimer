@@ -97,6 +97,9 @@ public class SettingsActivity extends AppCompatActivity {
     private int darkMode;
     public int begin = 0;
     public int end = 0;
+    public int offset = 0;
+    public int maxOffset = 0;
+    public boolean ran;
     private String darkmodeButtoncolor;
     private String darkmodeTextcolor;
     private String darkmodeBackgroundcolor;
@@ -285,6 +288,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ran = false;
         context = this;
         act = this;
         now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
@@ -618,7 +622,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
 
             // <----------------- [Y Values] -----------------> \\
-            backToMain.setY((float) (backToMain.getMeasuredHeight() / 6.0));
+            backToMain.setY((float) (backToMain.getMeasuredHeight() / 6.0) - offset);
             secondsSwitch.setY((float) (backToMain.getY() + backToMain.getMeasuredHeight() + secondsSwitch.getMeasuredHeight() / 6.0));
             changeDates.setY((float) (secondsSwitch.getY() + secondsSwitch.getMeasuredHeight() + changeDates.getMeasuredHeight() / 6.0));
             darkmodeSwitch.setY((float) (changeDates.getY() + changeDates.getMeasuredHeight() + darkmodeSwitch.getMeasuredHeight() / 6.0));
@@ -644,6 +648,12 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeBeginText2.setY(darkmodeBeginText1.getY());
             darkmodeEndText2.setY(darkmodeEndText1.getY());
             darkmodeSettingsDone.setY((float) (darkmodeEnd.getY() + darkmodeEnd.getMeasuredHeight() + darkmodeSettingsDone.getMeasuredHeight() / 1.5));
+
+            if(!ran) {
+                maxOffset = (int) (((reset.getY() + reset.getHeight() * 7) / 6.0) - height);
+                if(maxOffset < 0)maxOffset = 0;
+            }
+            ran = true;
         });
     }
 
