@@ -44,6 +44,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 @SuppressWarnings("SpellCheckingInspection")
 
+
 public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     View layout;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private double z;
     private double zbefore;
     private double percentage;
-    private double percentageLastOpened;
+    private int percentageLastOpened;
     private long startDateUNIX;
     private long endDateUNIX;
     private boolean settingsOpen;
@@ -122,19 +123,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private byte[] loadByteArray(String name) {
+        byte[] result = null;
         String string = sharedPref.getString(name, null);
-        if(string == null) {return null;
+        if (string != null) {
+            result = Base64.getDecoder().decode(string);
         }
-        return Base64.getDecoder().decode(string);
-    }
-
-    /*
-     * save(String) saves the given String for later use under the given name.
-     */
-    public void save(String a, String name) {
-        editor.putString(name, a);
-        editor.apply();
-        log("Saved String " + a + " as " + "\"" + name + "\".");
+        return result;
     }
 
     public void save(double a, String name) {
@@ -187,7 +181,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onPause() {
         log("The App has been closed but not terminated.");
-        percentageLastOpened = percentage;
+        percentageLastOpened = (int) Math.floor(z);
+        save(percentageLastOpened, "percentageLastOpened");
 
         Intent startIntent = new Intent(this, this.getClass());
         startIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -204,11 +199,12 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         log("The App has been opened again.");
         resetNotification();
-        settingsOpen = false;
-        if(percentage > percentageLastOpened) {
-            Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, (int) percentageLastOpened), Toast.LENGTH_LONG);
+        percentageLastOpened = sharedPref.getInt("percentageLastOpened", 0);
+        if(Math.floor(z) > percentageLastOpened) {
+            Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString((int) Math.floor(z), percentageLastOpened), Toast.LENGTH_SHORT);
             toast.show();
         }
+        settingsOpen = false;
         super.onResume();
     }
 
@@ -353,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
 
         begin = sharedPref.getInt("darkmodeBegin", 19);
         end = sharedPref.getInt("darkmodeEnd", 7);
-        multiper = sharedPref.getInt("timeMode", 1);
+        multiper = sharedPref.getInt("timeMode", 15000);
 
         darkmodeButtoncolor = sharedPref.getString("darkmodeButtoncolor", "#464646");
         darkmodeTextcolor   = sharedPref.getString("darkmodeTextcolor", "#C5C5C5");
@@ -366,9 +362,9 @@ public class MainActivity extends AppCompatActivity {
         darkMode = sharedPref.getInt("Darkmode", 2);
 
         startDate = sharedPref.getString("Start", "2022-08-24 09:30:00.000");
-        endDate = sharedPref.getString("Ende", "2023-07-23 21:40:00.000");
+        endDate = sharedPref.getString("Ende", "2023-03-01 21:00:00.000");
         startDateUNIX = sharedPref.getLong("StartUNIX", 1661326200);
-        endDateUNIX = sharedPref.getLong("EndUNIX", 1690141200);
+        endDateUNIX = sharedPref.getLong("EndUNIX", 1677700800);
 
         if((beginSave != begin)||(endSave != end)||(multiperSave != multiper)||(darkModeSave != darkMode)||(!startDateSave.equals(startDate))||(!endDateSave.equals(endDate))) {
             log("Loaded Variables: ");
@@ -967,11 +963,12 @@ public class MainActivity extends AppCompatActivity {
 
             percentage = Math.floor(z);
             if(backgroundImage != null)  backgroundImage.setImageBitmap(BackgroundImageBitmap);
+            if(!settingsOpen) {
+                save((int) Math.floor(z), "percentageLastOpened");
+            }
             if(!ran) {
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                editor = sharedPref.edit();
-                if(percentage > sharedPref.getInt("Percent", 0)) {
-                    Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString(percentage, sharedPref.getInt("Percent", 0)), Toast.LENGTH_LONG);
+                if(Math.floor(z) > percentageLastOpened) {
+                    Toast toast = Toast.makeText(getApplicationContext(), createMissedPercentString((int) Math.floor(z), percentageLastOpened), Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
@@ -1023,7 +1020,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * puts together a String for a missed Percent.
      */
-    private String createMissedPercentString(double percentage, int percent) {
+    private String createMissedPercentString(int percentage, int percent) {
         if((percentage - percent) > 1) return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2_singular);
         return getString(R.string.missed_percent_1) + " " + (int)(percentage - percent) + " " + getString(R.string.missed_percent_2_plural);
     }

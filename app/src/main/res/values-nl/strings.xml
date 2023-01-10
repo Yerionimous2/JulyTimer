@@ -41,6 +41,7 @@
     <string name="missed_percent_2_plural">procent gemist</string>
     <string name="title_activity_settings">" ideeën"</string>
     <string name="back">opbrengst</string>
+    <string name="reset">Resetten naar standaard</string>
     <string name="settings_seconds">tijdweergave: Seconden</string>
     <string name="settings_minutes">tijdweergave: Minuten</string>
     <string name="settings_hours">tijdweergave: Uur</string>
@@ -55,4 +56,7 @@
     <string name="button">" Knop"</string>
     <string name="text">" Tekst"</string>
     <string name="back2">achter</string>
+    <string name="milestone_quarter_notification">" Een kwart is al gedaan!"</string>
+    <string name="milestone_three_quarter_notification">Driekwart is al klaar!</string>
+    <string name="milestone_hundred_percent">" Eindelijk klaar!"</string>
 </resources>

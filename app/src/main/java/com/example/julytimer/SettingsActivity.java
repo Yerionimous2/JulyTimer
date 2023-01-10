@@ -63,10 +63,13 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView darkmodeEndText1;
     private TextView darkmodeEndText2;
     private TextView lbstartDate;
+    private TextView oneQuarter;
     private TextView oneThird;
     private TextView oneHalf;
     private TextView twoThird;
+    private TextView threeQuarter;
     private TextView ninetyPercent;
+    private TextView allDone;
     private TextView showDarkmodeColors;
     private TextView showBrightmodeColors;
     Context context;
@@ -81,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
     public Button backToMain;
     public Button pickBackgroundImage;
     public Button showMilestones;
+    public Button reset;
     public Button hideMilestones;
     public Button changeDarkmodeButtoncolor;
     public Button changeDarkmodeTextcolor;
@@ -246,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         begin = sharedPref.getInt("darkmodeBegin", 19);
         end = sharedPref.getInt("darkmodeEnd", 7);
-        multiper = sharedPref.getInt("timeMode", 1);
+        multiper = sharedPref.getInt("timeMode", 15000);
 
         darkmodeButtoncolor = sharedPref.getString("darkmodeButtoncolor", "#464646");
         darkmodeTextcolor = sharedPref.getString("darkmodeTextcolor", "#C5C5C5");
@@ -323,6 +327,7 @@ public class SettingsActivity extends AppCompatActivity {
         homeScreenLayout.addView(changeBrightmodeBackgroundcolor);
         homeScreenLayout.addView(changeBrightmodeButtoncolor);
         homeScreenLayout.addView(showMilestones);
+        homeScreenLayout.addView(reset);
         homeScreenLayout.addView(darkmodeSwitch);
         homeScreenLayout.addView(backToMain);
         homeScreenLayout.addView(pickBackgroundImage);
@@ -358,6 +363,7 @@ public class SettingsActivity extends AppCompatActivity {
         darkmodeSettings = new Button(a);
         darkmodeSettingsDone = new Button(a);
         showMilestones = new Button(a);
+        reset = new Button(a);
         backgroundImage.setBackground(getDrawable(R.drawable.normalbackground));
         backgroundImage.setImageBitmap(BackgroundImageBitmap);
         backgroundImage.setAlpha(0.23F);
@@ -396,6 +402,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeBrightmodeButtoncolor.measure(0, 0);
             changeBrightmodeTextcolor.measure(0, 0);
             showMilestones.measure(0, 0);
+            reset.measure(0, 0);
             darkmodeSwitch.measure(0, 0);
             backToMain.measure(0, 0);
             pickBackgroundImage.measure(0, 0);
@@ -423,6 +430,7 @@ public class SettingsActivity extends AppCompatActivity {
             changeBrightmodeButtoncolor.setTextSize(textSize);
             changeBrightmodeTextcolor.setTextSize(textSize);
             showMilestones.setTextSize(textSize);
+            reset.setTextSize(textSize);
             darkmodeSwitch.setTextSize(textSize);
             backToMain.setTextSize(textSize);
             pickBackgroundImage.setTextSize(textSize);
@@ -451,6 +459,7 @@ public class SettingsActivity extends AppCompatActivity {
             if (changeBrightmodeBackgroundcolor != null)
                 changeBrightmodeBackgroundcolor.setText(R.string.back2);
             if (showMilestones != null) showMilestones.setText(getString(R.string.showMilestones));
+            if(reset != null) reset.setText(getString(R.string.reset));
             if (darkmodeBeginText1 != null)
                 darkmodeBeginText1.setText(getString(R.string.begin_dark_mode));
             if (darkmodeBeginText2 != null) darkmodeBeginText2.setText(getString(R.string.o_clock));
@@ -512,6 +521,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setWidth(buttonWidth);
             changeDates.setWidth(buttonWidth);
             showMilestones.setWidth(buttonWidth);
+            reset.setWidth(buttonWidth);
             darkmodeSwitch.setWidth(buttonWidth);
             backToMain.setWidth(buttonWidth);
             pickBackgroundImage.setWidth(buttonWidth);
@@ -526,6 +536,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setHeight(buttonHeight);
             changeDates.setHeight(buttonHeight);
             showMilestones.setHeight(buttonHeight);
+            reset.setHeight(buttonHeight);
             darkmodeSwitch.setHeight(buttonHeight);
             backToMain.setHeight(buttonHeight);
             pickBackgroundImage.setHeight(buttonHeight);
@@ -584,6 +595,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSettings.setX((float) (width / 2.0 - darkmodeSettings.getMeasuredWidth() / 2.0));
             changeDates.setX((float) (width / 2.0 - changeDates.getMeasuredWidth() / 2.0));
             showMilestones.setX((float) (width / 2.0 - showMilestones.getMeasuredWidth() / 2.0));
+            reset.setX((float) (width / 2.0 - reset.getMeasuredWidth() / 2.0));
             pickBackgroundImage.setX((float) (width / 2.0 - pickBackgroundImage.getMeasuredWidth() / 2.0));
             showDarkmodeColors.setX((float) (width / 2.0 - showDarkmodeColors.getMeasuredWidth() / 2.0));
             showBrightmodeColors.setX((float) (width / 2.0 - showBrightmodeColors.getMeasuredWidth() / 2.0));
@@ -613,6 +625,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeSettings.setY((float) (darkmodeSwitch.getY() + darkmodeSwitch.getMeasuredHeight() + darkmodeSettings.getMeasuredHeight() / 6.0));
             pickBackgroundImage.setY((float) (darkmodeSettings.getY() + darkmodeSettings.getMeasuredHeight() + pickBackgroundImage.getMeasuredHeight() / 6.0));
             showMilestones.setY((float) (pickBackgroundImage.getY() + pickBackgroundImage.getMeasuredHeight() + showMilestones.getMeasuredHeight() / 6.0));
+            reset.setY((float) (showMilestones.getY() + showMilestones.getMeasuredHeight() + reset.getMeasuredHeight() / 6.0));
 
             showDarkmodeColors.setY(20);
             changeDarkmodeBackgroundcolor.setY(showDarkmodeColors.getY() + showDarkmodeColors.getMeasuredHeight() + 20);
@@ -668,6 +681,7 @@ public class SettingsActivity extends AppCompatActivity {
             showDarkmodeColors.setTextColor(Color.parseColor(textcolor));
             showBrightmodeColors.setTextColor(Color.parseColor(textcolor));
             showMilestones.setTextColor(Color.parseColor(textcolor));
+            reset.setTextColor(Color.parseColor(textcolor));
             darkmodeSwitch.setTextColor(Color.parseColor(textcolor));
             backToMain.setTextColor(Color.parseColor(textcolor));
             pickBackgroundImage.setTextColor(Color.parseColor(textcolor));
@@ -684,6 +698,7 @@ public class SettingsActivity extends AppCompatActivity {
             secondsSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
             changeDates.setBackgroundColor(Color.parseColor(buttoncolor));
             showMilestones.setBackgroundColor(Color.parseColor(buttoncolor));
+            reset.setBackgroundColor(Color.parseColor(buttoncolor));
             darkmodeSwitch.setBackgroundColor(Color.parseColor(buttoncolor));
             backToMain.setBackgroundColor(Color.parseColor(buttoncolor));
             pickBackgroundImage.setBackgroundColor(Color.parseColor(buttoncolor));
@@ -712,6 +727,7 @@ public class SettingsActivity extends AppCompatActivity {
             showDarkmodeColors.setTypeface(Typeface.MONOSPACE);
             showBrightmodeColors.setTypeface(Typeface.MONOSPACE);
             showMilestones.setTypeface(Typeface.MONOSPACE);
+            reset.setTypeface(Typeface.MONOSPACE);
             darkmodeSwitch.setTypeface(Typeface.MONOSPACE);
             backToMain.setTypeface(Typeface.MONOSPACE);
             pickBackgroundImage.setTypeface(Typeface.MONOSPACE);
@@ -815,6 +831,25 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            reset.setOnClickListener(view -> {
+                save((String) null, "BackgroundImage");
+                save(19, "darkmodeBegin");
+                save(7, "darkmodeEnd");
+                save(15000, "timeMode");
+                save("#464646", "darkmodeButtoncolor");
+                save("#C5C5C5", "darkmodeTextcolor");
+                save("#555555", "darkmodeBackgroundcolor");
+                save("#B7C8EA", "brightmodeButtoncolor");
+                save("#3A5A9B", "brightmodeTextcolor");
+                save("#7CA3F1", "brightmodeBackgroundcolor");
+                save(2, "Darkmode");
+                save("2022-08-24 09:30:00.000", "Start");
+                save("2023-03-01 21:00:00.000", "Ende");
+                save((long) 1661326200, "StartUNIX");
+                save((long) 1677700800, "EndUNIX");
+                loadVariables();
+            });
+
             changeDarkmodeBackgroundcolor.setOnClickListener(view -> {
                 AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.parseColor(darkmodeBackgroundcolor), false, new AmbilWarnaDialog.OnAmbilWarnaListener() {
                     @Override
@@ -915,28 +950,38 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeSettings.setVisibility(View.INVISIBLE);
                 changeDates.setVisibility(View.INVISIBLE);
                 showMilestones.setVisibility(View.INVISIBLE);
+                reset.setVisibility(View.INVISIBLE);
                 darkmodeSwitch.setVisibility(View.INVISIBLE);
                 backToMain.setVisibility(View.INVISIBLE);
                 pickBackgroundImage.setVisibility(View.INVISIBLE);
                 secondsSwitch.setVisibility(View.INVISIBLE);
 
                 hideMilestones = new Button(context);
+                oneQuarter = new TextView(context);
                 oneThird = new TextView(context);
                 oneHalf = new TextView(context);
                 twoThird = new TextView(context);
+                threeQuarter = new TextView(context);
                 ninetyPercent = new TextView(context);
+                allDone = new TextView(context);
 
                 hideMilestones.setTextSize(textSize);
+                oneQuarter.setTextSize((float) (textSize * 1.2));
                 oneThird.setTextSize((float) (textSize * 1.2));
                 oneHalf.setTextSize((float) (textSize * 1.2));
                 twoThird.setTextSize((float) (textSize * 1.2));
+                threeQuarter.setTextSize((float) (textSize * 1.2));
                 ninetyPercent.setTextSize((float) (textSize * 1.2));
+                allDone.setTextSize((float) (textSize * 1.2));
 
                 hideMilestones.setTypeface(Typeface.MONOSPACE);
+                oneQuarter.setTypeface(Typeface.MONOSPACE);
                 oneThird.setTypeface(Typeface.MONOSPACE);
                 oneHalf.setTypeface(Typeface.MONOSPACE);
                 twoThird.setTypeface(Typeface.MONOSPACE);
+                threeQuarter.setTypeface(Typeface.MONOSPACE);
                 ninetyPercent.setTypeface(Typeface.MONOSPACE);
+                allDone.setTypeface(Typeface.MONOSPACE);
 
                 width = getScreenWidth(act);
                 height = getScreenHeight(act);
@@ -947,43 +992,67 @@ public class SettingsActivity extends AppCompatActivity {
                 hideMilestones.setWidth(buttonWidth);
                 hideMilestones.setHeight(buttonHeight);
 
+                oneQuarter.setPaddingRelative(horizontal, vertical, horizontal, vertical);
                 oneThird.setPaddingRelative(horizontal, vertical, horizontal, vertical);
                 oneHalf.setPaddingRelative(horizontal, vertical, horizontal, vertical);
                 twoThird.setPaddingRelative(horizontal, vertical, horizontal, vertical);
+                threeQuarter.setPaddingRelative(horizontal, vertical, horizontal, vertical);
                 ninetyPercent.setPaddingRelative(horizontal, vertical, horizontal, vertical);
+                allDone.setPaddingRelative(horizontal, vertical, horizontal, vertical);
 
-
+                oneQuarter.setWidth(buttonWidth);
                 oneThird.setWidth(buttonWidth);
                 oneHalf.setWidth(buttonWidth);
                 twoThird.setWidth(buttonWidth);
+                threeQuarter.setWidth(buttonWidth);
                 ninetyPercent.setWidth(buttonWidth);
+                allDone.setWidth(buttonWidth);
 
+                oneQuarter.setText(getString(R.string.milestone_quarter_notification));
                 oneThird.setText(getString(R.string.milestone_third_notification));
                 oneHalf.setText(getString(R.string.milestone_half_notification));
                 twoThird.setText(getString(R.string.milestone_two_third_notification));
+                threeQuarter.setText(getString(R.string.milestone_three_quarter_notification));
                 ninetyPercent.setText(getString(R.string.milestone_ninety_percent));
+                allDone.setText(getString(R.string.milestone_hundred_percent));
                 hideMilestones.setText(getString(R.string.back));
 
+                oneQuarter.measure(0, 0);
                 oneThird.measure(0, 0);
                 oneHalf.measure(0, 0);
                 twoThird.measure(0, 0);
+                threeQuarter.measure(0, 0);
                 ninetyPercent.measure(0, 0);
+                allDone.measure(0, 0);
                 hideMilestones.measure(0, 0);
 
+                oneQuarter.setX((float) (width / 2.0 - oneQuarter.getMeasuredWidth() / 2.0));
                 oneThird.setX((float) (width / 2.0 - oneThird.getMeasuredWidth() / 2.0));
                 oneHalf.setX((float) (width / 2.0 - oneHalf.getMeasuredWidth() / 2.0));
                 twoThird.setX((float) (width / 2.0 - twoThird.getMeasuredWidth() / 2.0));
+                threeQuarter.setX((float) (width / 2.0 - threeQuarter.getMeasuredWidth() / 2.0));
                 ninetyPercent.setX((float) (width / 2.0 - ninetyPercent.getMeasuredWidth() / 2.0));
+                allDone.setX((float) (width / 2.0 - allDone.getMeasuredWidth() / 2.0));
                 hideMilestones.setX((float) (width / 2.0 - hideMilestones.getMeasuredWidth() / 2.0));
 
                 hideMilestones.setY((float) (hideMilestones.getMeasuredHeight() / 6.0));
-                oneThird.setY(hideMilestones.getY() + hideMilestones.getMeasuredHeight() + 60);
+                oneQuarter.setY(hideMilestones.getY() + hideMilestones.getMeasuredHeight() + 60);
+                oneThird.setY(oneQuarter.getY() + oneQuarter.getMeasuredHeight() + 10);
                 oneHalf.setY(oneThird.getY() + oneThird.getMeasuredHeight() + 10);
                 twoThird.setY(oneHalf.getY() + oneHalf.getMeasuredHeight() + 10);
-                ninetyPercent.setY(twoThird.getY() + twoThird.getMeasuredHeight() + 10);
+                threeQuarter.setY(twoThird.getY() + twoThird.getMeasuredHeight() + 10);
+                ninetyPercent.setY(threeQuarter.getY() + threeQuarter.getMeasuredHeight() + 10);
+                allDone.setY(ninetyPercent.getY() + ninetyPercent.getMeasuredHeight() + 10);
 
                 hideMilestones.setBackgroundColor(Color.parseColor(buttoncolor));
                 hideMilestones.setTextColor(Color.parseColor(textcolor));
+                if (done(25)) {
+                    oneQuarter.setBackgroundColor(Color.parseColor("#20B000"));
+                    oneQuarter.setTextColor(Color.parseColor("#76FF80"));
+                } else {
+                    oneQuarter.setBackgroundColor(Color.parseColor(buttoncolor));
+                    oneQuarter.setTextColor(Color.parseColor(textcolor));
+                }
                 if (done(100.0 / 3)) {
                     oneThird.setBackgroundColor(Color.parseColor("#20B000"));
                     oneThird.setTextColor(Color.parseColor("#76FF80"));
@@ -1008,6 +1077,14 @@ public class SettingsActivity extends AppCompatActivity {
                     twoThird.setTextColor(Color.parseColor(textcolor));
                 }
 
+                if (done(75)) {
+                    threeQuarter.setBackgroundColor(Color.parseColor("#20B000"));
+                    threeQuarter.setTextColor(Color.parseColor("#76FF80"));
+                } else {
+                    threeQuarter.setBackgroundColor(Color.parseColor(buttoncolor));
+                    threeQuarter.setTextColor(Color.parseColor(textcolor));
+                }
+
                 if (done(90)) {
                     ninetyPercent.setBackgroundColor(Color.parseColor("#20B000"));
                     ninetyPercent.setTextColor(Color.parseColor("#76FF80"));
@@ -1016,25 +1093,40 @@ public class SettingsActivity extends AppCompatActivity {
                     ninetyPercent.setTextColor(Color.parseColor(textcolor));
                 }
 
+                if (done(100)) {
+                    allDone.setBackgroundColor(Color.parseColor("#20B000"));
+                    allDone.setTextColor(Color.parseColor("#76FF80"));
+                } else {
+                    allDone.setBackgroundColor(Color.parseColor(buttoncolor));
+                    allDone.setTextColor(Color.parseColor(textcolor));
+                }
+
                 ConstraintLayout lyout = findViewById(R.id.Layout2);
+                lyout.addView(oneQuarter);
                 lyout.addView(oneThird);
                 lyout.addView(oneHalf);
                 lyout.addView(twoThird);
+                lyout.addView(threeQuarter);
                 lyout.addView(ninetyPercent);
+                lyout.addView(allDone);
                 lyout.addView(hideMilestones);
 
                 hideMilestones.setOnClickListener(view2 -> {
                     darkmodeSettings.setVisibility(View.VISIBLE);
                     changeDates.setVisibility(View.VISIBLE);
                     showMilestones.setVisibility(View.VISIBLE);
+                    reset.setVisibility(View.VISIBLE);
                     darkmodeSwitch.setVisibility(View.VISIBLE);
                     backToMain.setVisibility(View.VISIBLE);
                     pickBackgroundImage.setVisibility(View.VISIBLE);
                     secondsSwitch.setVisibility(View.VISIBLE);
+                    oneQuarter.setVisibility(View.INVISIBLE);
                     oneThird.setVisibility(View.INVISIBLE);
                     oneHalf.setVisibility(View.INVISIBLE);
                     twoThird.setVisibility(View.INVISIBLE);
+                    threeQuarter.setVisibility(View.INVISIBLE);
                     ninetyPercent.setVisibility(View.INVISIBLE);
+                    allDone.setVisibility(View.INVISIBLE);
                     hideMilestones.setVisibility(View.INVISIBLE);
                 });
             });
@@ -1089,6 +1181,7 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeSettings.setVisibility(View.INVISIBLE);
                 changeDates.setVisibility(View.INVISIBLE);
                 showMilestones.setVisibility(View.INVISIBLE);
+                reset.setVisibility(View.INVISIBLE);
                 darkmodeSwitch.setVisibility(View.INVISIBLE);
                 backToMain.setVisibility(View.INVISIBLE);
                 pickBackgroundImage.setVisibility(View.INVISIBLE);
@@ -1117,6 +1210,7 @@ public class SettingsActivity extends AppCompatActivity {
                 secondsSwitch.setVisibility(View.VISIBLE);
                 changeDates.setVisibility(View.VISIBLE);
                 showMilestones.setVisibility(View.VISIBLE);
+                reset.setVisibility(View.VISIBLE);
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 backToMain.setVisibility(View.VISIBLE);
                 pickBackgroundImage.setVisibility(View.VISIBLE);
@@ -1462,6 +1556,7 @@ public class SettingsActivity extends AppCompatActivity {
                 darkmodeSwitch.setVisibility(View.VISIBLE);
                 changeDates.setVisibility(View.VISIBLE);
                 showMilestones.setVisibility(View.VISIBLE);
+                reset.setVisibility(View.VISIBLE);
                 backToMain.setVisibility(View.VISIBLE);
                 pickBackgroundImage.setVisibility(View.VISIBLE);
                 darkmodeSettings.setVisibility(View.VISIBLE);
@@ -1633,6 +1728,7 @@ public class SettingsActivity extends AppCompatActivity {
             pickBackgroundImage.setVisibility(View.INVISIBLE);
             changeDates.setVisibility(View.INVISIBLE);
             showMilestones.setVisibility(View.INVISIBLE);
+            reset.setVisibility(View.INVISIBLE);
         });
     }
 

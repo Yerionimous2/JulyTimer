@@ -29,6 +29,7 @@
     <string name="pickBackground">Hintergrundbild ändern</string>
     <string name="pick_Image">Bild aussuchen</string>
     <string name="milestone_ninety_percent">90% sind schon geschafft!</string>
+    <string name="reset">Zurücksetzen</string>
 
     <!--[ Notification Strings ]-->
     <string name="notification_name_1">Die coole progress-Bar</string>
@@ -64,5 +65,9 @@
     <string name="button">Knopf</string>
     <string name="text">Text</string>
     <string name="back2">Hinten</string>
+    <string name="milestone_three_quarter_notification">Drei Viertel sind schon geschafft!</string>
+    <string name="milestone_hundred_percent">Endlich geschafft!</string>
+    <string name="milestone_quarter_notification">Ein Viertel ist schon geschafft!</string>
+    <string name="milestone_quarter_notification">E</string>
 
 </resources>
