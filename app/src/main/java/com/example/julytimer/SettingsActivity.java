@@ -848,6 +848,7 @@ public class SettingsActivity extends AppCompatActivity {
                 save((long) 1661326200, "StartUNIX");
                 save((long) 1677700800, "EndUNIX");
                 loadVariables();
+                pickDate();
             });
 
             changeDarkmodeBackgroundcolor.setOnClickListener(view -> {
