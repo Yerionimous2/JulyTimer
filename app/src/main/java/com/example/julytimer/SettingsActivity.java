@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
@@ -98,7 +99,9 @@ public class SettingsActivity extends AppCompatActivity {
     public int begin = 0;
     public int end = 0;
     public int offset = 0;
+    public int offsetSave;
     public int maxOffset = 0;
+    public float touchStartY;
     public boolean ran;
     private String darkmodeButtoncolor;
     private String darkmodeTextcolor;
@@ -285,6 +288,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,6 +307,23 @@ public class SettingsActivity extends AppCompatActivity {
                 update();
             }
         };
+
+        View decorView = getWindow().getDecorView();
+
+        homeScreenLayout.setOnTouchListener((view, motionEvent) -> {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    touchStartY = motionEvent.getY();
+                    offsetSave = offset;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float touchEndY = motionEvent.getY();
+                    offset = offsetSave + (int) (touchStartY - touchEndY);
+                    break;
+            }
+            System.out.println("Touch Method called!");
+            return true;
+        });
         showDarkmodeColors.setVisibility(View.INVISIBLE);
         changeDarkmodeBackgroundcolor.setVisibility(View.INVISIBLE);
         changeDarkmodeTextcolor.setVisibility(View.INVISIBLE);
@@ -622,6 +643,7 @@ public class SettingsActivity extends AppCompatActivity {
             darkmodeEndText2.setX(darkmodeEnd.getX() + darkmodeEnd.getMeasuredWidth());
 
             // <----------------- [Y Values] -----------------> \\
+            resetOffset();
             backToMain.setY((float) (backToMain.getMeasuredHeight() / 6.0) - offset);
             secondsSwitch.setY((float) (backToMain.getY() + backToMain.getMeasuredHeight() + secondsSwitch.getMeasuredHeight() / 6.0));
             changeDates.setY((float) (secondsSwitch.getY() + secondsSwitch.getMeasuredHeight() + changeDates.getMeasuredHeight() / 6.0));
@@ -651,10 +673,15 @@ public class SettingsActivity extends AppCompatActivity {
 
             if(!ran) {
                 maxOffset = (int) (((reset.getY() + reset.getHeight() * 7) / 6.0) - height);
-                if(maxOffset < 0)maxOffset = 0;
+                if(maxOffset < 0) maxOffset = 0;
             }
             ran = true;
         });
+    }
+
+    private void resetOffset() {
+        if(offset > maxOffset) offset = maxOffset;
+        if(offset < 0) offset = 0;
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -791,7 +818,7 @@ public class SettingsActivity extends AppCompatActivity {
         setPositions();
     }
 
-    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables", "ClickableViewAccessibility"})
     public void initialiseListeners() {
         runOnUiThread(() -> {
             darkmodeBegin.setOnKeyListener((v, keyCode, event) -> {
